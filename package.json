@@ -1,0 +1,29 @@
+{
+  "name": "porterfield-heroes",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Plateforme personnelle d'apprentissage dev fullstack — mono-user, web + PWA",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "dev": "pnpm -r --parallel run dev",
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "db:generate": "pnpm --filter @ph/db run generate",
+    "db:migrate": "pnpm --filter @ph/db run migrate",
+    "db:push": "pnpm --filter @ph/db run push",
+    "db:studio": "pnpm --filter @ph/db run studio",
+    "db:seed": "pnpm --filter @ph/db run seed",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

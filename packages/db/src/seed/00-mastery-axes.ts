@@ -1,0 +1,88 @@
+import type { NewMasteryAxis } from "../schema/content.js";
+
+export const masteryAxesSeed: NewMasteryAxis[] = [
+  {
+    id: "fundamentals",
+    label: "Fondamentaux",
+    description: "Web, terminal, Git, environnement de dev.",
+    colorHex: "#A1A1A6",
+    displayOrder: 1,
+  },
+  {
+    id: "git",
+    label: "Git & versionnage",
+    description: "Branches, merge, rebase, conflits, workflow pro.",
+    colorHex: "#F87171",
+    displayOrder: 2,
+  },
+  {
+    id: "html_css",
+    label: "HTML & CSS",
+    description: "Sémantique, accessibilité, layout, Tailwind, animations.",
+    colorHex: "#FB923C",
+    displayOrder: 3,
+  },
+  {
+    id: "javascript",
+    label: "JavaScript",
+    description: "ES2023+, async, closures, this, prototypes, patterns.",
+    colorHex: "#FACC15",
+    displayOrder: 4,
+  },
+  {
+    id: "typescript",
+    label: "TypeScript",
+    description: "Types stricts, generics, utility types, narrowing.",
+    colorHex: "#60A5FA",
+    displayOrder: 5,
+  },
+  {
+    id: "react",
+    label: "React",
+    description: "Composants, hooks, état, routing, queries, écosystème.",
+    colorHex: "#22D3EE",
+    displayOrder: 6,
+  },
+  {
+    id: "backend",
+    label: "Backend & Python",
+    description: "Node, Fastify, REST, WebSocket. Python pour scripting/IA.",
+    colorHex: "#34D399",
+    displayOrder: 7,
+  },
+  {
+    id: "database",
+    label: "Bases de données",
+    description: "SQL, Postgres, ORM Drizzle, transactions, indexes.",
+    colorHex: "#A78BFA",
+    displayOrder: 8,
+  },
+  {
+    id: "security",
+    label: "Sécurité",
+    description: "OWASP, auth, JWT, OAuth, CSP, rate limiting.",
+    colorHex: "#F472B6",
+    displayOrder: 9,
+  },
+  {
+    id: "testing",
+    label: "Tests",
+    description: "Vitest, Testing Library, Playwright, MSW.",
+    colorHex: "#E879F9",
+    displayOrder: 10,
+  },
+  {
+    id: "devops",
+    label: "DevOps",
+    description: "Docker, CI/CD, déploiement, monitoring, observabilité.",
+    colorHex: "#94A3B8",
+    displayOrder: 11,
+  },
+  {
+    id: "graphics_3d",
+    label: "Graphique & 3D",
+    description: "Three.js, R3F, shaders GLSL, performance 3D.",
+    colorHex: "#FDE68A",
+    displayOrder: 12,
+  },
+];

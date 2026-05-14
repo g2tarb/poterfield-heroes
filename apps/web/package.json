@@ -1,0 +1,44 @@
+{
+  "name": "@ph/web",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start --port 3000",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@tanstack/react-query": "^5.62.2",
+    "zod": "^3.23.8",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.5",
+    "marked": "^15.0.4",
+    "dompurify": "^3.2.2",
+    "@serwist/next": "^9.0.10",
+    "serwist": "^9.0.10",
+    "@codemirror/state": "^6.5.0",
+    "@codemirror/view": "^6.36.1",
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/lang-python": "^6.1.6",
+    "@codemirror/lang-sql": "^6.8.0",
+    "@codemirror/theme-one-dark": "^6.1.2",
+    "@electric-sql/pglite": "^0.2.14",
+    "@codemirror/commands": "^6.7.1",
+    "@codemirror/language": "^6.10.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.3",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "@types/dompurify": "^3.2.0",
+    "@tailwindcss/postcss": "^4.0.0-beta.5",
+    "tailwindcss": "^4.0.0-beta.5",
+    "typescript": "^5.6.3"
+  }
+}

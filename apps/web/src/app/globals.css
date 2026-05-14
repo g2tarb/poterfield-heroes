@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+/*
+ * Porterfield Heroes — design tokens v0 (foundation only).
+ * The final design system from DA will replace these.
+ */
+@theme {
+  /* Background scale (dark-first) */
+  --color-bg-base: oklch(0.13 0.005 280);          /* #0A0A0B */
+  --color-bg-elevated: oklch(0.16 0.005 280);      /* #141416 */
+  --color-bg-high: oklch(0.19 0.005 280);          /* #1C1C1F */
+
+  /* Borders / dividers */
+  --color-border-subtle: oklch(0.24 0.005 280);    /* #2A2A2E */
+  --color-border-strong: oklch(0.32 0.005 280);
+
+  /* Text */
+  --color-fg-primary: oklch(0.96 0.002 280);       /* #F5F5F7 */
+  --color-fg-secondary: oklch(0.72 0.005 280);     /* #A1A1A6 */
+  --color-fg-muted: oklch(0.52 0.005 280);         /* #6E6E73 */
+
+  /* Accent placeholder (à remplacer par la DA) */
+  --color-accent: oklch(0.82 0.14 80);             /* amber-ish, vintage forge */
+  --color-accent-fg: oklch(0.18 0.02 80);
+
+  /* Status */
+  --color-success: oklch(0.78 0.16 145);
+  --color-warning: oklch(0.82 0.16 80);
+  --color-danger: oklch(0.72 0.18 25);
+
+  /* Typography */
+  --font-sans: "Geist Sans", "Inter", system-ui, sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
+  --font-display: var(--font-sans);
+
+  /* Type scale (1.250 modular) */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  /* Spacing (4px base) */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+}
+
+html,
+body {
+  background: var(--color-bg-base);
+  color: var(--color-fg-primary);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: color-mix(in oklch, var(--color-accent), transparent 70%);
+  color: var(--color-fg-primary);
+}
+
+/* Markdown rendering for coach messages */
+.prose-coach :where(p, ul, ol, blockquote, pre, table) {
+  margin: 0.5rem 0;
+}
+.prose-coach :where(h1, h2, h3, h4) {
+  margin: 0.75rem 0 0.5rem;
+  font-weight: 600;
+}
+.prose-coach h3 {
+  font-size: var(--text-base);
+}
+.prose-coach :where(ul, ol) {
+  padding-left: 1.25rem;
+}
+.prose-coach ul {
+  list-style: disc;
+}
+.prose-coach ol {
+  list-style: decimal;
+}
+.prose-coach code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-bg-high);
+  padding: 0.1em 0.35em;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-subtle);
+}
+.prose-coach pre {
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  overflow-x: auto;
+}
+.prose-coach pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.prose-coach a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-coach blockquote {
+  border-left: 2px solid var(--color-border-strong);
+  padding-left: 0.75rem;
+  color: var(--color-fg-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
