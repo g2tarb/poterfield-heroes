@@ -1,4 +1,4 @@
-import type { NewLevel } from "../schema/content.js";
+import type { NewLevel } from "../schema/content";
 
 export const levelsSeed: NewLevel[] = [
   {

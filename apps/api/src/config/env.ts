@@ -6,7 +6,7 @@ const envSchema = z.object({
   API_HOST: z.string().default("0.0.0.0"),
   DATABASE_URL: z.string().url(),
   REDIS_URL: z.string().url().optional(),
-  CORS_ORIGIN: z.string().default("http://localhost:3000"),
+  CORS_ORIGIN: z.string().default("http://localhost:3030"),
   SESSION_SECRET: z.string().min(32),
   ACCESS_PASSWORD: z.string().min(8),
   ANTHROPIC_API_KEY: z.string().min(10).optional(),

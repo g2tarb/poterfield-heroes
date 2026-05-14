@@ -5,7 +5,11 @@ import { env } from "../config/env.js";
 
 export default fp(
   async (app) => {
-    app.setErrorHandler((error, request, reply) => {
+    app.setErrorHandler((rawError, request, reply) => {
+      const error = rawError as Error & {
+        validation?: unknown;
+        statusCode?: number;
+      };
       request.log.error({ err: error, url: request.url }, "request errored");
 
       if (error instanceof ZodError) {
@@ -26,8 +30,7 @@ export default fp(
         });
       }
 
-      // Fastify validation
-      if ((error as { validation?: unknown }).validation) {
+      if (error.validation) {
         return reply.code(422).send({
           error: "ValidationError",
           message: error.message,
@@ -35,7 +38,7 @@ export default fp(
         });
       }
 
-      const statusCode = (error as { statusCode?: number }).statusCode ?? 500;
+      const statusCode = error.statusCode ?? 500;
       const isProd = env.NODE_ENV === "production";
 
       return reply.code(statusCode).send({

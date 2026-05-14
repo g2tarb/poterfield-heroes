@@ -5,18 +5,18 @@
 
 type LogKind = "log" | "info" | "warn" | "error";
 
-type IncomingMessage = {
+type WorkerIncoming = {
   id: string;
   code: string;
   language: "javascript" | "typescript";
 };
 
-type OutgoingMessage =
+type WorkerOutgoing =
   | { type: "log"; id: string; kind: LogKind; args: string[] }
   | { type: "done"; id: string; durationMs: number; result?: string }
   | { type: "error"; id: string; message: string; stack?: string };
 
-const ctx = self as unknown as DedicatedWorkerGlobalScope;
+const sbCtx = self as unknown as DedicatedWorkerGlobalScope;
 
 function serialize(value: unknown): string {
   if (value === undefined) return "undefined";
@@ -32,19 +32,19 @@ function serialize(value: unknown): string {
   return String(value);
 }
 
-ctx.onmessage = async (event: MessageEvent<IncomingMessage>) => {
+sbCtx.onmessage = async (event: MessageEvent<WorkerIncoming>) => {
   const { id, code } = event.data;
   const start = performance.now();
 
   // Intercept console
   const sendLog = (kind: LogKind, args: unknown[]) => {
-    const msg: OutgoingMessage = {
+    const msg: WorkerOutgoing = {
       type: "log",
       id,
       kind,
       args: args.map(serialize),
     };
-    ctx.postMessage(msg);
+    sbCtx.postMessage(msg);
   };
 
   const customConsole = {
@@ -62,21 +62,21 @@ ctx.onmessage = async (event: MessageEvent<IncomingMessage>) => {
     );
     const result = await fn(customConsole);
     const durationMs = Math.round(performance.now() - start);
-    const msg: OutgoingMessage = {
+    const msg: WorkerOutgoing = {
       type: "done",
       id,
       durationMs,
       ...(result !== undefined ? { result: serialize(result) } : {}),
     };
-    ctx.postMessage(msg);
+    sbCtx.postMessage(msg);
   } catch (err) {
     const e = err as Error;
-    const msg: OutgoingMessage = {
+    const msg: WorkerOutgoing = {
       type: "error",
       id,
       message: e.message || String(err),
       ...(e.stack ? { stack: e.stack } : {}),
     };
-    ctx.postMessage(msg);
+    sbCtx.postMessage(msg);
   }
 };

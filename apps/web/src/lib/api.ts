@@ -1,6 +1,6 @@
 // Client-side API helper. Server components fetch directly via `apiFetch`.
 
-const API_BASE = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3001";
+const API_BASE = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3031";
 
 export class ApiError extends Error {
   constructor(

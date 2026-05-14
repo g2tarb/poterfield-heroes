@@ -58,7 +58,7 @@ export default fp(
     );
 
     // === Routes ===
-    app.post<{ Body: { password: string } }>("/auth/login", async (req, reply) => {
+    app.post<{ Body: { password: string } }>("/api/auth/login", async (req, reply) => {
       const { password } = (req.body ?? {}) as { password?: string };
       if (typeof password !== "string" || password.length < 1) {
         return reply.code(400).send({
@@ -88,12 +88,12 @@ export default fp(
       return reply.send({ ok: true });
     });
 
-    app.post("/auth/logout", async (req, reply) => {
+    app.post("/api/auth/logout", async (req, reply) => {
       reply.clearCookie(COOKIE_NAME, { path: "/" });
       return reply.send({ ok: true });
     });
 
-    app.get("/auth/me", async (req) => {
+    app.get("/api/auth/me", async (req) => {
       return { authenticated: req.isAuthenticated };
     });
   },

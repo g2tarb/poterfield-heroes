@@ -15,7 +15,7 @@ import {
   exerciseKindEnum,
   sandboxKindEnum,
   programmingLanguageEnum,
-} from "./enums.js";
+} from "./enums";
 
 // =============================================================
 // MASTERY AXES (12 axes du radar de progression)

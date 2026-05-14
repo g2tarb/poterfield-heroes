@@ -9,8 +9,8 @@ import {
   timestamp,
   index,
 } from "drizzle-orm/pg-core";
-import { notificationKindEnum, xpEventKindEnum } from "./enums.js";
-import { levels } from "./content.js";
+import { notificationKindEnum, xpEventKindEnum } from "./enums";
+import { levels } from "./content";
 
 // =============================================================
 // USER STATE (single row : c'est mono-user)

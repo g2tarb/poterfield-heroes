@@ -3,7 +3,7 @@ import type {
   NewSkill,
   NewVideo,
   NewExercise,
-} from "../../schema/content.js";
+} from "../../schema/content";
 
 export const M04_ID = "m04-env-dev";
 

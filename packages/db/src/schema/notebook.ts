@@ -8,8 +8,8 @@ import {
   timestamp,
   index,
 } from "drizzle-orm/pg-core";
-import { notebookSourceEnum } from "./enums.js";
-import { modules, skills } from "./content.js";
+import { notebookSourceEnum } from "./enums";
+import { modules, skills } from "./content";
 
 // =============================================================
 // NOTEBOOK ENTRIES (carnet markdown : entrées coach + libres + system)

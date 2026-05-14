@@ -11,6 +11,7 @@ import {
   anthropic,
   MODEL_SONNET,
   computeCostCents,
+  extractCacheTokens,
 } from "../lib/anthropic.js";
 import { AppError } from "../lib/errors.js";
 
@@ -160,12 +161,13 @@ Appelle l'outil \`emit_exam\` avec ta sortie.`;
     );
   }
 
+  const cacheTokens = extractCacheTokens(response.usage);
   const costCents = computeCostCents(
     MODEL_SONNET,
     response.usage.input_tokens,
     response.usage.output_tokens,
-    response.usage.cache_read_input_tokens ?? 0,
-    response.usage.cache_creation_input_tokens ?? 0,
+    cacheTokens.cacheReadInputTokens,
+    cacheTokens.cacheCreationInputTokens,
   );
 
   const moduleIds = [...new Set(practicingSkills.map((s) => s.moduleId))];

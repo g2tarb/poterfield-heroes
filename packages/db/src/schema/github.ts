@@ -8,8 +8,8 @@ import {
   timestamp,
   index,
 } from "drizzle-orm/pg-core";
-import { codeReviewSeverityEnum } from "./enums.js";
-import { modules } from "./content.js";
+import { codeReviewSeverityEnum } from "./enums";
+import { modules } from "./content";
 
 // =============================================================
 // GITHUB REPOS (repos trackés, liés à un module ou un projet portfolio)

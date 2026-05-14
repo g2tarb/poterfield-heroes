@@ -7,6 +7,7 @@ import {
   anthropic,
   MODEL_SONNET,
   computeCostCents,
+  extractCacheTokens,
 } from "../lib/anthropic.js";
 import { env } from "../config/env.js";
 import { AppError } from "../lib/errors.js";
@@ -216,12 +217,13 @@ Appelle l'outil \`emit_review\`.`;
     return;
   }
 
+  const cacheTokens = extractCacheTokens(response.usage);
   const costCents = computeCostCents(
     MODEL_SONNET,
     response.usage.input_tokens,
     response.usage.output_tokens,
-    response.usage.cache_read_input_tokens ?? 0,
-    response.usage.cache_creation_input_tokens ?? 0,
+    cacheTokens.cacheReadInputTokens,
+    cacheTokens.cacheCreationInputTokens,
   );
 
   await db.insert(codeReviews).values({

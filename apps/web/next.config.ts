@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 import withSerwistInit from "@serwist/next";
 
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3001";
+const apiUrl = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3031";
 
 const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
@@ -14,9 +14,7 @@ const withSerwist = withSerwistInit({
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  experimental: {
-    typedRoutes: true,
-  },
+  typedRoutes: true,
   async rewrites() {
     return [
       {

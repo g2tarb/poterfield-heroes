@@ -1,11 +1,11 @@
 // Centralized re-exports. Use this entry point everywhere.
 
-export * from "./enums.js";
-export * from "./content.js";
-export * from "./progress.js";
-export * from "./srs.js";
-export * from "./notebook.js";
-export * from "./coach.js";
-export * from "./github.js";
-export * from "./exams.js";
-export * from "./user.js";
+export * from "./enums";
+export * from "./content";
+export * from "./progress";
+export * from "./srs";
+export * from "./notebook";
+export * from "./coach";
+export * from "./github";
+export * from "./exams";
+export * from "./user";

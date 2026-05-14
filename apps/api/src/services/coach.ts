@@ -11,6 +11,7 @@ import {
   anthropic,
   MODEL_SONNET,
   computeCostCents,
+  extractCacheTokens,
   type ModelId,
 } from "../lib/anthropic.js";
 import { AppError } from "../lib/errors.js";
@@ -252,9 +253,10 @@ export async function streamCoachResponse(
       }
       if (event.type === "message_start" && event.message.usage) {
         const u = event.message.usage;
+        const cache = extractCacheTokens(u);
         usage.inputTokens = u.input_tokens;
-        usage.cachedReadTokens = u.cache_read_input_tokens ?? 0;
-        usage.cachedWriteTokens = u.cache_creation_input_tokens ?? 0;
+        usage.cachedReadTokens = cache.cacheReadInputTokens;
+        usage.cachedWriteTokens = cache.cacheCreationInputTokens;
       }
     }
 

@@ -3,7 +3,7 @@ import type {
   NewSkill,
   NewVideo,
   NewExercise,
-} from "../../schema/content.js";
+} from "../../schema/content";
 
 export const M05_ID = "m05-html5";
 

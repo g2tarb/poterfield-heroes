@@ -58,7 +58,7 @@ export async function buildApp(): Promise<FastifyInstance> {
     contentSecurityPolicy: false, // CSP géré côté Next.js
   });
   await app.register(dbPlugin);
-  await app.register(authPlugin, { prefix: "/api" });
+  await app.register(authPlugin);
 
   await app.register(healthRoutes);
   await app.register(modulesRoutes, { prefix: "/api" });

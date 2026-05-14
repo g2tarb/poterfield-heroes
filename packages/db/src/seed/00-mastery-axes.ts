@@ -1,4 +1,4 @@
-import type { NewMasteryAxis } from "../schema/content.js";
+import type { NewMasteryAxis } from "../schema/content";
 
 export const masteryAxesSeed: NewMasteryAxis[] = [
   {

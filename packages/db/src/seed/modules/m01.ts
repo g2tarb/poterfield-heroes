@@ -1,10 +1,9 @@
 import type {
   NewModule,
   NewSkill,
-  NewSkillAxis,
   NewVideo,
   NewExercise,
-} from "../../schema/content.js";
+} from "../../schema/content";
 
 // Helper IDs (slugs) so we can reference skills across tables.
 export const M01_ID = "m01-comment-fonctionne-le-web";

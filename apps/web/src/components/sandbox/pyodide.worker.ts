@@ -3,15 +3,15 @@
 // Pyodide worker — charge le runtime Python en WASM depuis CDN, exécute du code.
 // Coût initial : ~6 MB téléchargés au premier run. Cache navigateur ensuite.
 
-type IncomingMessage = { id: string; code: string };
+type PyIncoming = { id: string; code: string };
 
-type OutgoingMessage =
+type PyOutgoing =
   | { type: "log"; id: string; kind: "log" | "info" | "warn" | "error"; args: string[] }
   | { type: "loading"; id: string; stage: string }
   | { type: "done"; id: string; durationMs: number; result?: string }
   | { type: "error"; id: string; message: string; stack?: string };
 
-const ctx = self as unknown as DedicatedWorkerGlobalScope;
+const pyCtx = self as unknown as DedicatedWorkerGlobalScope;
 
 const PYODIDE_VERSION = "0.27.0";
 const PYODIDE_INDEX_URL = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
@@ -30,8 +30,8 @@ async function getPyodide(id: string): Promise<PyodideInstance> {
 
   pyodidePromise = (async () => {
     const post = (stage: string) => {
-      const msg: OutgoingMessage = { type: "loading", id, stage };
-      ctx.postMessage(msg);
+      const msg: PyOutgoing = { type: "loading", id, stage };
+      pyCtx.postMessage(msg);
     };
     post("Téléchargement de Pyodide…");
 
@@ -49,7 +49,7 @@ async function getPyodide(id: string): Promise<PyodideInstance> {
   return pyodidePromise;
 }
 
-ctx.onmessage = async (event: MessageEvent<IncomingMessage>) => {
+pyCtx.onmessage = async (event: MessageEvent<PyIncoming>) => {
   const { id, code } = event.data;
   const start = performance.now();
 
@@ -58,31 +58,31 @@ ctx.onmessage = async (event: MessageEvent<IncomingMessage>) => {
 
     py.setStdout({
       batched: (line: string) => {
-        const msg: OutgoingMessage = {
+        const msg: PyOutgoing = {
           type: "log",
           id,
           kind: "log",
           args: [line],
         };
-        ctx.postMessage(msg);
+        pyCtx.postMessage(msg);
       },
     });
     py.setStderr({
       batched: (line: string) => {
-        const msg: OutgoingMessage = {
+        const msg: PyOutgoing = {
           type: "log",
           id,
           kind: "error",
           args: [line],
         };
-        ctx.postMessage(msg);
+        pyCtx.postMessage(msg);
       },
     });
 
     const result = await py.runPythonAsync(code);
 
     const durationMs = Math.round(performance.now() - start);
-    const out: OutgoingMessage = {
+    const out: PyOutgoing = {
       type: "done",
       id,
       durationMs,
@@ -90,15 +90,15 @@ ctx.onmessage = async (event: MessageEvent<IncomingMessage>) => {
         ? { result: String(result) }
         : {}),
     };
-    ctx.postMessage(out);
+    pyCtx.postMessage(out);
   } catch (err) {
     const e = err as Error;
-    const out: OutgoingMessage = {
+    const out: PyOutgoing = {
       type: "error",
       id,
       message: e.message || String(err),
       ...(e.stack ? { stack: e.stack } : {}),
     };
-    ctx.postMessage(out);
+    pyCtx.postMessage(out);
   }
 };

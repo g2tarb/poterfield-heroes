@@ -44,3 +44,22 @@ export function computeCostCents(
       million,
   );
 }
+
+/**
+ * Safely extract cache token counts from Anthropic Usage.
+ * The SDK type does not always expose these fields yet (depends on version),
+ * but they are present in the response when prompt caching is enabled.
+ */
+export function extractCacheTokens(usage: unknown): {
+  cacheReadInputTokens: number;
+  cacheCreationInputTokens: number;
+} {
+  const u = usage as {
+    cache_read_input_tokens?: number;
+    cache_creation_input_tokens?: number;
+  };
+  return {
+    cacheReadInputTokens: u?.cache_read_input_tokens ?? 0,
+    cacheCreationInputTokens: u?.cache_creation_input_tokens ?? 0,
+  };
+}

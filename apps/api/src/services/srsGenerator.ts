@@ -2,7 +2,12 @@ import { z } from "zod";
 import { eq, desc } from "drizzle-orm";
 import type { Database } from "@ph/db";
 import { skills, modules, srsCards, notebookEntries } from "@ph/db";
-import { anthropic, MODEL_HAIKU, computeCostCents } from "../lib/anthropic.js";
+import {
+  anthropic,
+  MODEL_HAIKU,
+  computeCostCents,
+  extractCacheTokens,
+} from "../lib/anthropic.js";
 import { AppError, NotFoundError } from "../lib/errors.js";
 
 const cardsSchema = z.object({
@@ -130,12 +135,13 @@ Appelle l'outil \`emit_cards\` avec ta sortie.`;
     );
   }
 
+  const cacheTokens = extractCacheTokens(response.usage);
   const costCents = computeCostCents(
     MODEL_HAIKU,
     response.usage.input_tokens,
     response.usage.output_tokens,
-    response.usage.cache_read_input_tokens ?? 0,
-    response.usage.cache_creation_input_tokens ?? 0,
+    cacheTokens.cacheReadInputTokens,
+    cacheTokens.cacheCreationInputTokens,
   );
 
   const rows = parsed.data.cards.map((c) => ({

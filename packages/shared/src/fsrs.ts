@@ -7,6 +7,7 @@ import {
   Rating,
   State,
   type Card as FsrsCard,
+  type Grade,
 } from "ts-fsrs";
 
 export const FSRS_RATING = {
@@ -55,7 +56,7 @@ export function buildFsrsCard(args: {
     reps: args.reps,
     lapses: args.lapses,
     state,
-    last_review: args.lastReviewAt ?? undefined,
+    ...(args.lastReviewAt ? { last_review: args.lastReviewAt } : {}),
   };
 }
 
@@ -87,7 +88,7 @@ export function reviewCard(args: {
   now?: Date;
 }): ScheduleResult {
   const now = args.now ?? new Date();
-  const ratingMap: Record<FsrsRating, Rating> = {
+  const ratingMap: Record<FsrsRating, Grade> = {
     1: Rating.Again,
     2: Rating.Hard,
     3: Rating.Good,

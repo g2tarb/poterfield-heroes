@@ -9,8 +9,8 @@ import {
   text,
   index,
 } from "drizzle-orm/pg-core";
-import { moduleStatusEnum, skillStatusEnum } from "./enums.js";
-import { modules, skills, videos, exercises } from "./content.js";
+import { moduleStatusEnum, skillStatusEnum } from "./enums";
+import { modules, skills, videos, exercises } from "./content";
 
 // =============================================================
 // MODULE PROGRESS (1 row par module visité)

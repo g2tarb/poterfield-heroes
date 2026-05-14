@@ -2,14 +2,15 @@ import {
   pgTable,
   uuid,
   text,
+  varchar,
   integer,
   real,
   jsonb,
   timestamp,
   index,
 } from "drizzle-orm/pg-core";
-import { srsCardStateEnum } from "./enums.js";
-import { skills, modules } from "./content.js";
+import { srsCardStateEnum } from "./enums";
+import { skills, modules } from "./content";
 
 // =============================================================
 // SRS CARDS (FSRS state-of-art 2024, mieux que SM-2)

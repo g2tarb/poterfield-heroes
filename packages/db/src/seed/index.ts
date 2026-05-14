@@ -1,9 +1,9 @@
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { eq } from "drizzle-orm";
-import * as schema from "../schema/index.js";
-import { masteryAxesSeed } from "./00-mastery-axes.js";
-import { levelsSeed } from "./01-levels.js";
+import * as schema from "../schema/index";
+import { masteryAxesSeed } from "./00-mastery-axes";
+import { levelsSeed } from "./01-levels";
 import {
   M01_ID,
   m01Module,
@@ -11,7 +11,7 @@ import {
   m01SkillAxisRules,
   m01Videos,
   m01Exercises,
-} from "./modules/m01.js";
+} from "./modules/m01";
 import {
   M02_ID,
   m02Module,
@@ -19,7 +19,7 @@ import {
   m02SkillAxisRules,
   m02Videos,
   m02Exercises,
-} from "./modules/m02.js";
+} from "./modules/m02";
 import {
   M03_ID,
   m03Module,
@@ -27,7 +27,7 @@ import {
   m03SkillAxisRules,
   m03Videos,
   m03Exercises,
-} from "./modules/m03.js";
+} from "./modules/m03";
 import {
   M04_ID,
   m04Module,
@@ -35,7 +35,7 @@ import {
   m04SkillAxisRules,
   m04Videos,
   m04Exercises,
-} from "./modules/m04.js";
+} from "./modules/m04";
 import {
   M05_ID,
   m05Module,
@@ -43,7 +43,47 @@ import {
   m05SkillAxisRules,
   m05Videos,
   m05Exercises,
-} from "./modules/m05.js";
+} from "./modules/m05";
+import {
+  M06_ID,
+  m06Module,
+  m06Skills,
+  m06SkillAxisRules,
+  m06Videos,
+  m06Exercises,
+} from "./modules/m06";
+import {
+  M07_ID,
+  m07Module,
+  m07Skills,
+  m07SkillAxisRules,
+  m07Videos,
+  m07Exercises,
+} from "./modules/m07";
+import {
+  M08_ID,
+  m08Module,
+  m08Skills,
+  m08SkillAxisRules,
+  m08Videos,
+  m08Exercises,
+} from "./modules/m08";
+import {
+  M09_ID,
+  m09Module,
+  m09Skills,
+  m09SkillAxisRules,
+  m09Videos,
+  m09Exercises,
+} from "./modules/m09";
+import {
+  M10_ID,
+  m10Module,
+  m10Skills,
+  m10SkillAxisRules,
+  m10Videos,
+  m10Exercises,
+} from "./modules/m10";
 
 const databaseUrl = process.env["DATABASE_URL"];
 if (!databaseUrl) {
@@ -200,6 +240,46 @@ async function main() {
     m05SkillAxisRules,
     m05Videos,
     m05Exercises,
+  );
+  await seedModule(
+    M06_ID,
+    m06Module,
+    m06Skills,
+    m06SkillAxisRules,
+    m06Videos,
+    m06Exercises,
+  );
+  await seedModule(
+    M07_ID,
+    m07Module,
+    m07Skills,
+    m07SkillAxisRules,
+    m07Videos,
+    m07Exercises,
+  );
+  await seedModule(
+    M08_ID,
+    m08Module,
+    m08Skills,
+    m08SkillAxisRules,
+    m08Videos,
+    m08Exercises,
+  );
+  await seedModule(
+    M09_ID,
+    m09Module,
+    m09Skills,
+    m09SkillAxisRules,
+    m09Videos,
+    m09Exercises,
+  );
+  await seedModule(
+    M10_ID,
+    m10Module,
+    m10Skills,
+    m10SkillAxisRules,
+    m10Videos,
+    m10Exercises,
   );
   await seedUserState();
   await seedPublicProfile();

@@ -3,7 +3,7 @@ import type {
   NewSkill,
   NewVideo,
   NewExercise,
-} from "../../schema/content.js";
+} from "../../schema/content";
 
 export const M02_ID = "m02-terminal-shell";
 

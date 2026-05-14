@@ -9,8 +9,8 @@ import {
   vector,
   index,
 } from "drizzle-orm/pg-core";
-import { coachRoleEnum, memorySourceEnum } from "./enums.js";
-import { modules, exercises } from "./content.js";
+import { coachRoleEnum, memorySourceEnum } from "./enums";
+import { modules, exercises } from "./content";
 
 // =============================================================
 // COACH SESSIONS (conversations groupées)
