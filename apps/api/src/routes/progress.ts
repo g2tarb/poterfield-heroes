@@ -18,6 +18,7 @@ import {
 } from "../services/xpEngine.js";
 import { computeMasteryRadar } from "../services/masteryRadar.js";
 import { generateCardsForSkill } from "../services/srsGenerator.js";
+import { touchStreak } from "../services/streak.js";
 
 const progressRoutes: FastifyPluginAsync = async (app) => {
   const a = app.withTypeProvider<ZodTypeProvider>();
@@ -95,6 +96,9 @@ const progressRoutes: FastifyPluginAsync = async (app) => {
           startedAt: new Date(body.startedAt),
         })
         .returning();
+
+      // Touch streak à chaque tentative (passed or not — l'effort compte)
+      await touchStreak(app.db);
 
       let xpResult: Awaited<ReturnType<typeof awardXp>> | null = null;
       let cardsGenerated = 0;

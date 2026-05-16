@@ -1,0 +1,70 @@
+name: Backup Postgres → R2
+
+on:
+  schedule:
+    # Tous les jours à 03:00 UTC
+    - cron: "0 3 * * *"
+  workflow_dispatch: {} # bouton manuel
+
+jobs:
+  backup:
+    name: pg_dump + upload R2
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Install postgresql-client matching prod version
+        run: |
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-16
+
+      - name: Set timestamp
+        id: ts
+        run: echo "ts=$(date -u +%Y%m%dT%H%M%SZ)" >> "$GITHUB_OUTPUT"
+
+      - name: Dump database
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
+        run: |
+          pg_dump --no-owner --no-acl --format=custom \
+            --file="porterfield-${{ steps.ts.outputs.ts }}.dump" \
+            "$DATABASE_URL"
+          ls -lah porterfield-*.dump
+
+      - name: Configure rclone for R2
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+          mkdir -p ~/.config/rclone
+          cat > ~/.config/rclone/rclone.conf <<EOF
+          [r2]
+          type = s3
+          provider = Cloudflare
+          access_key_id = $R2_ACCESS_KEY_ID
+          secret_access_key = $R2_SECRET_ACCESS_KEY
+          endpoint = https://$R2_ACCOUNT_ID.r2.cloudflarestorage.com
+          region = auto
+          EOF
+
+      - name: Upload to R2
+        run: |
+          rclone copy "porterfield-${{ steps.ts.outputs.ts }}.dump" \
+            "r2:${{ secrets.R2_BUCKET }}/postgres-backups/" \
+            --progress
+
+      - name: Prune backups older than 30 days
+        run: |
+          rclone delete --min-age 30d \
+            "r2:${{ secrets.R2_BUCKET }}/postgres-backups/" \
+            --include "porterfield-*.dump"
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Backup failed at ${{ steps.ts.outputs.ts }}"
+          # Si tu ajoutes SLACK_WEBHOOK_URL en secret, on peut poster ici.

@@ -1,5 +1,6 @@
 import { Dashboard } from "@/components/dashboard/Dashboard";
 import { CoachPanel } from "@/components/coach/CoachPanel";
+import { FocusTimer } from "@/components/focus/FocusTimer";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -19,17 +20,14 @@ export default function HomePage() {
             <Link href="/srs" className="hover:text-[var(--color-fg-primary)]">
               SRS
             </Link>
-            <Link
-              href="/notebook"
-              className="hover:text-[var(--color-fg-primary)]"
-            >
+            <Link href="/notebook" className="hover:text-[var(--color-fg-primary)]">
               Carnet
             </Link>
-            <Link
-              href="/sandbox"
-              className="hover:text-[var(--color-fg-primary)]"
-            >
+            <Link href="/sandbox" className="hover:text-[var(--color-fg-primary)]">
               Sandbox
+            </Link>
+            <Link href="/settings" className="hover:text-[var(--color-fg-primary)]">
+              Settings
             </Link>
           </nav>
         </header>
@@ -37,6 +35,7 @@ export default function HomePage() {
         <Dashboard />
       </main>
       <CoachPanel />
+      <FocusTimer />
     </>
   );
 }

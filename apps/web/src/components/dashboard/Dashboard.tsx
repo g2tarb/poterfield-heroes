@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
 import { RadarChart12, type RadarAxis } from "./RadarChart12";
+import { ConstellationsBackground } from "../ambient/Constellations";
 
 type Progression = {
   user: {
@@ -80,6 +81,13 @@ export function Dashboard() {
 
   return (
     <div className="space-y-12">
+      <ConstellationsBackground
+        modules={modules.map((m) => ({
+          moduleNumber: m.moduleNumber,
+          phase: m.phase,
+          status: m.status,
+        }))}
+      />
       {/* Hero band */}
       <section className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_320px]">
         <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-6 md:p-8">
