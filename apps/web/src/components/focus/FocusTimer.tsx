@@ -142,7 +142,7 @@ export function FocusTimer() {
         onClick={() => setOpen((v) => !v)}
         aria-label="Focus timer"
         className={cn(
-          "fixed right-4 bottom-20 z-30 size-12 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-bg-high)] font-mono text-xs uppercase tracking-wider shadow-lg transition hover:border-[var(--color-accent)]",
+          "fixed right-4 bottom-36 z-30 size-12 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-bg-high)] font-mono text-xs uppercase tracking-wider shadow-lg transition hover:border-[var(--color-accent)] lg:bottom-20",
           phase === "focus" && "border-[var(--color-accent)] text-[var(--color-accent)]",
           phase === "break" && "border-[var(--color-success)] text-[var(--color-success)]",
         )}
@@ -151,7 +151,7 @@ export function FocusTimer() {
       </button>
 
       {open && (
-        <div className="fixed right-4 bottom-36 z-30 w-72 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-5 shadow-2xl">
+        <div className="fixed right-4 bottom-52 z-30 w-72 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-5 shadow-2xl lg:bottom-36">
           <header className="mb-4 flex items-baseline justify-between">
             <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
               {phase === "focus" ? "Focus" : phase === "break" ? "Pause" : "Pomodoro"}

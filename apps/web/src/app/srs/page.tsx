@@ -5,7 +5,7 @@ export const metadata = { title: "Révisions SRS" };
 
 export default function SrsPage() {
   return (
-    <main className="min-h-svh px-6 py-12 md:px-12 lg:px-24">
+    <main className="min-h-svh px-4 pb-8 pt-4 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
       <nav className="mb-8 font-mono text-xs">
         <Link
           href="/"

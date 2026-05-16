@@ -1,13 +1,11 @@
 import { GithubPushList } from "@/components/github/GithubPushList";
-import { CoachPanel } from "@/components/coach/CoachPanel";
 import Link from "next/link";
 
 export const metadata = { title: "GitHub" };
 
 export default function GithubPage() {
   return (
-    <>
-      <main className="min-h-svh px-6 py-12 md:px-12 lg:px-24">
+    <main className="min-h-svh px-4 pb-8 pt-4 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
         <nav className="mb-8 font-mono text-xs">
           <Link
             href="/"
@@ -33,8 +31,6 @@ export default function GithubPage() {
         </header>
 
         <GithubPushList />
-      </main>
-      <CoachPanel />
-    </>
+    </main>
   );
 }

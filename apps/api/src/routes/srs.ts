@@ -155,11 +155,10 @@ const srsRoutes: FastifyPluginAsync = async (app) => {
     "/srs/stats",
     { preHandler: [app.authenticate] },
     async () => {
-      const now = new Date();
       const [counts] = await app.db
         .select({
           total: sql<number>`count(*)::int`,
-          dueNow: sql<number>`count(*) filter (where ${srsCards.dueAt} <= ${now})::int`,
+          dueNow: sql<number>`count(*) filter (where ${srsCards.dueAt} <= now())::int`,
           newCount: sql<number>`count(*) filter (where ${srsCards.state} = 'new')::int`,
           matureCount: sql<number>`count(*) filter (where ${srsCards.state} = 'mature')::int`,
         })

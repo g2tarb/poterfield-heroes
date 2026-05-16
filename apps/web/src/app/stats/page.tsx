@@ -1,9 +1,9 @@
-import { SettingsClient } from "@/components/settings/SettingsClient";
+import { StatsClient } from "@/components/dashboard/StatsClient";
 import Link from "next/link";
 
-export const metadata = { title: "Réglages" };
+export const metadata = { title: "Stats" };
 
-export default function SettingsPage() {
+export default function StatsPage() {
   return (
     <main className="min-h-svh px-4 pb-8 pt-4 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
         <nav className="mb-8 font-mono text-xs">
@@ -17,17 +17,17 @@ export default function SettingsPage() {
 
         <header className="mb-10 max-w-2xl">
           <p className="font-mono text-sm uppercase tracking-widest text-[var(--color-fg-muted)]">
-            Réglages
+            Stats
           </p>
           <h1 className="mt-3 text-3xl font-semibold md:text-4xl">
-            Atelier
+            Radar mastery 12 axes
           </h1>
           <p className="mt-3 text-[var(--color-fg-secondary)]">
-            Préférences, budget IA, actions destructives.
+            Pondéré par contribution skill × pourcentage de mastery.
           </p>
         </header>
 
-        <SettingsClient />
+        <StatsClient />
     </main>
   );
 }

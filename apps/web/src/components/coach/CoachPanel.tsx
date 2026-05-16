@@ -46,7 +46,7 @@ export function CoachPanel({ moduleId }: Props) {
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Fermer le coach" : "Ouvrir le coach"}
         className={cn(
-          "fixed right-4 bottom-4 z-40 size-12 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-bg-high)] font-mono text-xs uppercase tracking-wider text-[var(--color-fg-primary)] shadow-lg transition hover:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]",
+          "fixed right-4 bottom-20 z-40 size-12 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-bg-high)] font-mono text-xs uppercase tracking-wider text-[var(--color-fg-primary)] shadow-lg transition hover:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] lg:bottom-4",
           open && "border-[var(--color-accent)]",
         )}
       >

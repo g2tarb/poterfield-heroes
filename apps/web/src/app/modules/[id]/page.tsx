@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { apiFetch, ApiError } from "@/lib/api";
-import { CoachPanel } from "@/components/coach/CoachPanel";
 
 type ModuleDetail = {
   module: {
@@ -90,8 +89,7 @@ export default async function ModulePage({
   const additionalVideos = videos.filter((v) => v.isPrimary === 0);
 
   return (
-    <>
-    <main className="min-h-svh px-6 py-12 md:px-12 lg:px-24">
+    <main className="min-h-svh px-4 pb-8 pt-4 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
       <nav className="mb-8 font-mono text-xs">
         <Link
           href="/"
@@ -109,11 +107,6 @@ export default async function ModulePage({
         <h1 className="mt-3 text-4xl font-semibold leading-tight md:text-5xl">
           {mod.title}
         </h1>
-        {mod.subtitle && (
-          <p className="mt-3 text-xl text-[var(--color-fg-secondary)]">
-            {mod.subtitle}
-          </p>
-        )}
       </header>
 
       <section className="mb-12 max-w-3xl">
@@ -161,15 +154,25 @@ export default async function ModulePage({
             </p>
           )}
           {primaryVideo.youtubeId && (
-            <div className="aspect-video w-full max-w-3xl overflow-hidden rounded-lg border border-[var(--color-border-subtle)] bg-black">
-              <iframe
-                src={`https://www.youtube.com/embed/${primaryVideo.youtubeId}`}
-                title={primaryVideo.title}
-                allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
-                allowFullScreen
-                className="h-full w-full"
-              />
-            </div>
+            <>
+              <div className="aspect-video w-full max-w-3xl overflow-hidden rounded-lg border border-[var(--color-border-subtle)] bg-black">
+                <iframe
+                  src={`https://www.youtube.com/embed/${primaryVideo.youtubeId}`}
+                  title={primaryVideo.title}
+                  allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
+                  allowFullScreen
+                  className="h-full w-full"
+                />
+              </div>
+              <a
+                href={`https://www.youtube.com/watch?v=${primaryVideo.youtubeId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-block font-mono text-xs text-[var(--color-fg-muted)] hover:text-[var(--color-accent)]"
+              >
+                Ouvrir sur YouTube ↗
+              </a>
+            </>
           )}
           {primaryVideo.whyThisOne && (
             <p className="mt-4 max-w-3xl text-sm italic text-[var(--color-fg-secondary)]">
@@ -185,31 +188,58 @@ export default async function ModulePage({
             Vidéos d&apos;approfondissement
           </h2>
           <ul className="space-y-3">
-            {additionalVideos.map((v) => (
-              <li
-                key={v.id}
-                className="rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4"
-              >
-                <div className="flex items-baseline justify-between gap-3">
-                  <h3 className="font-semibold">{v.title}</h3>
-                  {v.durationSeconds && (
-                    <span className="shrink-0 font-mono text-xs text-[var(--color-fg-muted)]">
-                      {formatDuration(v.durationSeconds)}
-                    </span>
+            {additionalVideos.map((v) => {
+              const href = v.youtubeId
+                ? `https://www.youtube.com/watch?v=${v.youtubeId}`
+                : null;
+              const Inner = (
+                <>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <h3 className="font-semibold">
+                      {v.title}
+                      {href && (
+                        <span className="ml-2 font-mono text-xs font-normal text-[var(--color-accent)]">
+                          ↗
+                        </span>
+                      )}
+                    </h3>
+                    {v.durationSeconds && (
+                      <span className="shrink-0 font-mono text-xs text-[var(--color-fg-muted)]">
+                        {formatDuration(v.durationSeconds)}
+                      </span>
+                    )}
+                  </div>
+                  {v.creator && (
+                    <p className="mt-1 text-sm text-[var(--color-fg-secondary)]">
+                      {v.creator}
+                    </p>
                   )}
-                </div>
-                {v.creator && (
-                  <p className="mt-1 text-sm text-[var(--color-fg-secondary)]">
-                    {v.creator}
-                  </p>
-                )}
-                {v.whyThisOne && (
-                  <p className="mt-2 text-sm italic text-[var(--color-fg-secondary)]">
-                    {v.whyThisOne}
-                  </p>
-                )}
-              </li>
-            ))}
+                  {v.whyThisOne && (
+                    <p className="mt-2 text-sm italic text-[var(--color-fg-secondary)]">
+                      {v.whyThisOne}
+                    </p>
+                  )}
+                </>
+              );
+              return (
+                <li key={v.id}>
+                  {href ? (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4 transition hover:border-[var(--color-accent)] hover:bg-[var(--color-bg-high)]"
+                    >
+                      {Inner}
+                    </a>
+                  ) : (
+                    <div className="rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
+                      {Inner}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}
@@ -244,7 +274,5 @@ export default async function ModulePage({
         </section>
       )}
     </main>
-    <CoachPanel moduleId={mod.id} />
-    </>
   );
 }

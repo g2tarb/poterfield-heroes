@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef } from "react";
 import * as THREE from "three";
 
 type Props = {
@@ -95,5 +94,3 @@ export function LevelUpReveal({ level, onClose }: Props) {
   );
 }
 
-// useMemo import inline because Burst needs it
-import { useMemo } from "react";
