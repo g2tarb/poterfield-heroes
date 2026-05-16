@@ -124,6 +124,16 @@ import {
   m15Videos,
   m15Exercises,
 } from "./modules/m15";
+import { M16_ID, m16Module, m16Skills, m16SkillAxisRules, m16Videos, m16Exercises } from "./modules/m16";
+import { M17_ID, m17Module, m17Skills, m17SkillAxisRules, m17Videos, m17Exercises } from "./modules/m17";
+import { M18_ID, m18Module, m18Skills, m18SkillAxisRules, m18Videos, m18Exercises } from "./modules/m18";
+import { M19_ID, m19Module, m19Skills, m19SkillAxisRules, m19Videos, m19Exercises } from "./modules/m19";
+import { M20_ID, m20Module, m20Skills, m20SkillAxisRules, m20Videos, m20Exercises } from "./modules/m20";
+import { M21_ID, m21Module, m21Skills, m21SkillAxisRules, m21Videos, m21Exercises } from "./modules/m21";
+import { M22_ID, m22Module, m22Skills, m22SkillAxisRules, m22Videos, m22Exercises } from "./modules/m22";
+import { M23_ID, m23Module, m23Skills, m23SkillAxisRules, m23Videos, m23Exercises } from "./modules/m23";
+import { M24_ID, m24Module, m24Skills, m24SkillAxisRules, m24Videos, m24Exercises } from "./modules/m24";
+import { M25_ID, m25Module, m25Skills, m25SkillAxisRules, m25Videos, m25Exercises } from "./modules/m25";
 
 const databaseUrl = process.env["DATABASE_URL"];
 if (!databaseUrl) {
@@ -361,6 +371,16 @@ async function main() {
     m15Videos,
     m15Exercises,
   );
+  await seedModule(M16_ID, m16Module, m16Skills, m16SkillAxisRules, m16Videos, m16Exercises);
+  await seedModule(M17_ID, m17Module, m17Skills, m17SkillAxisRules, m17Videos, m17Exercises);
+  await seedModule(M18_ID, m18Module, m18Skills, m18SkillAxisRules, m18Videos, m18Exercises);
+  await seedModule(M19_ID, m19Module, m19Skills, m19SkillAxisRules, m19Videos, m19Exercises);
+  await seedModule(M20_ID, m20Module, m20Skills, m20SkillAxisRules, m20Videos, m20Exercises);
+  await seedModule(M21_ID, m21Module, m21Skills, m21SkillAxisRules, m21Videos, m21Exercises);
+  await seedModule(M22_ID, m22Module, m22Skills, m22SkillAxisRules, m22Videos, m22Exercises);
+  await seedModule(M23_ID, m23Module, m23Skills, m23SkillAxisRules, m23Videos, m23Exercises);
+  await seedModule(M24_ID, m24Module, m24Skills, m24SkillAxisRules, m24Videos, m24Exercises);
+  await seedModule(M25_ID, m25Module, m25Skills, m25SkillAxisRules, m25Videos, m25Exercises);
   await seedUserState();
   await seedPublicProfile();
   console.log("\nDone.");
