@@ -84,6 +84,46 @@ import {
   m10Videos,
   m10Exercises,
 } from "./modules/m10";
+import {
+  M11_ID,
+  m11Module,
+  m11Skills,
+  m11SkillAxisRules,
+  m11Videos,
+  m11Exercises,
+} from "./modules/m11";
+import {
+  M12_ID,
+  m12Module,
+  m12Skills,
+  m12SkillAxisRules,
+  m12Videos,
+  m12Exercises,
+} from "./modules/m12";
+import {
+  M13_ID,
+  m13Module,
+  m13Skills,
+  m13SkillAxisRules,
+  m13Videos,
+  m13Exercises,
+} from "./modules/m13";
+import {
+  M14_ID,
+  m14Module,
+  m14Skills,
+  m14SkillAxisRules,
+  m14Videos,
+  m14Exercises,
+} from "./modules/m14";
+import {
+  M15_ID,
+  m15Module,
+  m15Skills,
+  m15SkillAxisRules,
+  m15Videos,
+  m15Exercises,
+} from "./modules/m15";
 
 const databaseUrl = process.env["DATABASE_URL"];
 if (!databaseUrl) {
@@ -280,6 +320,46 @@ async function main() {
     m10SkillAxisRules,
     m10Videos,
     m10Exercises,
+  );
+  await seedModule(
+    M11_ID,
+    m11Module,
+    m11Skills,
+    m11SkillAxisRules,
+    m11Videos,
+    m11Exercises,
+  );
+  await seedModule(
+    M12_ID,
+    m12Module,
+    m12Skills,
+    m12SkillAxisRules,
+    m12Videos,
+    m12Exercises,
+  );
+  await seedModule(
+    M13_ID,
+    m13Module,
+    m13Skills,
+    m13SkillAxisRules,
+    m13Videos,
+    m13Exercises,
+  );
+  await seedModule(
+    M14_ID,
+    m14Module,
+    m14Skills,
+    m14SkillAxisRules,
+    m14Videos,
+    m14Exercises,
+  );
+  await seedModule(
+    M15_ID,
+    m15Module,
+    m15Skills,
+    m15SkillAxisRules,
+    m15Videos,
+    m15Exercises,
   );
   await seedUserState();
   await seedPublicProfile();
