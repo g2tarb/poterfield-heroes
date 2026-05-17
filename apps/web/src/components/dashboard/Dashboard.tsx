@@ -9,6 +9,7 @@ import {
   ProgressionPanelSkeleton,
 } from "../staircase/StaircaseSkeleton";
 import { CodeRain } from "../ambient/CodeRain";
+import { FocusedModuleProvider } from "../ambient/FocusedModuleContext";
 
 type Progression = {
   user: {
@@ -66,9 +67,11 @@ export function Dashboard() {
   }, []);
 
   const modulesCompleted = modules.filter((m) => m.status === "completed").length;
+  const activeModule = modules.find((m) => m.status === "active") ?? null;
+  const defaultModuleNumber = activeModule?.moduleNumber ?? null;
 
   return (
-    <>
+    <FocusedModuleProvider defaultModule={defaultModuleNumber}>
       <CodeRain />
       <div className="relative grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px] lg:gap-8">
         <div className="order-1 lg:order-2">
@@ -92,6 +95,6 @@ export function Dashboard() {
           )}
         </div>
       </div>
-    </>
+    </FocusedModuleProvider>
   );
 }

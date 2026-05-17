@@ -1,39 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-const SNIPPETS = [
-  "const fetch = async (url) => await (await fetch(url)).json()",
-  "<!DOCTYPE html>",
-  "document.querySelector('.hero').addEventListener('click', ...)",
-  "function debounce(fn, ms) { let t; return (...a) => { ... } }",
-  "useEffect(() => { return () => cleanup(); }, [deps])",
-  "SELECT * FROM users WHERE created_at > NOW() - interval '7d'",
-  "git rebase -i HEAD~3",
-  "type User = { id: string; email: string; created: Date }",
-  "Promise.all([fetch(a), fetch(b)]).then(...)",
-  "@media (prefers-reduced-motion: reduce) { ... }",
-  "export default async function Page() { ... }",
-  "fastify.post('/login', { schema }, handler)",
-  "CREATE INDEX idx_users_email ON users (email)",
-  "const [state, setState] = useState<User | null>(null)",
-  "DROP TABLE IF EXISTS sessions CASCADE",
-  "npm run build && npm run start",
-  "if (!response.ok) throw new ApiError(response.status)",
-  "FROM node:22-alpine AS runtime",
-  "addEventListener('beforeunload', (e) => e.preventDefault())",
-  "interface Repository<T> { find(id: string): Promise<T | null> }",
-  "useMemo(() => expensiveCompute(data), [data])",
-  "const { rows } = await db.query('SELECT ... ')",
-  "z.object({ email: z.string().email() })",
-  "for await (const chunk of stream) { ... }",
-  "Object.freeze(config)",
-  "new Worker(new URL('./worker.js', import.meta.url))",
-  "matrix.translate(x, y).rotate(theta).scale(s)",
-  "WeakMap<Element, Subscription>()",
-  "AbortController() // → controller.signal",
-  "git commit -m 'feat: lift off 🚀'",
-];
+import { getSnippetsForModule } from "@/lib/moduleSnippets";
+import { useFocusedModule } from "./FocusedModuleContext";
 
 type Line = {
   id: number;
@@ -45,26 +14,33 @@ type Line = {
   depth: number;
 };
 
+const LINE_COUNT = 18;
+
+function generateLines(snippets: string[]): Line[] {
+  return Array.from({ length: LINE_COUNT }).map((_, i) => ({
+    id: i,
+    text: snippets[Math.floor(Math.random() * snippets.length)] ?? "",
+    top: Math.random() * 100,
+    duration: 35 + Math.random() * 55,
+    delay: Math.random() * -80,
+    fadeDuration: 10 + Math.random() * 8,
+    depth: 0.3 + Math.random() * 1.5,
+  }));
+}
+
 export function CodeRain() {
+  const { focused } = useFocusedModule();
   const [lines, setLines] = useState<Line[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const targetRef = useRef({ x: 0, y: 0 });
   const currentRef = useRef({ x: 0, y: 0 });
 
+  // Re-génère les lignes quand le module focused change
   useEffect(() => {
-    // Génère 18 lignes, depth variable (0.3 = profondeur, 1.8 = premier plan)
-    const generated: Line[] = Array.from({ length: 18 }).map((_, i) => ({
-      id: i,
-      text: SNIPPETS[Math.floor(Math.random() * SNIPPETS.length)] ?? "",
-      top: Math.random() * 100,
-      duration: 35 + Math.random() * 55,
-      delay: Math.random() * -80,
-      fadeDuration: 10 + Math.random() * 8,
-      depth: 0.3 + Math.random() * 1.5,
-    }));
-    setLines(generated);
-  }, []);
+    const snippets = getSnippetsForModule(focused);
+    setLines(generateLines(snippets));
+  }, [focused]);
 
   // Parallax au curseur — lerp pour mouvement fluide
   useEffect(() => {
@@ -108,7 +84,7 @@ export function CodeRain() {
     <div ref={containerRef} className="ph-code-bg" aria-hidden>
       {lines.map((line) => (
         <div
-          key={line.id}
+          key={`${focused ?? "default"}-${line.id}`}
           className="ph-code-bg-line"
           style={
             {

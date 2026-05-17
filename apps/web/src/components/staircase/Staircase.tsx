@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { useFocusedModule } from "../ambient/FocusedModuleContext";
 
 type Module = {
   id: string;
@@ -35,11 +36,15 @@ function StationStamp({ status }: { status: Module["status"] }) {
 }
 
 function Station({ mod }: { mod: Module }) {
+  const { setHovered } = useFocusedModule();
   const isLocked = mod.status === "locked";
   const isActive = mod.status === "active";
   const isDone = mod.status === "completed";
 
   const ref = `STN-${String(mod.moduleNumber).padStart(2, "0")}`;
+
+  const handleEnter = () => setHovered(mod.moduleNumber);
+  const handleLeave = () => setHovered(null);
 
   const accentBorder = isActive
     ? "border-l-4 border-l-[var(--color-accent)]"
@@ -101,10 +106,25 @@ function Station({ mod }: { mod: Module }) {
   );
 
   if (isLocked) {
-    return <div className="group block w-full">{panel}</div>;
+    return (
+      <div
+        className="group block w-full"
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+      >
+        {panel}
+      </div>
+    );
   }
   return (
-    <Link href={`/modules/${mod.id}`} className="group block w-full">
+    <Link
+      href={`/modules/${mod.id}`}
+      className="group block w-full"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      onFocus={handleEnter}
+      onBlur={handleLeave}
+    >
       {panel}
     </Link>
   );
