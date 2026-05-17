@@ -1,6 +1,10 @@
-// Client-side API helper. Server components fetch directly via `apiFetch`.
-
-const API_BASE = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3031";
+// Client-side: paths relatifs → Next rewrite /api/* proxy vers l'API
+// (cookie reste sur poterfield.online → envoyé même origin)
+// Server-side: URL absolue requise (pas de host pour les paths relatifs en SSR)
+const API_BASE =
+  typeof window === "undefined"
+    ? (process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3031")
+    : "";
 
 export class ApiError extends Error {
   constructor(
