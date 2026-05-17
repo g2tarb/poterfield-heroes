@@ -1,0 +1,103 @@
+# =============================================================================
+# Porterfield Heroes — production stack (self-hosted, Coolify-compatible)
+# Lance : docker compose -f docker-compose.prod.yml --env-file .env.production up -d
+# =============================================================================
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: ph_postgres_prod
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ph}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?required}
+      POSTGRES_DB: ${POSTGRES_DB:-porterfield}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ph} -d ${POSTGRES_DB:-porterfield}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    # Pas de port exposé en prod : seul l'API y accède via réseau interne
+    networks:
+      - ph_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: ph_redis_prod
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks:
+      - ph_net
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: ph_api_prod
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      API_HOST: 0.0.0.0
+      API_PORT: 3031
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ph}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-porterfield}
+      REDIS_URL: redis://redis:6379
+      SESSION_SECRET: ${SESSION_SECRET:?required}
+      ACCESS_PASSWORD: ${ACCESS_PASSWORD:?required}
+      CORS_ORIGIN: ${CORS_ORIGIN:?required}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?required}
+      VOYAGE_API_KEY: ${VOYAGE_API_KEY}
+      MONTHLY_AI_BUDGET_CENTS: ${MONTHLY_AI_BUDGET_CENTS:-5000}
+      GITHUB_APP_ID: ${GITHUB_APP_ID:-}
+      GITHUB_APP_PRIVATE_KEY: ${GITHUB_APP_PRIVATE_KEY:-}
+      GITHUB_WEBHOOK_SECRET: ${GITHUB_WEBHOOK_SECRET:-}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+    networks:
+      - ph_net
+    # Exposé seulement si pas de reverse proxy. Sinon, retirer "ports".
+    ports:
+      - "3031:3031"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${PUBLIC_API_URL:-http://localhost:3031}
+    container_name: ph_web_prod
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: production
+      PORT: 3030
+      HOSTNAME: 0.0.0.0
+      NEXT_PUBLIC_API_URL: ${PUBLIC_API_URL:-http://localhost:3031}
+    networks:
+      - ph_net
+    ports:
+      - "3030:3030"
+
+volumes:
+  pg_data:
+  redis_data:
+
+networks:
+  ph_net:
+    driver: bridge

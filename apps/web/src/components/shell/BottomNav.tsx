@@ -28,16 +28,25 @@ export function BottomNav() {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className={`flex flex-col items-center gap-1 py-2.5 text-[10px] font-mono uppercase tracking-wider transition ${
+                className={`relative flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-mono uppercase tracking-wider transition active:scale-90 ${
                   active
                     ? "text-[var(--color-accent)]"
                     : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-primary)]"
                 }`}
               >
-                <span className="text-xl" aria-hidden>
+                <span
+                  className={`text-xl transition-transform ${active ? "scale-110" : ""}`}
+                  aria-hidden
+                >
                   {item.icon}
                 </span>
                 <span>{item.label}</span>
+                {active && (
+                  <span
+                    className="absolute top-0 h-0.5 w-8 rounded-full bg-[var(--color-accent)]"
+                    aria-hidden
+                  />
+                )}
               </Link>
             </li>
           );

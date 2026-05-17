@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { apiFetch, ApiError } from "@/lib/api";
+import { ModuleStartButton } from "@/components/module/ModuleStartButton";
 
 type ModuleDetail = {
   module: {
@@ -66,14 +67,31 @@ function formatDuration(seconds: number | null): string | null {
   return h > 0 ? `${h}h${String(m).padStart(2, "0")}` : `${m}min`;
 }
 
-function exerciseKindLabel(kind: ModuleDetail["exercises"][number]["kind"]) {
-  return {
-    quiz_activation: "Quiz d'activation",
-    quiz_verification: "Quiz de vérification",
-    code_exercise: "Exercice code",
-    project_validation: "Projet de validation",
-  }[kind];
-}
+const EXERCISE_META: Record<
+  ModuleDetail["exercises"][number]["kind"],
+  { label: string; icon: string; color: string }
+> = {
+  quiz_activation: {
+    label: "Quiz d'activation",
+    icon: "🎯",
+    color: "text-[var(--color-fg-secondary)]",
+  },
+  quiz_verification: {
+    label: "Quiz de vérification",
+    icon: "✅",
+    color: "text-[var(--color-success)]",
+  },
+  code_exercise: {
+    label: "Exercice code",
+    icon: "💻",
+    color: "text-[var(--color-accent)]",
+  },
+  project_validation: {
+    label: "Projet de validation",
+    icon: "🎓",
+    color: "text-[var(--color-accent)]",
+  },
+};
 
 export default async function ModulePage({
   params,
@@ -84,195 +102,284 @@ export default async function ModulePage({
   const data = await getModule(id);
   if (!data) notFound();
 
-  const { module: mod, skills, videos, exercises } = data;
+  const { module: mod, skills, videos, exercises, progress } = data;
   const primaryVideo = videos.find((v) => v.isPrimary === 1);
   const additionalVideos = videos.filter((v) => v.isPrimary === 0);
+  const status = progress?.status ?? "locked";
 
   return (
     <main className="min-h-svh px-4 pb-8 pt-4 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
-      <nav className="mb-8 font-mono text-xs">
+      <nav className="mb-6 font-mono text-xs">
         <Link
           href="/"
           className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-primary)]"
         >
-          ← Tous les modules
+          ← Atelier
         </Link>
       </nav>
 
-      <header className="mb-12 max-w-3xl">
-        <p className="font-mono text-sm uppercase tracking-widest text-[var(--color-fg-muted)]">
-          M{String(mod.moduleNumber).padStart(2, "0")} · Phase {mod.phase} ·{" "}
-          {mod.estimatedHours}h
-        </p>
-        <h1 className="mt-3 text-4xl font-semibold leading-tight md:text-5xl">
-          {mod.title}
-        </h1>
-      </header>
-
-      <section className="mb-12 max-w-3xl">
-        <h2 className="mb-3 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
-          Pourquoi ce module
-        </h2>
-        <p className="whitespace-pre-line text-base leading-relaxed text-[var(--color-fg-primary)]">
-          {mod.pourquoi}
-        </p>
-      </section>
-
-      <section className="mb-12">
-        <h2 className="mb-4 text-2xl font-semibold">
-          Compétences à valider ({skills.length})
-        </h2>
-        <ul className="grid grid-cols-1 gap-2 md:grid-cols-2">
-          {skills.map((s, i) => (
-            <li
-              key={s.id}
-              className="flex gap-3 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-3"
-            >
-              <span className="shrink-0 font-mono text-xs text-[var(--color-fg-muted)]">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="text-sm leading-snug">{s.label}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {primaryVideo && (
-        <section className="mb-12">
-          <h2 className="mb-1 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
-            Vidéo principale
-          </h2>
-          <h3 className="mb-1 text-2xl font-semibold">{primaryVideo.title}</h3>
-          {primaryVideo.creator && (
-            <p className="mb-4 text-sm text-[var(--color-fg-secondary)]">
-              {primaryVideo.creator}{" "}
-              {primaryVideo.durationSeconds && (
-                <span className="font-mono text-[var(--color-fg-muted)]">
-                  · {formatDuration(primaryVideo.durationSeconds)}
-                </span>
-              )}
+      {/* Layout 2 colonnes desktop, 1 col mobile */}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px] lg:gap-12">
+        {/* === COLONNE PRINCIPALE === */}
+        <article className="min-w-0 space-y-12">
+          <header>
+            <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
+              M{String(mod.moduleNumber).padStart(2, "0")} · Phase {mod.phase}
             </p>
-          )}
-          {primaryVideo.youtubeId && (
-            <>
-              <div className="aspect-video w-full max-w-3xl overflow-hidden rounded-lg border border-[var(--color-border-subtle)] bg-black">
-                <iframe
-                  src={`https://www.youtube.com/embed/${primaryVideo.youtubeId}`}
-                  title={primaryVideo.title}
-                  allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
-                  allowFullScreen
-                  className="h-full w-full"
-                />
-              </div>
-              <a
-                href={`https://www.youtube.com/watch?v=${primaryVideo.youtubeId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 inline-block font-mono text-xs text-[var(--color-fg-muted)] hover:text-[var(--color-accent)]"
-              >
-                Ouvrir sur YouTube ↗
-              </a>
-            </>
-          )}
-          {primaryVideo.whyThisOne && (
-            <p className="mt-4 max-w-3xl text-sm italic text-[var(--color-fg-secondary)]">
-              {primaryVideo.whyThisOne}
-            </p>
-          )}
-        </section>
-      )}
+            <h1 className="mt-3 text-3xl font-semibold leading-tight md:text-5xl">
+              {mod.title}
+            </h1>
+            {mod.subtitle && (
+              <p className="mt-4 text-lg text-[var(--color-fg-secondary)] lg:hidden">
+                {mod.subtitle}
+              </p>
+            )}
+          </header>
 
-      {additionalVideos.length > 0 && (
-        <section className="mb-12">
-          <h2 className="mb-4 text-2xl font-semibold">
-            Vidéos d&apos;approfondissement
-          </h2>
-          <ul className="space-y-3">
-            {additionalVideos.map((v) => {
-              const href = v.youtubeId
-                ? `https://www.youtube.com/watch?v=${v.youtubeId}`
-                : null;
-              const Inner = (
+          {/* Pourquoi */}
+          <section>
+            <h2 className="mb-3 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
+              Pourquoi
+            </h2>
+            <blockquote className="border-l-2 border-[var(--color-accent)] pl-4">
+              <p className="whitespace-pre-line text-base leading-relaxed">
+                {mod.pourquoi}
+              </p>
+            </blockquote>
+          </section>
+
+          {/* Vidéo principale */}
+          {primaryVideo && (
+            <section>
+              <h2 className="mb-4 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
+                Vidéo principale · {primaryVideo.creator}
+                {primaryVideo.durationSeconds && (
+                  <span> · {formatDuration(primaryVideo.durationSeconds)}</span>
+                )}
+              </h2>
+              <h3 className="mb-3 text-xl font-semibold">{primaryVideo.title}</h3>
+              {primaryVideo.youtubeId && (
                 <>
-                  <div className="flex items-baseline justify-between gap-3">
-                    <h3 className="font-semibold">
-                      {v.title}
-                      {href && (
-                        <span className="ml-2 font-mono text-xs font-normal text-[var(--color-accent)]">
-                          ↗
-                        </span>
-                      )}
-                    </h3>
-                    {v.durationSeconds && (
-                      <span className="shrink-0 font-mono text-xs text-[var(--color-fg-muted)]">
-                        {formatDuration(v.durationSeconds)}
-                      </span>
-                    )}
+                  <div className="aspect-video w-full overflow-hidden rounded-xl border border-[var(--color-border-subtle)] bg-black">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${primaryVideo.youtubeId}`}
+                      title={primaryVideo.title}
+                      allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
+                      allowFullScreen
+                      className="h-full w-full"
+                    />
                   </div>
-                  {v.creator && (
-                    <p className="mt-1 text-sm text-[var(--color-fg-secondary)]">
-                      {v.creator}
-                    </p>
-                  )}
-                  {v.whyThisOne && (
-                    <p className="mt-2 text-sm italic text-[var(--color-fg-secondary)]">
-                      {v.whyThisOne}
-                    </p>
-                  )}
+                  <a
+                    href={`https://www.youtube.com/watch?v=${primaryVideo.youtubeId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-block font-mono text-xs text-[var(--color-fg-muted)] hover:text-[var(--color-accent)]"
+                  >
+                    Ouvrir sur YouTube ↗
+                  </a>
                 </>
-              );
-              return (
-                <li key={v.id}>
-                  {href ? (
-                    <a
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4 transition hover:border-[var(--color-accent)] hover:bg-[var(--color-bg-high)]"
-                    >
-                      {Inner}
-                    </a>
-                  ) : (
-                    <div className="rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
-                      {Inner}
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )}
-
-      {exercises.length > 0 && (
-        <section className="mb-12">
-          <h2 className="mb-4 text-2xl font-semibold">
-            Étapes du module ({exercises.length})
-          </h2>
-          <ol className="space-y-3">
-            {exercises.map((e, i) => (
-              <li
-                key={e.id}
-                className="rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4"
-              >
-                <div className="flex items-baseline justify-between gap-3">
-                  <p className="font-mono text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
-                    Étape {i + 1} · {exerciseKindLabel(e.kind)}
-                    {e.estimatedMinutes && (
-                      <span> · ~{e.estimatedMinutes} min</span>
-                    )}
-                  </p>
-                </div>
-                <h3 className="mt-2 text-lg font-semibold">{e.title}</h3>
-                <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-[var(--color-fg-secondary)]">
-                  {e.statement.split("\n").slice(0, 3).join("\n")}
-                  {e.statement.split("\n").length > 3 && "…"}
+              )}
+              {primaryVideo.whyThisOne && (
+                <p className="mt-4 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-3 text-sm italic text-[var(--color-fg-secondary)]">
+                  💡 {primaryVideo.whyThisOne}
                 </p>
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
+              )}
+            </section>
+          )}
+
+          {/* Vidéos approfondissement */}
+          {additionalVideos.length > 0 && (
+            <section>
+              <h2 className="mb-4 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
+                Pour approfondir
+              </h2>
+              <ul className="space-y-3">
+                {additionalVideos.map((v) => {
+                  const href = v.youtubeId
+                    ? `https://www.youtube.com/watch?v=${v.youtubeId}`
+                    : null;
+                  const Inner = (
+                    <>
+                      <div className="flex items-baseline justify-between gap-3">
+                        <h3 className="font-semibold">
+                          {v.title}
+                          {href && (
+                            <span className="ml-2 font-mono text-xs font-normal text-[var(--color-accent)]">
+                              ↗
+                            </span>
+                          )}
+                        </h3>
+                        {v.durationSeconds && (
+                          <span className="shrink-0 font-mono text-xs text-[var(--color-fg-muted)]">
+                            {formatDuration(v.durationSeconds)}
+                          </span>
+                        )}
+                      </div>
+                      {v.creator && (
+                        <p className="mt-1 text-sm text-[var(--color-fg-secondary)]">
+                          {v.creator}
+                        </p>
+                      )}
+                      {v.whyThisOne && (
+                        <p className="mt-2 text-sm italic text-[var(--color-fg-secondary)]">
+                          {v.whyThisOne}
+                        </p>
+                      )}
+                    </>
+                  );
+                  return (
+                    <li key={v.id}>
+                      {href ? (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4 transition hover:border-[var(--color-accent)] hover:bg-[var(--color-bg-high)]"
+                        >
+                          {Inner}
+                        </a>
+                      ) : (
+                        <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
+                          {Inner}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          )}
+
+          {/* Étapes */}
+          {exercises.length > 0 && (
+            <section>
+              <h2 className="mb-4 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
+                Étapes du parcours ({exercises.length})
+              </h2>
+              <ol className="space-y-3">
+                {exercises.map((e, i) => {
+                  const meta = EXERCISE_META[e.kind];
+                  return (
+                    <li
+                      key={e.id}
+                      className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4"
+                    >
+                      <div className="flex items-baseline gap-3">
+                        <span
+                          className="shrink-0 text-xl leading-none"
+                          aria-hidden
+                        >
+                          {meta.icon}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p
+                            className={`font-mono text-xs uppercase tracking-wider ${meta.color}`}
+                          >
+                            Étape {i + 1} · {meta.label}
+                            {e.estimatedMinutes && (
+                              <span className="text-[var(--color-fg-muted)]">
+                                {" "}
+                                · ~{e.estimatedMinutes} min
+                              </span>
+                            )}
+                          </p>
+                          <h3 className="mt-1.5 text-base font-semibold">
+                            {e.title}
+                          </h3>
+                          <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-[var(--color-fg-secondary)]">
+                            {e.statement.split("\n").slice(0, 3).join("\n")}
+                            {e.statement.split("\n").length > 3 && "…"}
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
+            </section>
+          )}
+        </article>
+
+        {/* === COLONNE LATÉRALE (desktop sticky) === */}
+        <aside className="space-y-5 lg:sticky lg:top-6 lg:self-start">
+          {/* CTA */}
+          <ModuleStartButton moduleId={mod.id} initialStatus={status} />
+
+          {/* Méta */}
+          <section className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
+            <h3 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
+              Informations
+            </h3>
+            <dl className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <dt className="text-[var(--color-fg-muted)]">Durée</dt>
+                <dd className="font-mono tabular-nums">
+                  {mod.estimatedHours}h
+                  {mod.estimatedWeeks && (
+                    <span className="text-[var(--color-fg-muted)]">
+                      {" "}
+                      · ~{mod.estimatedWeeks}sem
+                    </span>
+                  )}
+                </dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-[var(--color-fg-muted)]">Phase</dt>
+                <dd className="font-mono tabular-nums">{mod.phase} / 8</dd>
+              </div>
+              {mod.prerequisites && (
+                <div>
+                  <dt className="text-[var(--color-fg-muted)]">Prérequis</dt>
+                  <dd className="mt-1 text-xs text-[var(--color-fg-secondary)]">
+                    {mod.prerequisites}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </section>
+
+          {/* Objectifs */}
+          {mod.objectives.length > 0 && (
+            <section className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
+              <h3 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
+                Tu sauras ({mod.objectives.length})
+              </h3>
+              <ul className="space-y-2 text-xs">
+                {mod.objectives.map((obj, i) => (
+                  <li key={i} className="flex gap-2 leading-snug">
+                    <span
+                      className="shrink-0 text-[var(--color-accent)]"
+                      aria-hidden
+                    >
+                      ◇
+                    </span>
+                    <span>{obj}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Compétences */}
+          {skills.length > 0 && (
+            <section className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
+              <h3 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
+                Compétences à valider ({skills.length})
+              </h3>
+              <ul className="space-y-1.5 text-xs">
+                {skills.map((s, i) => (
+                  <li key={s.id} className="flex gap-2 leading-snug">
+                    <span className="shrink-0 font-mono tabular-nums text-[var(--color-fg-muted)]">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span>{s.label}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </aside>
+      </div>
     </main>
   );
 }

@@ -12,8 +12,10 @@ out/
 
 .env
 .env.local
+.env.production
 .env.*.local
 !.env.example
+!.env.production.example
 
 coverage/
 .nyc_output/
@@ -24,3 +26,7 @@ coverage/
 !.vscode/settings.json
 
 drizzle/meta/_journal.json.bak
+
+# Serwist generated service worker (built at next build)
+apps/web/public/sw.js
+apps/web/public/swe-worker-*.js

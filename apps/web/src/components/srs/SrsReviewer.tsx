@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { apiFetch } from "@/lib/api";
 import { cn } from "@/lib/cn";
+import { Markdown } from "@/components/coach/Markdown";
+import Link from "next/link";
 
 type Card = {
   id: string;
@@ -31,40 +33,36 @@ const RATING_BUTTONS: Array<{
   rating: 1 | 2 | 3 | 4;
   label: string;
   key: string;
-  desc: string;
-  className: string;
+  hint: string;
+  color: string;
 }> = [
   {
     rating: 1,
-    label: "Again",
+    label: "Raté",
     key: "1",
-    desc: "Raté, à revoir vite",
-    className:
-      "border-[var(--color-danger)] text-[var(--color-danger)] hover:bg-[var(--color-bg-high)]",
+    hint: "<10 min",
+    color: "border-[var(--color-danger)] text-[var(--color-danger)]",
   },
   {
     rating: 2,
-    label: "Hard",
+    label: "Difficile",
     key: "2",
-    desc: "Difficile, allonger peu",
-    className:
-      "border-[var(--color-warning)] text-[var(--color-warning)] hover:bg-[var(--color-bg-high)]",
+    hint: "demain",
+    color: "border-[var(--color-warning)] text-[var(--color-warning)]",
   },
   {
     rating: 3,
-    label: "Good",
+    label: "Bon",
     key: "3",
-    desc: "Bon, intervalle normal",
-    className:
-      "border-[var(--color-fg-primary)] text-[var(--color-fg-primary)] hover:bg-[var(--color-bg-high)]",
+    hint: "3-5j",
+    color: "border-[var(--color-fg-primary)] text-[var(--color-fg-primary)]",
   },
   {
     rating: 4,
-    label: "Easy",
+    label: "Facile",
     key: "4",
-    desc: "Facile, allonger fort",
-    className:
-      "border-[var(--color-success)] text-[var(--color-success)] hover:bg-[var(--color-bg-high)]",
+    hint: "1sem+",
+    color: "border-[var(--color-success)] text-[var(--color-success)]",
   },
 ];
 
@@ -75,6 +73,14 @@ function formatInterval(days: number): string {
   if (days < 365) return `${Math.round(days / 30)}mois`;
   return `${Math.round(days / 365)}an`;
 }
+
+const STATE_LABELS: Record<Card["state"], string> = {
+  new: "nouveau",
+  learning: "apprentissage",
+  review: "révision",
+  mature: "mature",
+  suspended: "suspendu",
+};
 
 export function SrsReviewer() {
   const [cards, setCards] = useState<Card[] | null>(null);
@@ -93,7 +99,6 @@ export function SrsReviewer() {
           "/api/srs/due?limit=50&newPerSession=10",
         );
         if (cancelled) return;
-        // New cards first to introduce them, then due cards
         setCards([...data.newCards, ...data.dueCards]);
       } catch (e) {
         if (!cancelled) setError((e as Error).message);
@@ -132,7 +137,12 @@ export function SrsReviewer() {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
       if (!revealed && (e.key === " " || e.key === "Enter")) {
         e.preventDefault();
         setRevealed(true);
@@ -148,14 +158,12 @@ export function SrsReviewer() {
     return () => window.removeEventListener("keydown", onKey);
   }, [revealed, submit]);
 
-  const progressLabel = useMemo(() => {
-    if (!cards) return "Chargement…";
-    return `${Math.min(index, cards.length)} / ${cards.length}`;
-  }, [cards, index]);
+  const total = cards?.length ?? 0;
+  const progressPct = total > 0 ? Math.round((index / total) * 100) : 0;
 
   if (error) {
     return (
-      <div className="rounded-lg border border-[var(--color-danger)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-danger)]">
+      <div className="rounded-xl border border-[var(--color-danger)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-danger)]">
         {error}
       </div>
     );
@@ -163,37 +171,60 @@ export function SrsReviewer() {
 
   if (!cards) {
     return (
-      <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-5 text-[var(--color-fg-secondary)]">
-        Chargement des cartes…
+      <div className="mx-auto max-w-2xl animate-pulse">
+        <div className="mb-6 h-1.5 rounded-full bg-[var(--color-bg-elevated)]" />
+        <div className="h-64 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]" />
+        <div className="mt-6 h-14 rounded-xl bg-[var(--color-bg-elevated)]" />
       </div>
     );
   }
 
   if (cards.length === 0) {
     return (
-      <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-8 text-center">
-        <p className="text-xl font-semibold">Aucune carte à réviser.</p>
-        <p className="mt-2 text-[var(--color-fg-secondary)]">
-          Revoir demain. Pour l&apos;instant, lance un module.
+      <div className="mx-auto max-w-md rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-8 text-center">
+        <p className="text-4xl" aria-hidden>
+          ✅
         </p>
+        <p className="mt-4 text-xl font-semibold">Aucune carte à réviser.</p>
+        <p className="mt-2 text-sm text-[var(--color-fg-secondary)]">
+          Rien n&apos;arrive à échéance pour l&apos;instant. Reviens demain ou
+          continue un module.
+        </p>
+        <Link
+          href="/"
+          className="mt-6 inline-block rounded-lg bg-[var(--color-accent)] px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--color-accent-fg)]"
+        >
+          Retour à l&apos;atelier
+        </Link>
       </div>
     );
   }
 
   if (index >= cards.length) {
     return (
-      <div className="rounded-lg border border-[var(--color-success)] bg-[var(--color-bg-elevated)] p-8 text-center">
-        <p className="text-xl font-semibold">Session terminée.</p>
-        <p className="mt-2 text-[var(--color-fg-secondary)]">
-          {cards.length} cartes traitées. Reviens demain ou continue un module.
+      <div className="mx-auto max-w-md rounded-2xl border border-[var(--color-success)] bg-[var(--color-bg-elevated)] p-8 text-center">
+        <p className="text-4xl" aria-hidden>
+          🎉
+        </p>
+        <p className="mt-4 text-xl font-semibold">Session terminée.</p>
+        <p className="mt-2 text-sm text-[var(--color-fg-secondary)]">
+          {cards.length} carte{cards.length > 1 ? "s" : ""} traitée
+          {cards.length > 1 ? "s" : ""}. Reviens demain ou continue un module.
         </p>
         {lastResult && (
           <p className="mt-4 font-mono text-xs text-[var(--color-fg-muted)]">
-            Dernière carte : prochain rappel dans{" "}
-            {formatInterval(lastResult.intervalDays)} · état{" "}
-            {lastResult.state}
+            Dernière carte → prochain rappel dans{" "}
+            <span className="text-[var(--color-fg-primary)]">
+              {formatInterval(lastResult.intervalDays)}
+            </span>
           </p>
         )}
+        <Link
+          href="/"
+          className="mt-6 inline-block rounded-lg bg-[var(--color-accent)] px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--color-accent-fg)]"
+        >
+          Retour à l&apos;atelier
+        </Link>
       </div>
     );
   }
@@ -202,67 +233,100 @@ export function SrsReviewer() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <header className="mb-6 flex items-baseline justify-between">
-        <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
-          {progressLabel} · {current.state}
-        </p>
-        <p className="font-mono text-xs text-[var(--color-fg-muted)]">
-          {current.moduleTitle}
-        </p>
+      {/* Progress bar + header sticky */}
+      <header className="mb-6 space-y-3">
+        <div className="flex items-baseline justify-between font-mono text-xs">
+          <span className="text-[var(--color-fg-muted)]">
+            <span className="text-[var(--color-fg-primary)] tabular-nums">
+              {index + 1}
+            </span>
+            <span> / {total}</span>
+            <span className="ml-3 uppercase tracking-wider">
+              {STATE_LABELS[current.state]}
+            </span>
+          </span>
+          <span className="truncate text-[var(--color-fg-muted)]">
+            {current.moduleTitle}
+          </span>
+        </div>
+        <div className="h-1 overflow-hidden rounded-full bg-[var(--color-bg-elevated)]">
+          <div
+            className="h-full rounded-full bg-[var(--color-accent)] transition-all duration-300"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
       </header>
 
-      <article className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-8">
-        <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
+      {/* Card */}
+      <article
+        className={cn(
+          "rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-6 transition-all duration-300 sm:p-8",
+          revealed && "border-[var(--color-accent)]",
+        )}
+      >
+        <p className="mb-4 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
           {current.skillLabel}
         </p>
-        <div className="whitespace-pre-wrap text-xl leading-relaxed">
-          {current.front}
+        <div className="text-xl leading-relaxed">
+          <Markdown source={current.front} />
         </div>
 
         {revealed && (
-          <>
+          <div className="ph-fade-up">
             <hr className="my-6 border-[var(--color-border-subtle)]" />
-            <div className="whitespace-pre-wrap text-base leading-relaxed text-[var(--color-fg-primary)]">
-              {current.back}
+            <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-success)]">
+              Réponse
+            </p>
+            <div className="text-base leading-relaxed">
+              <Markdown source={current.back} />
             </div>
-          </>
+          </div>
         )}
       </article>
 
+      {/* Actions */}
       <div className="mt-6">
         {!revealed ? (
           <button
             type="button"
             onClick={() => setRevealed(true)}
-            className="w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg-high)] py-3 font-mono text-sm uppercase tracking-wider hover:border-[var(--color-accent)]"
+            className="w-full rounded-xl border border-[var(--color-border-strong)] bg-[var(--color-bg-high)] py-4 font-mono text-sm font-semibold uppercase tracking-wider transition active:scale-[0.98] hover:border-[var(--color-accent)] hover:bg-[var(--color-bg-elevated)]"
           >
-            Voir la réponse · espace
+            Voir la réponse
+            <span className="ml-2 hidden font-mono text-xs opacity-60 sm:inline">
+              [espace]
+            </span>
           </button>
         ) : (
-          <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-            {RATING_BUTTONS.map((b) => (
-              <button
-                key={b.rating}
-                type="button"
-                onClick={() => submit(b.rating)}
-                disabled={submitting}
-                className={cn(
-                  "rounded-lg border bg-[var(--color-bg-elevated)] px-3 py-3 text-left transition disabled:cursor-not-allowed disabled:opacity-40",
-                  b.className,
-                )}
-              >
-                <div className="flex items-baseline justify-between">
-                  <span className="font-semibold">{b.label}</span>
-                  <span className="font-mono text-[10px] opacity-60">
-                    [{b.key}]
-                  </span>
-                </div>
-                <p className="mt-1 text-[10px] text-[var(--color-fg-muted)]">
-                  {b.desc}
-                </p>
-              </button>
-            ))}
-          </div>
+          <>
+            <p className="mb-3 text-center font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
+              Comment ça s&apos;est passé ?
+            </p>
+            <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+              {RATING_BUTTONS.map((b) => (
+                <button
+                  key={b.rating}
+                  type="button"
+                  onClick={() => submit(b.rating)}
+                  disabled={submitting}
+                  className={cn(
+                    "group rounded-xl border-2 bg-[var(--color-bg-elevated)] px-3 py-4 transition active:scale-[0.96] hover:bg-[var(--color-bg-high)] disabled:cursor-not-allowed disabled:opacity-40",
+                    b.color,
+                  )}
+                >
+                  <div className="flex items-baseline justify-center gap-2">
+                    <span className="font-semibold">{b.label}</span>
+                    <span className="hidden font-mono text-[10px] opacity-50 sm:inline">
+                      {b.key}
+                    </span>
+                  </div>
+                  <p className="mt-1 font-mono text-[10px] text-[var(--color-fg-muted)]">
+                    +{b.hint}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>

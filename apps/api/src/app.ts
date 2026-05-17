@@ -1,6 +1,7 @@
 import Fastify, { type FastifyInstance } from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
+import rateLimit from "@fastify/rate-limit";
 import sensible from "@fastify/sensible";
 import {
   serializerCompiler,
@@ -55,9 +56,20 @@ export async function buildApp(): Promise<FastifyInstance> {
     origin: env.CORS_ORIGIN.split(",").map((s) => s.trim()),
     credentials: true,
   });
+  // L'API ne sert pas de HTML donc CSP serait inutile dessus, mais on garde
+  // les autres protections (HSTS, frame, content-type sniffing) actives.
   await app.register(helmet, {
-    contentSecurityPolicy: false, // CSP géré côté Next.js
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" }, // permet le fetch CORS depuis le web
   });
+
+  // Rate limit global doux + override strict sur /api/auth/login dans le plugin auth
+  await app.register(rateLimit, {
+    global: false, // on n'applique pas globalement, juste sur les routes sensibles
+    max: 100,
+    timeWindow: "1 minute",
+  });
+
   await app.register(dbPlugin);
   await app.register(authPlugin);
 

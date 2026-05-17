@@ -58,7 +58,18 @@ export default fp(
     );
 
     // === Routes ===
-    app.post<{ Body: { password: string } }>("/api/auth/login", async (req, reply) => {
+    // Rate limit strict sur login : 5 tentatives / 5 min / IP. Au-delà, 429.
+    app.post<{ Body: { password: string } }>(
+      "/api/auth/login",
+      {
+        config: {
+          rateLimit: {
+            max: 5,
+            timeWindow: "5 minutes",
+          },
+        },
+      },
+      async (req, reply) => {
       const { password } = (req.body ?? {}) as { password?: string };
       if (typeof password !== "string" || password.length < 1) {
         return reply.code(400).send({

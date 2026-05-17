@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 
 type Module = {
@@ -29,7 +30,7 @@ function StepCard({ mod }: { mod: Module }) {
   const isDone = mod.status === "completed";
 
   const borderClass = isActive
-    ? "border-[var(--color-accent)] shadow-[0_0_24px_-8px_var(--color-accent)]"
+    ? "border-[var(--color-accent)] ph-pulse-glow"
     : isDone
       ? "border-[var(--color-success)]"
       : "border-[var(--color-border-subtle)]";
@@ -99,6 +100,20 @@ export function Staircase({ modules }: { modules: Module[] }) {
     (a, b) => a.moduleNumber - b.moduleNumber,
   );
 
+  const activeRef = useRef<HTMLLIElement | null>(null);
+
+  useEffect(() => {
+    if (!activeRef.current) return;
+    // Petit délai pour laisser la stagger animation finir avant le scroll
+    const t = setTimeout(() => {
+      activeRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 600);
+    return () => clearTimeout(t);
+  }, [sorted.length]);
+
   const items: Array<
     | { kind: "phase-start"; phase: number }
     | { kind: "module"; mod: Module; index: number }
@@ -137,10 +152,16 @@ export function Staircase({ modules }: { modules: Module[] }) {
           // Mobile = toujours centré. Desktop = zigzag.
           const desktopAlign =
             item.index % 2 === 0 ? "lg:justify-start" : "lg:justify-end";
+          // Stagger animation : chaque card apparaît avec un délai croissant
+          // (capé à 12 pour éviter d'attendre 3s pour la dernière)
+          const delayMs = Math.min(item.index, 12) * 40;
+          const isActive = item.mod.status === "active";
           return (
             <li
               key={item.mod.id}
-              className={`relative flex justify-center ${desktopAlign}`}
+              ref={isActive ? activeRef : undefined}
+              className={`ph-fade-up relative flex scroll-mt-24 justify-center ${desktopAlign}`}
+              style={{ animationDelay: `${delayMs}ms` }}
             >
               {/* Connecteur ligne-vers-carte (desktop only) */}
               <div

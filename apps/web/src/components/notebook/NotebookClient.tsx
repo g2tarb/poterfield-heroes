@@ -20,11 +20,26 @@ type Entry = {
 
 type Module = { id: string; moduleNumber: number; title: string };
 
-const SOURCE_LABEL = {
-  coach: "Coach",
-  user: "Libre",
-  system: "Système",
+const SOURCE_META = {
+  coach: { label: "Coach", icon: "💬", color: "text-[var(--color-accent)]" },
+  user: { label: "Libre", icon: "✏️", color: "text-[var(--color-fg-muted)]" },
+  system: { label: "Système", icon: "⚙️", color: "text-[var(--color-fg-muted)]" },
 } as const;
+
+function relativeDate(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "à l'instant";
+  if (m < 60) return `il y a ${m}min`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `il y a ${h}h`;
+  const d = Math.floor(h / 24);
+  if (d < 7) return `il y a ${d}j`;
+  return new Date(iso).toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "short",
+  });
+}
 
 export function NotebookClient() {
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -38,15 +53,18 @@ export function NotebookClient() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [moduleFilter, setModuleFilter] = useState<string>("all");
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const fetchEntries = useCallback(async () => {
     try {
-      const qs =
-        moduleFilter !== "all" ? `?moduleId=${moduleFilter}` : "";
+      const qs = moduleFilter !== "all" ? `?moduleId=${moduleFilter}` : "";
       const rows = await apiFetch<Entry[]>(`/api/notebook${qs}`);
       setEntries(rows);
     } catch (e) {
       setError((e as Error).message);
+    } finally {
+      setLoading(false);
     }
   }, [moduleFilter]);
 
@@ -60,7 +78,7 @@ export function NotebookClient() {
         const rows = await apiFetch<Module[]>("/api/modules");
         setModules(rows);
       } catch {
-        // ignore
+        /* ignore */
       }
     })();
   }, []);
@@ -73,7 +91,6 @@ export function NotebookClient() {
     }
   }, [selectedId, selected]);
 
-  // Debounced auto-save
   useEffect(() => {
     if (!selected) return;
     if (
@@ -112,7 +129,7 @@ export function NotebookClient() {
         body: JSON.stringify({
           source: "user",
           title: "Nouvelle note",
-          contentMarkdown: "Commence à écrire ici…",
+          contentMarkdown: "",
           moduleId: moduleFilter !== "all" ? moduleFilter : null,
         }),
       });
@@ -136,17 +153,42 @@ export function NotebookClient() {
     }
   }
 
+  // Filter by search query
+  const filteredEntries = query.trim()
+    ? entries.filter((e) =>
+        (e.title + " " + e.contentMarkdown)
+          .toLowerCase()
+          .includes(query.toLowerCase()),
+      )
+    : entries;
+
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-[280px_1fr] md:gap-6">
+    <div
+      className={cn(
+        "grid grid-cols-1 gap-4 md:grid-cols-[300px_1fr] md:gap-6",
+        // Sur mobile : si une note est ouverte, on cache la liste
+        selected && "max-md:[&>aside]:hidden",
+      )}
+    >
       {/* Sidebar */}
-      <aside className="md:max-h-[75vh] md:overflow-y-auto">
-        <div className="mb-3 flex items-center gap-2">
+      <aside className="space-y-3 md:max-h-[calc(100svh-9rem)] md:overflow-y-auto">
+        {/* Search */}
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Rechercher…"
+          className="w-full rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] px-3 py-2 text-sm placeholder:text-[var(--color-fg-muted)] focus:border-[var(--color-accent)] focus:outline-none"
+        />
+
+        {/* Module filter + New */}
+        <div className="flex items-center gap-2">
           <select
             value={moduleFilter}
             onChange={(e) => setModuleFilter(e.target.value)}
-            className="flex-1 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] px-2 py-1.5 text-xs"
+            className="flex-1 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] px-2 py-2 text-xs"
           >
-            <option value="all">Tous modules</option>
+            <option value="all">Tous les modules</option>
             {modules.map((m) => (
               <option key={m.id} value={m.id}>
                 M{String(m.moduleNumber).padStart(2, "0")} · {m.title}
@@ -156,69 +198,137 @@ export function NotebookClient() {
           <button
             type="button"
             onClick={createNew}
-            className="shrink-0 rounded-md bg-[var(--color-accent)] px-3 py-1.5 text-xs font-mono uppercase tracking-wider text-[var(--color-accent-fg)]"
+            className="shrink-0 rounded-lg bg-[var(--color-accent)] px-3 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--color-accent-fg)] transition active:scale-95"
+            aria-label="Nouvelle note"
           >
-            +
+            + Note
           </button>
         </div>
 
-        <ul className="space-y-1">
-          {entries.length === 0 && (
-            <li className="rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-3 text-xs text-[var(--color-fg-muted)]">
-              Aucune note. Crée la première via +.
-            </li>
+        {/* List */}
+        <ul className="space-y-1.5">
+          {loading && (
+            <>
+              {[0, 1, 2].map((i) => (
+                <li
+                  key={i}
+                  className="h-16 animate-pulse rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]"
+                />
+              ))}
+            </>
           )}
-          {entries.map((e) => (
-            <li key={e.id}>
+          {!loading && filteredEntries.length === 0 && entries.length === 0 && (
+            <li className="rounded-xl border border-dashed border-[var(--color-border-subtle)] p-6 text-center">
+              <p className="text-2xl" aria-hidden>
+                📓
+              </p>
+              <p className="mt-2 text-sm font-semibold">Carnet vide</p>
+              <p className="mt-1 text-xs text-[var(--color-fg-muted)]">
+                Tes notes seront indexées par le coach.
+              </p>
               <button
                 type="button"
-                onClick={() => setSelectedId(e.id)}
-                className={cn(
-                  "w-full rounded-md border px-3 py-2 text-left transition",
-                  selectedId === e.id
-                    ? "border-[var(--color-accent)] bg-[var(--color-bg-high)]"
-                    : "border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] hover:border-[var(--color-border-strong)]",
-                )}
+                onClick={createNew}
+                className="mt-3 rounded-lg bg-[var(--color-accent)] px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--color-accent-fg)]"
               >
-                <p className="truncate text-sm font-semibold">{e.title}</p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-[var(--color-fg-muted)]">
-                  {SOURCE_LABEL[e.source]}
-                </p>
+                Première note
               </button>
             </li>
-          ))}
+          )}
+          {!loading &&
+            filteredEntries.length === 0 &&
+            entries.length > 0 && (
+              <li className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-3 text-xs text-[var(--color-fg-muted)]">
+                Aucune note ne correspond à « {query} ».
+              </li>
+            )}
+          {filteredEntries.map((e) => {
+            const meta = SOURCE_META[e.source];
+            return (
+              <li key={e.id}>
+                <button
+                  type="button"
+                  onClick={() => setSelectedId(e.id)}
+                  className={cn(
+                    "w-full rounded-lg border px-3 py-2.5 text-left transition active:scale-[0.99]",
+                    selectedId === e.id
+                      ? "border-[var(--color-accent)] bg-[var(--color-bg-high)]"
+                      : "border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] hover:border-[var(--color-border-strong)]",
+                  )}
+                >
+                  <p className="truncate text-sm font-semibold">{e.title}</p>
+                  <div className="mt-1 flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-wider">
+                    <span className={meta.color}>
+                      <span className="mr-1">{meta.icon}</span>
+                      {meta.label}
+                    </span>
+                    <span className="text-[var(--color-fg-muted)]">
+                      {relativeDate(e.updatedAt)}
+                    </span>
+                  </div>
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </aside>
 
       {/* Editor */}
-      <section className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]">
+      <section
+        className={cn(
+          "rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]",
+          // Sur mobile : si pas sélectionné, cache l'éditeur
+          !selected && "hidden md:block",
+        )}
+      >
         {!selected ? (
-          <div className="p-8 text-center text-[var(--color-fg-secondary)]">
-            Sélectionne une note ou crée la première.
+          <div className="grid h-full place-items-center p-8 text-center text-[var(--color-fg-secondary)]">
+            <div>
+              <p className="text-3xl" aria-hidden>
+                ✍️
+              </p>
+              <p className="mt-3 text-sm">
+                Sélectionne une note ou crée la première.
+              </p>
+            </div>
           </div>
         ) : (
           <div className="flex h-full flex-col">
-            <header className="flex items-center justify-between gap-3 border-b border-[var(--color-border-subtle)] px-4 py-3">
+            <header className="flex items-center gap-2 border-b border-[var(--color-border-subtle)] px-3 py-2.5">
+              <button
+                type="button"
+                onClick={() => setSelectedId(null)}
+                className="shrink-0 rounded-md p-1 text-[var(--color-fg-muted)] transition hover:text-[var(--color-fg-primary)] md:hidden"
+                aria-label="Retour à la liste"
+              >
+                ←
+              </button>
               <input
                 value={editing.title}
                 onChange={(e) =>
                   setEditing((s) => ({ ...s, title: e.target.value }))
                 }
-                className="flex-1 bg-transparent text-lg font-semibold focus:outline-none"
+                className="flex-1 bg-transparent text-base font-semibold focus:outline-none sm:text-lg"
                 placeholder="Titre de la note"
               />
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-1.5">
                 <button
                   type="button"
                   onClick={() => setPreview((v) => !v)}
-                  className="rounded-md border border-[var(--color-border-strong)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider hover:border-[var(--color-accent)]"
+                  className={cn(
+                    "rounded-md border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition",
+                    preview
+                      ? "border-[var(--color-accent)] text-[var(--color-accent)]"
+                      : "border-[var(--color-border-strong)] hover:border-[var(--color-accent)]",
+                  )}
                 >
                   {preview ? "Éditer" : "Aperçu"}
                 </button>
                 <button
                   type="button"
                   onClick={() => remove(selected.id)}
-                  className="rounded-md border border-[var(--color-border-strong)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider hover:border-[var(--color-danger)]"
+                  className="rounded-md border border-[var(--color-border-strong)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition hover:border-[var(--color-danger)] hover:text-[var(--color-danger)]"
+                  aria-label="Supprimer"
                 >
                   Suppr
                 </button>
@@ -227,9 +337,7 @@ export function NotebookClient() {
 
             <div className="min-h-[400px] flex-1 p-4">
               {preview ? (
-                <div className="prose-coach">
-                  <Markdown source={editing.content} />
-                </div>
+                <Markdown source={editing.content || "_(note vide)_"} />
               ) : (
                 <textarea
                   value={editing.content}
@@ -238,14 +346,23 @@ export function NotebookClient() {
                   }
                   className="h-full min-h-[400px] w-full resize-none bg-transparent font-mono text-sm leading-relaxed focus:outline-none"
                   placeholder="Markdown…"
+                  autoFocus
                 />
               )}
             </div>
 
-            <footer className="border-t border-[var(--color-border-subtle)] px-4 py-2 font-mono text-[10px] text-[var(--color-fg-muted)]">
-              {saving ? "Enregistrement…" : "Auto-save activé · 1.2s"}
-              {error && (
-                <span className="ml-3 text-[var(--color-danger)]">{error}</span>
+            <footer className="flex items-center justify-between border-t border-[var(--color-border-subtle)] px-4 py-2 font-mono text-[10px] text-[var(--color-fg-muted)]">
+              <span>
+                {saving ? (
+                  <span className="text-[var(--color-accent)]">● Sauvegarde…</span>
+                ) : (
+                  <span>Auto-save · 1.2s</span>
+                )}
+              </span>
+              {error ? (
+                <span className="text-[var(--color-danger)]">{error}</span>
+              ) : (
+                <span>{relativeDate(selected.updatedAt)}</span>
               )}
             </footer>
           </div>

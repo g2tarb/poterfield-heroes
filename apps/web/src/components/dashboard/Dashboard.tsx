@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
 import { Staircase } from "../staircase/Staircase";
 import { ProgressionPanel } from "../staircase/ProgressionPanel";
+import {
+  StaircaseSkeleton,
+  ProgressionPanelSkeleton,
+} from "../staircase/StaircaseSkeleton";
 
 type Progression = {
   user: {
@@ -39,6 +43,7 @@ export function Dashboard() {
   const [progression, setProgression] = useState<Progression | null>(null);
   const [modules, setModules] = useState<ModuleSummary[]>([]);
   const [srs, setSrs] = useState<SrsStats | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     void (async () => {
@@ -53,6 +58,8 @@ export function Dashboard() {
         setSrs(s);
       } catch (err) {
         console.error("[dashboard] failed to load", err);
+      } finally {
+        setLoaded(true);
       }
     })();
   }, []);
@@ -61,19 +68,25 @@ export function Dashboard() {
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px] lg:gap-8">
-      {/* Panel : 1er sur mobile (au-dessus), 2e sur desktop (à droite sticky) */}
       <div className="order-1 lg:order-2">
-        <ProgressionPanel
-          progression={progression}
-          srs={srs}
-          modulesCompleted={modulesCompleted}
-          modulesTotal={modules.length || 25}
-        />
+        {loaded && progression ? (
+          <ProgressionPanel
+            progression={progression}
+            srs={srs}
+            modulesCompleted={modulesCompleted}
+            modulesTotal={modules.length || 25}
+          />
+        ) : (
+          <ProgressionPanelSkeleton />
+        )}
       </div>
 
-      {/* Escalier */}
       <div className="order-2 min-w-0 lg:order-1">
-        <Staircase modules={modules} />
+        {loaded && modules.length > 0 ? (
+          <Staircase modules={modules} />
+        ) : (
+          <StaircaseSkeleton />
+        )}
       </div>
     </div>
   );

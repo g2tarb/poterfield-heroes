@@ -103,20 +103,25 @@ export function Sandbox({
             ) : (
               <span>{language}</span>
             )}
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
+              {durationMs !== null && !running && (
+                <span className="font-mono text-[10px] tabular-nums text-[var(--color-success)]">
+                  ✓ {durationMs}ms
+                </span>
+              )}
               <button
                 type="button"
                 onClick={handleRun}
                 disabled={running}
-                className="rounded bg-[var(--color-accent)] px-2.5 py-1 text-[var(--color-accent-fg)] disabled:opacity-40"
+                className="rounded-md bg-[var(--color-accent)] px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-[var(--color-accent-fg)] transition active:scale-95 disabled:opacity-40"
               >
-                {running ? "Run…" : "Run ▸"}
+                {running ? "● Run…" : "▶ Run"}
               </button>
               {running && (
                 <button
                   type="button"
                   onClick={handleStop}
-                  className="rounded border border-[var(--color-border-strong)] px-2.5 py-1 hover:border-[var(--color-danger)]"
+                  className="rounded-md border border-[var(--color-border-strong)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition hover:border-[var(--color-danger)] hover:text-[var(--color-danger)]"
                 >
                   Stop
                 </button>
