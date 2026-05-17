@@ -8,8 +8,18 @@ if (!databaseUrl) {
   throw new Error("DATABASE_URL is required");
 }
 
-console.log("[boot] Running migrations…");
 const migrator = postgres(databaseUrl, { max: 1 });
+
+console.log("[boot] Ensuring Postgres extensions…");
+await migrator.unsafe(`
+  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+  CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+  CREATE EXTENSION IF NOT EXISTS "vector";
+  CREATE EXTENSION IF NOT EXISTS "pg_trgm";
+`);
+console.log("[boot] Extensions ready.");
+
+console.log("[boot] Running migrations…");
 await migrate(drizzle(migrator), {
   migrationsFolder: "./packages/db/drizzle",
 });
