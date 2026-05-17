@@ -87,10 +87,13 @@ export default fp(
         });
       }
 
+      // Cross-subdomain en prod (web sur poterfield.online, API sur api.poterfield.online) :
+      // SameSite=None + Secure est requis pour que le browser envoie le cookie cross-site.
+      const isProd = env.NODE_ENV === "production";
       reply.setCookie(COOKIE_NAME, SESSION_VALUE, {
         httpOnly: true,
-        secure: env.NODE_ENV === "production",
-        sameSite: "lax",
+        secure: isProd,
+        sameSite: isProd ? "none" : "lax",
         signed: true,
         path: "/",
         maxAge: ONE_YEAR_SECONDS,
