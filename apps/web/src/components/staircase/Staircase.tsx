@@ -24,87 +24,116 @@ const PHASE_LABELS: Record<number, string> = {
   8: "Bonus (3D / IA)",
 };
 
-function StepCard({ mod }: { mod: Module }) {
+function StationStamp({ status }: { status: Module["status"] }) {
+  if (status === "completed") {
+    return <span className="ph-stamp ph-stamp-done">✓ Terminé</span>;
+  }
+  if (status === "active") {
+    return <span className="ph-stamp ph-stamp-active">⚡ En cours</span>;
+  }
+  return <span className="ph-stamp ph-stamp-locked">🔒 Verrouillé</span>;
+}
+
+function Station({ mod }: { mod: Module }) {
   const isLocked = mod.status === "locked";
   const isActive = mod.status === "active";
   const isDone = mod.status === "completed";
 
-  const borderClass = isActive
-    ? "border-[var(--color-accent)] ph-pulse-glow"
+  const ref = `STN-${String(mod.moduleNumber).padStart(2, "0")}`;
+
+  const accentBorder = isActive
+    ? "border-l-4 border-l-[var(--color-accent)]"
     : isDone
-      ? "border-[var(--color-success)]"
-      : "border-[var(--color-border-subtle)]";
+      ? "border-l-4 border-l-[var(--color-success)]"
+      : "border-l-4 border-l-[var(--color-border-strong)]";
 
-  const opacityClass = isLocked ? "opacity-60" : "";
-
-  const card = (
+  const stripeOverlay = isActive ? (
     <div
-      className={`group w-full max-w-md rounded-2xl border-2 bg-[var(--color-bg-elevated)] p-5 transition active:scale-[0.98] lg:hover:scale-[1.02] ${borderClass} ${opacityClass}`}
+      className="ph-stripes pointer-events-none absolute inset-0 opacity-50"
+      aria-hidden
+    />
+  ) : null;
+
+  const panel = (
+    <article
+      className={`ph-panel ph-rivets ph-glitch relative overflow-hidden ${accentBorder} ${isLocked ? "opacity-55" : ""} ${isActive ? "ph-pulse-glow" : ""} transition-transform duration-300 lg:hover:translate-y-[-2px]`}
+      data-glitch={isLocked ? undefined : mod.title}
     >
-      <div className="flex items-baseline justify-between gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-          M{String(mod.moduleNumber).padStart(2, "0")} · Phase {mod.phase}
-        </span>
-        <span className="font-mono text-[10px] tabular-nums text-[var(--color-fg-muted)]">
-          {mod.estimatedHours}h
-        </span>
-      </div>
+      <span className="ph-rivet-tl" />
+      <span className="ph-rivet-tr" />
+      {stripeOverlay}
 
-      <h3
-        className={`mt-2 text-base font-semibold leading-snug lg:text-lg ${isLocked ? "text-[var(--color-fg-muted)]" : "text-[var(--color-fg-primary)]"}`}
-      >
-        {mod.title}
-      </h3>
-
-      {mod.subtitle && !isLocked && (
-        <p className="mt-1.5 text-xs leading-snug text-[var(--color-fg-secondary)] line-clamp-2">
-          {mod.subtitle}
-        </p>
-      )}
-
-      <div className="mt-3 flex items-center justify-between">
-        <span
-          className={`font-mono text-[10px] uppercase tracking-wider ${
-            isActive
-              ? "text-[var(--color-accent)]"
-              : isDone
-                ? "text-[var(--color-success)]"
-                : "text-[var(--color-fg-muted)]"
-          }`}
-        >
-          {isActive
-            ? "▶ en cours"
-            : isDone
-              ? "✓ validé"
-              : "🔒 verrouillé"}
-        </span>
-        {!isLocked && (
-          <span className="font-mono text-[10px] text-[var(--color-fg-muted)] transition lg:opacity-0 lg:group-hover:opacity-100">
-            →
+      {/* Header bandeau métal */}
+      <header className="ph-station-header relative flex items-center justify-between px-4 py-2">
+        <div className="flex items-baseline gap-3">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-fg-secondary)]">
+            Station {String(mod.moduleNumber).padStart(2, "0")}
           </span>
+          <span className="ph-ref hidden sm:inline">{ref}</span>
+        </div>
+        <span className="ph-ref tabular-nums">{mod.estimatedHours}h</span>
+      </header>
+
+      {/* Body station */}
+      <div className="relative px-5 py-5">
+        <h3
+          className={`text-base font-bold uppercase leading-tight tracking-wide lg:text-lg ${isLocked ? "text-[var(--color-fg-muted)]" : "text-[var(--color-fg-primary)]"}`}
+        >
+          {mod.title}
+        </h3>
+
+        {mod.subtitle && !isLocked && (
+          <p className="mt-2 text-xs leading-relaxed text-[var(--color-fg-secondary)] line-clamp-2">
+            {mod.subtitle}
+          </p>
         )}
+
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <StationStamp status={mod.status} />
+          {!isLocked && (
+            <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)] transition-opacity lg:opacity-60 lg:group-hover:opacity-100">
+              accéder →
+            </span>
+          )}
+        </div>
       </div>
-    </div>
+    </article>
   );
 
-  if (isLocked) return card;
+  if (isLocked) {
+    return <div className="group block w-full">{panel}</div>;
+  }
   return (
-    <Link href={`/modules/${mod.id}`} className="block w-full max-w-md">
-      {card}
+    <Link href={`/modules/${mod.id}`} className="group block w-full">
+      {panel}
     </Link>
   );
 }
 
-export function Staircase({ modules }: { modules: Module[] }) {
-  const sorted = [...modules].sort(
-    (a, b) => a.moduleNumber - b.moduleNumber,
+function PhaseSeparator({ phase }: { phase: number }) {
+  return (
+    <div className="relative my-6 flex items-center gap-3">
+      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--color-border-strong)] to-[var(--color-border-strong)]" />
+      <div className="ph-panel flex items-center gap-2 px-3 py-1.5">
+        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--color-fg-muted)]">
+          Section {String.fromCharCode(64 + phase)}
+        </span>
+        <span className="h-3 w-px bg-[var(--color-border-strong)]" />
+        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-secondary)]">
+          Phase {phase} · {PHASE_LABELS[phase]}
+        </span>
+      </div>
+      <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[var(--color-border-strong)] to-[var(--color-border-strong)]" />
+    </div>
   );
+}
 
+export function Staircase({ modules }: { modules: Module[] }) {
+  const sorted = [...modules].sort((a, b) => a.moduleNumber - b.moduleNumber);
   const activeRef = useRef<HTMLLIElement | null>(null);
 
   useEffect(() => {
     if (!activeRef.current) return;
-    // Petit délai pour laisser la stagger animation finir avant le scroll
     const t = setTimeout(() => {
       activeRef.current?.scrollIntoView({
         behavior: "smooth",
@@ -129,48 +158,51 @@ export function Staircase({ modules }: { modules: Module[] }) {
 
   return (
     <div className="relative">
-      {/* Épine dorsale verticale — uniquement desktop */}
-      <div
-        className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-gradient-to-b from-[var(--color-border-strong)] via-[var(--color-border-subtle)] to-transparent lg:block"
-        aria-hidden
-      />
+      {/* En-tête de chaîne */}
+      <header className="ph-panel mb-6 flex items-center justify-between px-4 py-3">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-fg-muted)]">
+            Chaîne d&apos;apprentissage
+          </p>
+          <p className="mt-0.5 font-mono text-xs text-[var(--color-fg-secondary)]">
+            25 stations · 8 sections
+          </p>
+        </div>
+        <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
+          <span className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-[var(--color-accent)]" />
+            actif
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-[var(--color-success)]" />
+            fait
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-[var(--color-border-strong)]" />
+            verrou
+          </span>
+        </div>
+      </header>
 
-      <ol className="relative flex flex-col gap-4 lg:gap-8">
+      <ol className="relative flex flex-col gap-3">
         {items.map((item, i) => {
           if (item.kind === "phase-start") {
             return (
-              <li
-                key={`phase-${item.phase}-${i}`}
-                className="relative my-2 flex items-center justify-center"
-              >
-                <span className="rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-                  Phase {item.phase} · {PHASE_LABELS[item.phase]}
-                </span>
+              <li key={`phase-${item.phase}-${i}`}>
+                <PhaseSeparator phase={item.phase} />
               </li>
             );
           }
-          // Mobile = toujours centré. Desktop = zigzag.
-          const desktopAlign =
-            item.index % 2 === 0 ? "lg:justify-start" : "lg:justify-end";
-          // Stagger animation : chaque card apparaît avec un délai croissant
-          // (capé à 12 pour éviter d'attendre 3s pour la dernière)
-          const delayMs = Math.min(item.index, 12) * 40;
+          const delayMs = Math.min(item.index, 12) * 35;
           const isActive = item.mod.status === "active";
           return (
             <li
               key={item.mod.id}
               ref={isActive ? activeRef : undefined}
-              className={`ph-fade-up relative flex scroll-mt-24 justify-center ${desktopAlign}`}
+              className="ph-fade-up scroll-mt-24"
               style={{ animationDelay: `${delayMs}ms` }}
             >
-              {/* Connecteur ligne-vers-carte (desktop only) */}
-              <div
-                className={`pointer-events-none absolute top-1/2 hidden h-px w-[8%] bg-[var(--color-border-subtle)] lg:block ${
-                  item.index % 2 === 0 ? "left-[42%]" : "right-[42%]"
-                }`}
-                aria-hidden
-              />
-              <StepCard mod={item.mod} />
+              <Station mod={item.mod} />
             </li>
           );
         })}

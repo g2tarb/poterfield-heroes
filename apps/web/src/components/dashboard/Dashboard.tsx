@@ -8,6 +8,7 @@ import {
   StaircaseSkeleton,
   ProgressionPanelSkeleton,
 } from "../staircase/StaircaseSkeleton";
+import { CodeRain } from "../ambient/CodeRain";
 
 type Progression = {
   user: {
@@ -67,27 +68,30 @@ export function Dashboard() {
   const modulesCompleted = modules.filter((m) => m.status === "completed").length;
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px] lg:gap-8">
-      <div className="order-1 lg:order-2">
-        {loaded && progression ? (
-          <ProgressionPanel
-            progression={progression}
-            srs={srs}
-            modulesCompleted={modulesCompleted}
-            modulesTotal={modules.length || 25}
-          />
-        ) : (
-          <ProgressionPanelSkeleton />
-        )}
-      </div>
+    <>
+      <CodeRain />
+      <div className="relative grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px] lg:gap-8">
+        <div className="order-1 lg:order-2">
+          {loaded && progression ? (
+            <ProgressionPanel
+              progression={progression}
+              srs={srs}
+              modulesCompleted={modulesCompleted}
+              modulesTotal={modules.length || 25}
+            />
+          ) : (
+            <ProgressionPanelSkeleton />
+          )}
+        </div>
 
-      <div className="order-2 min-w-0 lg:order-1">
-        {loaded && modules.length > 0 ? (
-          <Staircase modules={modules} />
-        ) : (
-          <StaircaseSkeleton />
-        )}
+        <div className="order-2 min-w-0 lg:order-1">
+          {loaded && modules.length > 0 ? (
+            <Staircase modules={modules} />
+          ) : (
+            <StaircaseSkeleton />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

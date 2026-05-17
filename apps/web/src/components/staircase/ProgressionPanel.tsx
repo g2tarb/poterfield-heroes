@@ -35,135 +35,182 @@ export function ProgressionPanel({
   modulesCompleted,
   modulesTotal,
 }: Props) {
+  const completionPct = Math.round(
+    (modulesCompleted / Math.max(1, modulesTotal)) * 100,
+  );
+
   return (
-    <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
-      {/* Bloc Palier */}
-      <section className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-5">
-        <div className="flex items-baseline gap-3">
-          <span className="text-4xl">
-            {progression?.currentLevel?.icon ?? "🌱"}
+    <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start">
+      {/* Panneau Palier — module principal */}
+      <section className="ph-panel ph-rivets relative overflow-hidden">
+        <span className="ph-rivet-tl" />
+        <span className="ph-rivet-tr" />
+
+        <header className="ph-station-header flex items-center justify-between px-4 py-2">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-fg-secondary)]">
+            Palier {progression?.currentLevel?.id ?? 1}
           </span>
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-              Palier {progression?.currentLevel?.id ?? 1}
-            </p>
-            <p className="text-lg font-semibold leading-tight">
-              {progression?.currentLevel?.name ?? "Init"}
-            </p>
-          </div>
-        </div>
+          <span className="ph-ref">REF-LVL</span>
+        </header>
 
-        {progression?.currentLevel?.description && (
-          <p className="mt-3 text-xs leading-relaxed text-[var(--color-fg-secondary)]">
-            {progression.currentLevel.description}
-          </p>
-        )}
-
-        <div className="mt-5">
-          <div className="flex items-baseline justify-between font-mono text-xs">
-            <span className="tabular-nums">
-              <span className="text-[var(--color-fg-primary)]">
-                {progression?.user.currentXp ?? 0}
-              </span>
-              <span className="text-[var(--color-fg-muted)]"> XP</span>
+        <div className="px-5 py-4">
+          <div className="flex items-baseline gap-3">
+            <span className="text-3xl">
+              {progression?.currentLevel?.icon ?? "🌱"}
             </span>
-            {progression?.nextLevel ? (
-              <span className="text-[var(--color-fg-muted)]">
-                → {progression.nextLevel.xpRequired}
-              </span>
-            ) : (
-              <span className="text-[var(--color-success)]">max</span>
-            )}
+            <div>
+              <p className="text-base font-bold uppercase leading-tight tracking-wide">
+                {progression?.currentLevel?.name ?? "Init"}
+              </p>
+            </div>
           </div>
-          <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[var(--color-bg-high)]">
-            <div
-              className="h-full rounded-full bg-[var(--color-accent)] transition-all duration-700"
-              style={{ width: `${progression?.progressPct ?? 0}%` }}
-            />
-          </div>
-          {progression?.nextLevel && (
-            <p className="mt-1.5 font-mono text-[10px] text-[var(--color-fg-muted)]">
-              Prochain : {progression.nextLevel.name} ({progression.xpToNext}{" "}
-              XP restants)
+
+          {progression?.currentLevel?.description && (
+            <p className="mt-3 text-xs leading-relaxed text-[var(--color-fg-secondary)]">
+              {progression.currentLevel.description}
             </p>
           )}
+
+          {/* Jauge XP industrielle */}
+          <div className="mt-5">
+            <div className="flex items-baseline justify-between font-mono text-[10px] uppercase tracking-widest">
+              <span className="tabular-nums text-[var(--color-fg-primary)]">
+                {progression?.user.currentXp ?? 0}
+                <span className="text-[var(--color-fg-muted)]"> XP</span>
+              </span>
+              {progression?.nextLevel ? (
+                <span className="text-[var(--color-fg-muted)] tabular-nums">
+                  / {progression.nextLevel.xpRequired}
+                </span>
+              ) : (
+                <span className="text-[var(--color-success)]">MAX</span>
+              )}
+            </div>
+            <div
+              className="mt-2 h-2 overflow-hidden border border-[var(--color-border-strong)] bg-[var(--color-bg-base)]"
+              style={{ borderRadius: 2 }}
+            >
+              <div
+                className="ph-stripes h-full bg-[var(--color-accent)] transition-all duration-700"
+                style={{ width: `${progression?.progressPct ?? 0}%` }}
+              />
+            </div>
+            {progression?.nextLevel && (
+              <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-[var(--color-fg-muted)]">
+                → {progression.nextLevel.name} · {progression.xpToNext} XP
+              </p>
+            )}
+          </div>
         </div>
       </section>
 
-      {/* Bloc Streak + Modules */}
+      {/* Compteurs jumeaux : Série + Modules */}
       <section className="grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-            Série
-          </p>
-          <p className="mt-2 text-2xl font-semibold tabular-nums">
-            {progression?.user.streakDays ?? 0}
-            <span className="ml-1 text-xs font-normal text-[var(--color-fg-muted)]">
-              j
-            </span>
-          </p>
-          {progression?.user.longestStreak && progression.user.longestStreak > 0 ? (
-            <p className="mt-1 font-mono text-[10px] text-[var(--color-fg-muted)]">
-              record {progression.user.longestStreak}j
-            </p>
-          ) : null}
-        </div>
-
-        <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-            Modules
-          </p>
-          <p className="mt-2 text-2xl font-semibold tabular-nums">
-            {modulesCompleted}
-            <span className="text-base text-[var(--color-fg-muted)]">
-              /{modulesTotal}
-            </span>
-          </p>
-          <p className="mt-1 font-mono text-[10px] text-[var(--color-fg-muted)]">
-            {Math.round((modulesCompleted / Math.max(1, modulesTotal)) * 100)}%
-          </p>
-        </div>
+        <Gauge
+          label="Série"
+          value={progression?.user.streakDays ?? 0}
+          unit="j"
+          sub={
+            progression?.user.longestStreak && progression.user.longestStreak > 0
+              ? `record ${progression.user.longestStreak}j`
+              : null
+          }
+        />
+        <Gauge
+          label="Modules"
+          value={modulesCompleted}
+          unit={`/${modulesTotal}`}
+          sub={`${completionPct}%`}
+        />
       </section>
 
-      {/* Bloc SRS — CTA si cartes due */}
+      {/* Panneau SRS */}
       {srs && srs.dueNow > 0 ? (
-        <Link
-          href="/srs"
-          className="block rounded-xl border-2 border-[var(--color-accent)] bg-[var(--color-bg-elevated)] p-4 transition hover:bg-[var(--color-bg-high)]"
-        >
-          <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-accent)]">
-            Révision du jour
-          </p>
-          <p className="mt-2 text-lg font-semibold">
-            {srs.dueNow} carte{srs.dueNow > 1 ? "s" : ""} à réviser
-          </p>
-          <p className="mt-1 font-mono text-[10px] text-[var(--color-fg-muted)]">
-            Maintenant →
-          </p>
+        <Link href="/srs" className="ph-panel ph-rivets group relative block overflow-hidden border-l-4 border-l-[var(--color-accent)]">
+          <span className="ph-rivet-tl" />
+          <span className="ph-rivet-tr" />
+          <div className="ph-stripes pointer-events-none absolute inset-0 opacity-40" aria-hidden />
+          <header className="ph-station-header relative flex items-center justify-between px-4 py-2">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-accent)]">
+              Révision du jour
+            </span>
+            <span className="ph-ref">SRS-DUE</span>
+          </header>
+          <div className="relative px-5 py-4">
+            <p className="text-2xl font-bold tabular-nums">
+              {srs.dueNow}
+              <span className="ml-2 text-xs font-normal uppercase tracking-widest text-[var(--color-fg-secondary)]">
+                carte{srs.dueNow > 1 ? "s" : ""}
+              </span>
+            </p>
+            <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)] group-hover:text-[var(--color-accent)]">
+              démarrer →
+            </p>
+          </div>
         </Link>
       ) : srs && srs.total === 0 ? (
-        <div className="rounded-xl border border-dashed border-[var(--color-border-subtle)] bg-transparent p-4">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-            SRS
+        <section className="ph-panel relative overflow-hidden">
+          <header className="ph-station-header flex items-center justify-between px-4 py-2">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
+              SRS
+            </span>
+            <span className="ph-ref">EMPTY</span>
+          </header>
+          <p className="px-5 py-4 text-xs leading-relaxed text-[var(--color-fg-secondary)]">
+            Aucune carte. Termine un skill pour générer tes premières flashcards.
           </p>
-          <p className="mt-2 text-xs text-[var(--color-fg-secondary)]">
-            Aucune carte encore. Termine un skill pour générer tes premières
-            flashcards.
-          </p>
-        </div>
+        </section>
       ) : (
-        <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-            SRS
-          </p>
-          <p className="mt-2 text-sm text-[var(--color-success)]">
-            ✓ Tout est à jour
-          </p>
-          <p className="mt-1 font-mono text-[10px] text-[var(--color-fg-muted)]">
-            {srs?.total ?? 0} carte{(srs?.total ?? 0) > 1 ? "s" : ""} au total
-          </p>
-        </div>
+        <section className="ph-panel relative overflow-hidden">
+          <header className="ph-station-header flex items-center justify-between px-4 py-2">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-fg-secondary)]">
+              SRS
+            </span>
+            <span className="ph-ref">SYNCED</span>
+          </header>
+          <div className="px-5 py-4">
+            <p className="text-sm font-semibold text-[var(--color-success)]">
+              ✓ Tout est à jour
+            </p>
+            <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
+              {srs?.total ?? 0} carte{(srs?.total ?? 0) > 1 ? "s" : ""} en stock
+            </p>
+          </div>
+        </section>
       )}
     </aside>
+  );
+}
+
+function Gauge({
+  label,
+  value,
+  unit,
+  sub,
+}: {
+  label: string;
+  value: number;
+  unit: string;
+  sub: string | null;
+}) {
+  return (
+    <div className="ph-panel ph-rivets relative overflow-hidden px-4 py-3">
+      <span className="ph-rivet-tl" />
+      <span className="ph-rivet-tr" />
+      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
+        {label}
+      </p>
+      <p className="mt-2 text-2xl font-bold tabular-nums">
+        {value}
+        <span className="ml-0.5 text-xs font-normal text-[var(--color-fg-muted)]">
+          {unit}
+        </span>
+      </p>
+      {sub && (
+        <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-[var(--color-fg-muted)]">
+          {sub}
+        </p>
+      )}
+    </div>
   );
 }

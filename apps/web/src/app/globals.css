@@ -168,6 +168,234 @@ body {
   animation: ph-pulse-glow 2400ms ease-in-out infinite;
 }
 
+/* ========================================
+   ATELIER BRUT — utilitaires DA industrielle
+   ======================================== */
+
+/* Hachures diagonales (chantier / station active) */
+.ph-stripes {
+  background-image: repeating-linear-gradient(
+    45deg,
+    color-mix(in oklch, var(--color-accent), transparent 88%) 0,
+    color-mix(in oklch, var(--color-accent), transparent 88%) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+.ph-stripes-warn {
+  background-image: repeating-linear-gradient(
+    45deg,
+    color-mix(in oklch, var(--color-warning), transparent 80%) 0,
+    color-mix(in oklch, var(--color-warning), transparent 80%) 8px,
+    transparent 8px,
+    transparent 18px
+  );
+}
+
+/* Rivets industriels aux 4 coins d'un panneau */
+.ph-rivets {
+  position: relative;
+}
+.ph-rivets::before,
+.ph-rivets::after,
+.ph-rivets > .ph-rivet-tl,
+.ph-rivets > .ph-rivet-tr {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    var(--color-fg-muted) 0%,
+    var(--color-bg-base) 70%
+  );
+  box-shadow:
+    inset 0 0 0 1px var(--color-border-strong),
+    0 1px 0 0 rgba(0, 0, 0, 0.5);
+}
+.ph-rivets::before {
+  bottom: 8px;
+  left: 8px;
+}
+.ph-rivets::after {
+  bottom: 8px;
+  right: 8px;
+}
+.ph-rivets > .ph-rivet-tl {
+  top: 8px;
+  left: 8px;
+}
+.ph-rivets > .ph-rivet-tr {
+  top: 8px;
+  right: 8px;
+}
+
+/* Panneau métal : fond + bordure + ombre interne */
+.ph-panel {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklch, var(--color-bg-elevated), white 2%) 0%,
+      var(--color-bg-elevated) 50%,
+      color-mix(in oklch, var(--color-bg-elevated), black 3%) 100%
+    );
+  border: 1px solid var(--color-border-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Header de station — bandeau métal inversé */
+.ph-station-header {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklch, var(--color-bg-base), black 30%) 0%,
+      color-mix(in oklch, var(--color-bg-base), black 10%) 100%
+    );
+  border-bottom: 1px solid var(--color-border-strong);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.03);
+}
+
+/* Tampon (état terminé / verrouillé) */
+.ph-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+  transform: rotate(-2deg);
+  opacity: 0.85;
+}
+.ph-stamp-done {
+  color: var(--color-success);
+}
+.ph-stamp-locked {
+  color: var(--color-fg-muted);
+}
+.ph-stamp-active {
+  color: var(--color-accent);
+  transform: none;
+  opacity: 1;
+}
+
+/* Connecteur entre stations (rail/tuyau vertical) */
+.ph-rail {
+  width: 4px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--color-border-subtle) 0%,
+      var(--color-border-strong) 50%,
+      var(--color-border-subtle) 100%
+    );
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+}
+
+/* Code de référence (M01-001) */
+.ph-ref {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  color: var(--color-fg-muted);
+  text-transform: uppercase;
+}
+
+/* === Effet GLITCH au hover (RGB split + distorsion) === */
+@keyframes ph-glitch-x {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, 2px); }
+  80% { transform: translate(1px, -2px); }
+}
+@keyframes ph-glitch-clip {
+  0%, 100% { clip-path: inset(0 0 0 0); }
+  20% { clip-path: inset(20% 0 60% 0); }
+  40% { clip-path: inset(60% 0 20% 0); }
+  60% { clip-path: inset(40% 0 40% 0); }
+  80% { clip-path: inset(80% 0 0 0); }
+}
+
+.ph-glitch {
+  position: relative;
+  isolation: isolate;
+}
+.ph-glitch::before,
+.ph-glitch::after {
+  content: attr(data-glitch);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-fast) ease;
+  font: inherit;
+  display: flex;
+  align-items: center;
+  padding: inherit;
+  z-index: -1;
+}
+.ph-glitch::before {
+  color: oklch(0.7 0.3 0);
+  transform: translate(-2px, 0);
+  mix-blend-mode: screen;
+}
+.ph-glitch::after {
+  color: oklch(0.7 0.3 220);
+  transform: translate(2px, 0);
+  mix-blend-mode: screen;
+}
+.ph-glitch:hover::before,
+.ph-glitch:hover::after {
+  opacity: 0.7;
+}
+.ph-glitch:hover {
+  animation: ph-glitch-x 220ms steps(2, end) 2;
+}
+.ph-glitch:hover::before {
+  animation: ph-glitch-clip 220ms steps(2, end) 2;
+}
+.ph-glitch:hover::after {
+  animation: ph-glitch-clip 280ms steps(2, end) 2 reverse;
+}
+
+/* === Background code ambient (filigrane code) === */
+.ph-code-bg {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  user-select: none;
+}
+.ph-code-bg-line {
+  position: absolute;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-fg-primary);
+  opacity: 0;
+  animation:
+    ph-code-drift linear infinite,
+    ph-code-fade ease-in-out infinite;
+}
+@keyframes ph-code-drift {
+  from { transform: translateX(-10vw); }
+  to { transform: translateX(110vw); }
+}
+@keyframes ph-code-fade {
+  0%, 100% { opacity: 0; }
+  20%, 80% { opacity: 0.06; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
