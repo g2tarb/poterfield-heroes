@@ -47,4 +47,4 @@ COPY --chown=api:nodejs package.json pnpm-workspace.yaml ./
 USER api
 EXPOSE 3031
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["tsx", "apps/api/src/server.ts"]
+CMD ["tsx", "apps/api/src/migrate-and-start.ts"]

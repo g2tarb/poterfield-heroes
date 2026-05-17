@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "tsx watch --env-file=../../.env src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "tsx src/migrate-and-start.ts",
     "typecheck": "tsc --noEmit",
     "test:unit": "vitest run --dir src --exclude '**/*.integration.test.ts'",
     "test:integration": "vitest run --dir src --testNamePattern='integration|inject'",
@@ -31,7 +31,8 @@
     "fastify-type-provider-zod": "^4.0.2",
     "zod": "^3.23.8",
     "pino-pretty": "^11.3.0",
-    "drizzle-orm": "^0.36.4"
+    "drizzle-orm": "^0.36.4",
+    "postgres": "^3.4.5"
   },
   "devDependencies": {
     "@types/node": "^22.9.3",
