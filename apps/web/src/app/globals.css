@@ -367,7 +367,7 @@ body {
   animation: ph-glitch-clip 280ms steps(2, end) 2 reverse;
 }
 
-/* === Background code ambient (filigrane code) === */
+/* === Background code ambient — néon ambre + parallax curseur === */
 .ph-code-bg {
   pointer-events: none;
   position: fixed;
@@ -375,25 +375,60 @@ body {
   z-index: 0;
   overflow: hidden;
   user-select: none;
+  /* parallax variables alimentées par JS au mousemove */
+  --mx: 0;
+  --my: 0;
 }
 .ph-code-bg-line {
   position: absolute;
   white-space: nowrap;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--color-fg-primary);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  /* Néon ambre vintage forge */
+  color: color-mix(in oklch, var(--color-accent), white 15%);
+  text-shadow:
+    0 0 4px color-mix(in oklch, var(--color-accent), transparent 30%),
+    0 0 12px color-mix(in oklch, var(--color-accent), transparent 60%),
+    0 0 22px color-mix(in oklch, var(--color-accent), transparent 80%);
   opacity: 0;
+  /* parallax : chaque ligne a un facteur de profondeur via --depth (0.2 à 1.8) */
+  transform: translate3d(
+    calc(var(--mx) * var(--depth, 1) * 1px),
+    calc(var(--my) * var(--depth, 1) * 1px),
+    0
+  );
   animation:
     ph-code-drift linear infinite,
     ph-code-fade ease-in-out infinite;
+  will-change: transform, opacity;
+  transition: text-shadow 200ms ease;
 }
+
+/* Boost néon quand le user hover un élément intéressant (survol global) */
+.ph-code-bg:hover .ph-code-bg-line,
+.ph-code-bg.is-active .ph-code-bg-line {
+  text-shadow:
+    0 0 6px var(--color-accent),
+    0 0 18px color-mix(in oklch, var(--color-accent), transparent 30%),
+    0 0 36px color-mix(in oklch, var(--color-accent), transparent 50%);
+}
+
 @keyframes ph-code-drift {
-  from { transform: translateX(-10vw); }
-  to { transform: translateX(110vw); }
+  from {
+    left: -30vw;
+  }
+  to {
+    left: 130vw;
+  }
 }
 @keyframes ph-code-fade {
-  0%, 100% { opacity: 0; }
-  20%, 80% { opacity: 0.06; }
+  0%, 100% {
+    opacity: 0;
+  }
+  15%, 85% {
+    opacity: 0.18;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
