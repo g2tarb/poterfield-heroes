@@ -1,76 +1,64 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { apiFetch } from "@/lib/api";
-
 type Status = "locked" | "active" | "completed";
 
 export function ModuleStartButton({
-  moduleId,
+  moduleId: _moduleId,
   initialStatus,
 }: {
   moduleId: string;
   initialStatus: Status;
 }) {
-  const router = useRouter();
-  const [status, setStatus] = useState<Status>(initialStatus);
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-
-  function handleStart() {
-    setError(null);
-    startTransition(async () => {
-      try {
-        await apiFetch(`/api/progress/module/${moduleId}/start`, {
-          method: "POST",
-        });
-        setStatus("active");
-        router.refresh();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Erreur");
-      }
-    });
-  }
-
-  if (status === "completed") {
+  if (initialStatus === "completed") {
     return (
-      <div className="rounded-xl border-2 border-[var(--color-success)] bg-[var(--color-bg-elevated)] p-4 text-center">
-        <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-success)]">
+      <div className="ph-panel ph-rivets relative overflow-hidden border-l-4 border-l-[var(--color-success)] px-5 py-4">
+        <span className="ph-rivet-tl" />
+        <span className="ph-rivet-tr" />
+        <p className="font-mono text-xs font-bold uppercase tracking-widest text-[var(--color-success)]">
           ✓ Module validé
         </p>
+        <p className="mt-2 text-xs text-[var(--color-fg-secondary)]">
+          Tu peux le revoir librement ou passer au suivant.
+        </p>
       </div>
     );
   }
 
-  if (status === "active") {
+  if (initialStatus === "locked") {
     return (
-      <div className="rounded-xl border-2 border-[var(--color-accent)] bg-[var(--color-bg-elevated)] p-4 text-center ph-pulse-glow">
-        <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-accent)]">
-          ▶ En cours
+      <div className="ph-panel ph-rivets relative overflow-hidden px-5 py-4 opacity-70">
+        <span className="ph-rivet-tl" />
+        <span className="ph-rivet-tr" />
+        <p className="font-mono text-xs font-bold uppercase tracking-widest text-[var(--color-fg-muted)]">
+          🔒 Verrouillé
         </p>
-        <p className="mt-1 text-xs text-[var(--color-fg-secondary)]">
-          Travaille dessus, le coach est dispo en bas à droite.
+        <p className="mt-2 text-xs text-[var(--color-fg-secondary)]">
+          Termine le module précédent pour déverrouiller celui-ci.
         </p>
       </div>
     );
   }
 
+  // active = panneau "En cours" + CTA scroll vers exos
   return (
-    <>
-      <button
-        type="button"
-        onClick={handleStart}
-        disabled={pending}
-        className="w-full rounded-xl bg-[var(--color-accent)] px-4 py-3 font-mono text-sm font-semibold uppercase tracking-wider text-[var(--color-accent-fg)] transition active:scale-[0.98] hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {pending ? "Démarrage…" : "▶ Démarrer ce module"}
-      </button>
-      {error && (
-        <p className="mt-2 font-mono text-xs text-[var(--color-danger)]">
-          {error}
+    <div className="ph-panel ph-rivets ph-pulse-glow relative overflow-hidden border-l-4 border-l-[var(--color-accent)]">
+      <span className="ph-rivet-tl" />
+      <span className="ph-rivet-tr" />
+      <div className="ph-stripes pointer-events-none absolute inset-0 opacity-30" aria-hidden />
+      <div className="relative px-5 py-4">
+        <p className="font-mono text-xs font-bold uppercase tracking-widest text-[var(--color-accent)]">
+          ⚡ En cours
         </p>
-      )}
-    </>
+        <p className="mt-2 text-xs text-[var(--color-fg-secondary)]">
+          Lance-toi sur les étapes ci-dessous. Le coach est dispo à tout moment.
+        </p>
+        <a
+          href="#exercises"
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 border-2 border-[var(--color-accent)] bg-[var(--color-bg-elevated)] px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-[var(--color-accent)] transition hover:bg-[var(--color-bg-high)]"
+        >
+          ▼ Premier exercice
+        </a>
+      </div>
+    </div>
   );
 }

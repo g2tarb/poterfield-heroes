@@ -237,7 +237,7 @@ export default async function ModulePage({
 
           {/* Étapes */}
           {exercises.length > 0 && (
-            <section>
+            <section id="exercises" className="scroll-mt-24">
               <h2 className="mb-4 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
                 Étapes du parcours ({exercises.length})
               </h2>

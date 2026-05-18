@@ -109,6 +109,33 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
 
       if (!mod) throw new NotFoundError("Module");
 
+      // Cascade pour le status : on regarde tous les modules + leurs progress
+      const allRows = await app.db
+        .select({
+          id: modules.id,
+          moduleNumber: modules.moduleNumber,
+          status: moduleProgress.status,
+        })
+        .from(modules)
+        .leftJoin(moduleProgress, eq(moduleProgress.moduleId, modules.id))
+        .orderBy(asc(modules.moduleNumber));
+
+      let cascadedStatus: "locked" | "active" | "completed" = "locked";
+      let firstUnstartedFound = false;
+      for (const r of allRows) {
+        let s: "locked" | "active" | "completed";
+        if (r.status === "completed") {
+          s = "completed";
+        } else if (r.status === "active") {
+          firstUnstartedFound = true;
+          s = "active";
+        } else {
+          s = firstUnstartedFound ? "locked" : "active";
+          if (!firstUnstartedFound) firstUnstartedFound = true;
+        }
+        if (r.id === params.id) cascadedStatus = s;
+      }
+
       const [skillsList, videosList, exercisesList, progress] =
         await Promise.all([
           app.db
@@ -150,7 +177,12 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
         skills: skillsList,
         videos: videosList,
         exercises: exercisesList,
-        progress,
+        progress: progress
+          ? { ...progress, status: cascadedStatus }
+          : {
+              status: cascadedStatus,
+              secondsSpent: 0,
+            },
       };
     },
   );
