@@ -9,8 +9,8 @@
     "build": "tsc",
     "start": "tsx src/migrate-and-start.ts",
     "typecheck": "tsc --noEmit",
-    "test:unit": "vitest run --dir src --exclude '**/*.integration.test.ts'",
-    "test:integration": "vitest run --dir src --testNamePattern='integration|inject'",
+    "test:unit": "vitest run --dir src --exclude '**/*.integration.test.ts' --passWithNoTests",
+    "test:integration": "vitest run --dir src '**/*.integration.test.ts'",
     "lint": "echo 'lint TBD'"
   },
   "dependencies": {
