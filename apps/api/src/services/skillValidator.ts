@@ -1,40 +1,9 @@
 import { anthropic, MODEL_HAIKU } from "../lib/anthropic.js";
 import { AppError } from "../lib/errors.js";
-
-const QUESTION_SYSTEM = `Tu es un examinateur senior dans l'atelier privé d'apprentissage d'Erwin (Porterfield Heroes).
-
-# Mission
-Générer UNE seule question de validation pour une compétence précise. La question doit prouver que la compétence est *vraiment* acquise, pas juste comprise en surface.
-
-# Critères de bonne question
-- Demande une explication conceptuelle OU un mini-snippet de code à écrire (max 5 lignes attendues).
-- Pointue mais pas piège. Ne porte pas sur un détail obscur.
-- Doit avoir UNE bonne réponse claire (pas vague).
-
-# Format de retour (JSON strict, rien d'autre)
-{
-  "question": "<la question, 1-3 phrases max>",
-  "expectedAnswer": "<la réponse attendue ou ses caractéristiques clés, pour l'évaluation>"
-}
-
-# Ton
-Direct, factuel, pas de bla-bla. Pas de "bonne chance" ou "tu y arrives".`;
-
-const VALIDATION_SYSTEM = `Tu es l'évaluateur de cette même question. Tu juges si la réponse d'Erwin prouve la maîtrise de la compétence.
-
-# Verdict
-- "mastered" : la réponse est juste, montre une vraie compréhension.
-- "practicing" : la réponse est partielle, montre un début de compréhension mais reste fragile. Continuer à pratiquer.
-- "discovering" : la réponse est incorrecte ou hors sujet. Revenir aux fondamentaux.
-
-# Format de retour (JSON strict, rien d'autre)
-{
-  "verdict": "mastered" | "practicing" | "discovering",
-  "feedback": "<markdown court 2-4 lignes : ce qui est juste, ce qui manque, sans donner la solution>"
-}
-
-# Ton
-Direct, sans flatterie. Si Erwin est juste, le dire et passer. Si bancal, expliquer ce qui cloche.`;
+import {
+  buildSkillQuestionSystemPrompt,
+  buildSkillValidationSystemPrompt,
+} from "../lib/modulePersonas.js";
 
 export type SkillQuestion = {
   question: string;
@@ -59,21 +28,27 @@ function extractJson<T>(text: string): T {
 export async function generateSkillQuestion(input: {
   skillLabel: string;
   moduleTitle: string;
+  moduleNumber: number;
   phase: number;
 }): Promise<SkillQuestion> {
   if (!anthropic) {
     throw new AppError(503, "ANTHROPIC_API_KEY missing");
   }
 
-  const prompt = `Module : "${input.moduleTitle}" (phase ${input.phase})
+  const system = buildSkillQuestionSystemPrompt({
+    moduleNumber: input.moduleNumber,
+    phase: input.phase,
+  });
+
+  const prompt = `Module : "${input.moduleTitle}" (M${String(input.moduleNumber).padStart(2, "0")}, phase ${input.phase})
 Compétence à valider : "${input.skillLabel}"
 
-Génère UNE question de validation. Réponds en JSON strict, rien d'autre.`;
+Génère UNE question de validation. JSON strict.`;
 
   const response = await anthropic.messages.create({
     model: MODEL_HAIKU,
     max_tokens: 512,
-    system: QUESTION_SYSTEM,
+    system,
     messages: [{ role: "user", content: prompt }],
   });
 
@@ -90,10 +65,17 @@ export async function validateSkillAnswer(input: {
   question: string;
   expectedAnswer: string;
   userAnswer: string;
+  moduleNumber: number;
+  phase: number;
 }): Promise<SkillValidation> {
   if (!anthropic) {
     throw new AppError(503, "ANTHROPIC_API_KEY missing");
   }
+
+  const system = buildSkillValidationSystemPrompt({
+    moduleNumber: input.moduleNumber,
+    phase: input.phase,
+  });
 
   const prompt = `Compétence : "${input.skillLabel}"
 
@@ -109,7 +91,7 @@ ${input.userAnswer}
   const response = await anthropic.messages.create({
     model: MODEL_HAIKU,
     max_tokens: 512,
-    system: VALIDATION_SYSTEM,
+    system,
     messages: [{ role: "user", content: prompt }],
   });
 

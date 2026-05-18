@@ -2,7 +2,7 @@ import type { FastifyPluginAsync } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
-import { exercises, exerciseAttempts } from "@ph/db";
+import { exercises, exerciseAttempts, modules } from "@ph/db";
 import { NotFoundError } from "../lib/errors.js";
 import {
   correctExercise,
@@ -66,6 +66,16 @@ const exercisesRoutes: FastifyPluginAsync = async (app) => {
             code: "INVALID_INPUT",
           };
         }
+
+        const [mod] = await app.db
+          .select({
+            moduleNumber: modules.moduleNumber,
+            phase: modules.phase,
+          })
+          .from(modules)
+          .where(eq(modules.id, ex.moduleId))
+          .limit(1);
+
         result = await correctExercise({
           statement: ex.statement,
           solutionCode: ex.solutionCode,
@@ -74,6 +84,8 @@ const exercisesRoutes: FastifyPluginAsync = async (app) => {
           kind: ex.kind,
           title: ex.title,
           userAnswer: body.answer,
+          moduleNumber: mod?.moduleNumber ?? 1,
+          phase: mod?.phase ?? 1,
         });
       }
 

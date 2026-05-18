@@ -5,6 +5,7 @@ import {
   extractCacheTokens,
 } from "../lib/anthropic.js";
 import { AppError } from "../lib/errors.js";
+import { buildExerciseCorrectionSystemPrompt } from "../lib/modulePersonas.js";
 
 export type CorrectionVerdict = "correct" | "partial" | "incorrect";
 
@@ -16,36 +17,6 @@ export type CorrectionResult = {
   costCents: number;
 };
 
-const CORRECTION_SYSTEM = `Tu es le correcteur senior d'Erwin (alias Scory), dev fullstack en apprentissage avancé sur Porterfield Heroes.
-
-# Mission
-Évaluer la réponse d'Erwin à un exercice en comparant à l'énoncé et à la solution attendue. Verdict + feedback dense.
-
-# Verdict
-- "correct" : la réponse est juste, complète, idiomatique. scorePct 85-100.
-- "partial" : la réponse marche mais a des défauts (sub-optimal, manque un edge case, mauvais nommage, etc.). scorePct 50-84.
-- "incorrect" : la réponse ne marche pas ou rate l'objectif principal. scorePct 0-49.
-
-# Format de retour (JSON strict, rien d'autre)
-{
-  "verdict": "correct" | "partial" | "incorrect",
-  "scorePct": <0-100>,
-  "feedback": "<markdown court, 3-6 lignes, explique ce qui va et ne va pas>",
-  "suggestions": "<optionnel markdown, pistes d'amélioration concrètes ou null>"
-}
-
-# Ton
-- Direct, senior à senior. Pas de flatterie ("super effort !", "presque !").
-- Si correct, dire ce qui est bien et UNE piste d'amélioration s'il y a.
-- Si partial, pointer LE défaut principal sans donner la solution.
-- Si incorrect, expliquer ce qui foire SANS donner la solution complète.
-- Markdown autorisé : code blocks, listes, **bold**. Pas de headers H1/H2.
-
-# Limites
-- Tu ne lances pas le code, tu le lis et raisonnes dessus.
-- Si la réponse fait quelque chose de différent mais qui marche aussi, c'est valide → "correct".
-- Si Erwin a oublié de gérer un cas mentionné dans l'énoncé → "partial".`;
-
 export async function correctExercise(input: {
   statement: string;
   solutionCode: string | null;
@@ -54,12 +25,18 @@ export async function correctExercise(input: {
   kind: string;
   title: string;
   userAnswer: string;
+  moduleNumber: number;
+  phase: number;
 }): Promise<CorrectionResult> {
   if (!anthropic) {
     throw new AppError(503, "ANTHROPIC_API_KEY missing — correction disabled");
   }
 
   const lang = input.language ?? "text";
+  const system = buildExerciseCorrectionSystemPrompt({
+    moduleNumber: input.moduleNumber,
+    phase: input.phase,
+  });
 
   const prompt = `## Énoncé : ${input.title}
 ${input.statement}
@@ -75,7 +52,7 @@ ${input.userAnswer}
   const response = await anthropic.messages.create({
     model: MODEL_HAIKU,
     max_tokens: 1024,
-    system: CORRECTION_SYSTEM,
+    system,
     messages: [{ role: "user", content: prompt }],
   });
 

@@ -49,7 +49,11 @@ const skillsRoutes: FastifyPluginAsync = async (app) => {
       if (!skill) throw new NotFoundError("Skill");
 
       const [mod] = await app.db
-        .select({ title: modules.title, phase: modules.phase })
+        .select({
+          title: modules.title,
+          phase: modules.phase,
+          moduleNumber: modules.moduleNumber,
+        })
         .from(modules)
         .where(eq(modules.id, skill.moduleId))
         .limit(1);
@@ -58,6 +62,7 @@ const skillsRoutes: FastifyPluginAsync = async (app) => {
       const q = await generateSkillQuestion({
         skillLabel: skill.label,
         moduleTitle: mod.title,
+        moduleNumber: mod.moduleNumber,
         phase: mod.phase,
       });
 
@@ -81,17 +86,29 @@ const skillsRoutes: FastifyPluginAsync = async (app) => {
     },
     async ({ params, body }) => {
       const [skill] = await app.db
-        .select({ id: skills.id, label: skills.label })
+        .select({
+          id: skills.id,
+          label: skills.label,
+          moduleId: skills.moduleId,
+        })
         .from(skills)
         .where(eq(skills.id, params.id))
         .limit(1);
       if (!skill) throw new NotFoundError("Skill");
+
+      const [mod] = await app.db
+        .select({ moduleNumber: modules.moduleNumber, phase: modules.phase })
+        .from(modules)
+        .where(eq(modules.id, skill.moduleId))
+        .limit(1);
 
       const result = await validateSkillAnswer({
         skillLabel: skill.label,
         question: body.question,
         expectedAnswer: body.expectedAnswer,
         userAnswer: body.userAnswer,
+        moduleNumber: mod?.moduleNumber ?? 1,
+        phase: mod?.phase ?? 1,
       });
 
       const masteryPct =
