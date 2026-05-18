@@ -10,7 +10,7 @@ export default function GithubPage() {
         eyebrow="Atelier · Code review IA"
         title="Reviews automatiques"
         subtitle="Quand tu push sur un repo tracké, Claude review le diff. Annotations inline + score sur 7 critères."
-        ref="GITHUB"
+        refCode="GITHUB"
       />
       <GithubPushList />
     </main>

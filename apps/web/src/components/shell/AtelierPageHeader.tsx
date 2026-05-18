@@ -4,7 +4,7 @@ type Props = {
   eyebrow: string; // ex: "ATELIER · ROADMAP"
   title: string;
   subtitle?: string;
-  ref?: string; // code de référence atelier
+  refCode?: string; // code de référence atelier (renommé pour éviter conflit React ref)
   backHref?: string;
   backLabel?: string;
 };
@@ -13,7 +13,7 @@ export function AtelierPageHeader({
   eyebrow,
   title,
   subtitle,
-  ref,
+  refCode,
   backHref = "/",
   backLabel = "← Atelier",
 }: Props) {
@@ -36,7 +36,7 @@ export function AtelierPageHeader({
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--color-fg-secondary)]">
             {eyebrow}
           </span>
-          {ref && <span className="ph-ref">{ref}</span>}
+          {refCode && <span className="ph-ref">{refCode}</span>}
         </div>
 
         <div className="px-4 py-4 sm:px-5 sm:py-5">

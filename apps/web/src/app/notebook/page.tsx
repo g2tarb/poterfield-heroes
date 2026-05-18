@@ -10,7 +10,7 @@ export default function NotebookPage() {
         eyebrow="Atelier · Carnet d'établi"
         title="Tes notes, vivantes."
         subtitle="Markdown. Indexées automatiquement pour que le coach les retrouve quand tu poses une question."
-        ref="NOTEBOOK"
+        refCode="NOTEBOOK"
       />
       <NotebookClient />
     </main>

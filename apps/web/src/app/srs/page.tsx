@@ -10,7 +10,7 @@ export default function SrsPage() {
         eyebrow="Atelier · Mémoire long-terme"
         title="Révisions du jour"
         subtitle="Algorithme FSRS-4. Réponds honnêtement — c'est l'auto-tromperie qui te coûte la rétention, pas l'échec."
-        ref="SRS"
+        refCode="SRS"
       />
       <SrsReviewer />
     </main>

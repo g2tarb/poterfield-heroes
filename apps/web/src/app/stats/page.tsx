@@ -10,7 +10,7 @@ export default function StatsPage() {
         eyebrow="Atelier · Mesures"
         title="Radar mastery 12 axes"
         subtitle="Pondéré par contribution skill × pourcentage de mastery."
-        ref="STATS"
+        refCode="STATS"
       />
       <StatsClient />
     </main>

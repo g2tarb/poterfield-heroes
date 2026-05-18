@@ -10,7 +10,7 @@ export default function SettingsPage() {
         eyebrow="Atelier · Configuration"
         title="Réglages"
         subtitle="Préférences, budget IA, actions destructives."
-        ref="CONFIG"
+        refCode="CONFIG"
       />
       <SettingsClient />
     </main>

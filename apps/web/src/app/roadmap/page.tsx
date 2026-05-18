@@ -52,7 +52,7 @@ export default async function RoadmapPage() {
         eyebrow="Atelier · Plan général"
         title="25 stations · 8 sections"
         subtitle={`Chaîne complète : ~${totalHours}h. Chaque station se déverrouille quand la précédente est terminée. Pas de raccourci, pas de skip.`}
-        ref="ROADMAP"
+        refCode="ROADMAP"
       />
 
       <div className="mx-auto max-w-3xl space-y-8">

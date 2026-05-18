@@ -10,7 +10,7 @@ export default function SandboxPage() {
         eyebrow="Atelier · Bac à sable"
         title="Sandbox JavaScript"
         subtitle="Exécution isolée dans un Web Worker. Timeout 5s. Pas d'accès DOM. Pour expérimenter, débugger un snippet, vérifier une intuition."
-        ref="SANDBOX"
+        refCode="SANDBOX"
       />
       <Sandbox title="JS Runtime" />
     </main>

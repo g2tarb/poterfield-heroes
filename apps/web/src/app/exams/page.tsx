@@ -27,7 +27,7 @@ export default async function ExamsPage() {
         eyebrow="Atelier · Contrôles hebdomadaires"
         title="Examens"
         subtitle="Tous les contrôles que tu as passés. Un nouveau est généré chaque vendredi soir à partir de ton activité de la semaine."
-        ref="EXAMS"
+        refCode="EXAMS"
       />
 
       <div className="mx-auto max-w-3xl">
