@@ -62,6 +62,7 @@ function SkillRow({ skill, index }: { skill: Skill; index: number }) {
     try {
       const q = await apiFetch<Question>(`/api/skills/${skill.id}/check`, {
         method: "POST",
+        body: JSON.stringify({}),
       });
       setQuestion(q);
     } catch (e) {
