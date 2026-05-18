@@ -3,6 +3,7 @@ import Link from "next/link";
 import { apiFetch, ApiError } from "@/lib/api";
 import { ModuleStartButton } from "@/components/module/ModuleStartButton";
 import { ExerciseRunner } from "@/components/module/ExerciseRunner";
+import { SkillChecklist } from "@/components/module/SkillChecklist";
 
 type ModuleDetail = {
   module: {
@@ -23,6 +24,8 @@ type ModuleDetail = {
     label: string;
     weight: number;
     displayOrder: number;
+    status: "discovering" | "practicing" | "mastered" | null;
+    masteryPct: number | null;
   }>;
   videos: Array<{
     id: string;
@@ -323,24 +326,8 @@ export default async function ModulePage({
             </section>
           )}
 
-          {/* Compétences */}
-          {skills.length > 0 && (
-            <section className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
-              <h3 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-                Compétences à valider ({skills.length})
-              </h3>
-              <ul className="space-y-1.5 text-xs">
-                {skills.map((s, i) => (
-                  <li key={s.id} className="flex gap-2 leading-snug">
-                    <span className="shrink-0 font-mono tabular-nums text-[var(--color-fg-muted)]">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span>{s.label}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
+          {/* Compétences cochables */}
+          {skills.length > 0 && <SkillChecklist skills={skills} />}
         </aside>
       </div>
     </main>

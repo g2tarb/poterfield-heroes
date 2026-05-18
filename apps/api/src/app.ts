@@ -21,6 +21,7 @@ import progressRoutes from "./routes/progress.js";
 import publicRoutes from "./routes/public.js";
 import pushRoutes from "./routes/push.js";
 import settingsRoutes from "./routes/settings.js";
+import skillsRoutes from "./routes/skills.js";
 import srsRoutes from "./routes/srs.js";
 import videoRoutes from "./routes/video.js";
 import { env } from "./config/env.js";
@@ -87,6 +88,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(pushRoutes, { prefix: "/api" });
   await app.register(videoRoutes, { prefix: "/api" });
   await app.register(settingsRoutes, { prefix: "/api" });
+  await app.register(skillsRoutes, { prefix: "/api" });
 
   return app;
 }

@@ -8,6 +8,7 @@ import {
   videos,
   exercises,
   moduleProgress,
+  skillProgress,
 } from "@ph/db";
 import { NotFoundError } from "../lib/errors.js";
 
@@ -139,8 +140,17 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
       const [skillsList, videosList, exercisesList, progress] =
         await Promise.all([
           app.db
-            .select()
+            .select({
+              id: skills.id,
+              slug: skills.slug,
+              label: skills.label,
+              weight: skills.weight,
+              displayOrder: skills.displayOrder,
+              status: skillProgress.status,
+              masteryPct: skillProgress.masteryPct,
+            })
             .from(skills)
+            .leftJoin(skillProgress, eq(skillProgress.skillId, skills.id))
             .where(eq(skills.moduleId, mod.id))
             .orderBy(asc(skills.displayOrder)),
           app.db
