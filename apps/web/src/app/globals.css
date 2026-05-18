@@ -385,12 +385,6 @@ body {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   letter-spacing: 0.02em;
-  /* Néon ambre vintage forge */
-  color: color-mix(in oklch, var(--color-accent), white 15%);
-  text-shadow:
-    0 0 4px color-mix(in oklch, var(--color-accent), transparent 30%),
-    0 0 12px color-mix(in oklch, var(--color-accent), transparent 60%),
-    0 0 22px color-mix(in oklch, var(--color-accent), transparent 80%);
   opacity: 0;
   /* parallax : chaque ligne a un facteur de profondeur via --depth (0.2 à 1.8) */
   transform: translate3d(
@@ -398,20 +392,30 @@ body {
     calc(var(--my) * var(--depth, 1) * 1px),
     0
   );
+  /* 3 animations en parallèle :
+     - drift : traverse l'écran horizontalement
+     - fade  : apparition/disparition cyclique
+     - hue   : cycle fluo multicolore (cyan→magenta→vert→jaune→ambre→violet) */
   animation:
     ph-code-drift linear infinite,
-    ph-code-fade ease-in-out infinite;
-  will-change: transform, opacity;
-  transition: text-shadow 200ms ease;
+    ph-code-fade ease-in-out infinite,
+    ph-code-hue 8s linear infinite;
+  will-change: transform, opacity, color;
+  /* Couleur initiale + glow néon (mis à jour par @keyframes ph-code-hue) */
+  color: oklch(0.85 0.25 200);
+  text-shadow:
+    0 0 4px currentColor,
+    0 0 12px currentColor,
+    0 0 22px color-mix(in oklch, currentColor, transparent 60%);
 }
 
-/* Boost néon quand le user hover un élément intéressant (survol global) */
+/* Boost néon quand le user bouge la souris */
 .ph-code-bg:hover .ph-code-bg-line,
 .ph-code-bg.is-active .ph-code-bg-line {
   text-shadow:
-    0 0 6px var(--color-accent),
-    0 0 18px color-mix(in oklch, var(--color-accent), transparent 30%),
-    0 0 36px color-mix(in oklch, var(--color-accent), transparent 50%);
+    0 0 6px currentColor,
+    0 0 18px currentColor,
+    0 0 36px color-mix(in oklch, currentColor, transparent 30%);
 }
 
 @keyframes ph-code-drift {
@@ -427,8 +431,18 @@ body {
     opacity: 0;
   }
   15%, 85% {
-    opacity: 0.18;
+    opacity: 0.22;
   }
+}
+/* Cycle fluo : 6 couleurs néon → palette atelier électrique */
+@keyframes ph-code-hue {
+  0%   { color: oklch(0.85 0.25 200); }  /* cyan néon */
+  17%  { color: oklch(0.75 0.30 330); }  /* magenta */
+  33%  { color: oklch(0.88 0.28 140); }  /* vert acide */
+  50%  { color: oklch(0.92 0.22 100); }  /* jaune fluo */
+  67%  { color: oklch(0.82 0.24 60);  }  /* orange électrique */
+  83%  { color: oklch(0.70 0.30 290); }  /* violet néon */
+  100% { color: oklch(0.85 0.25 200); }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -11,6 +11,7 @@ type Line = {
   duration: number;
   delay: number;
   fadeDuration: number;
+  hueDelay: number;
   depth: number;
 };
 
@@ -24,6 +25,8 @@ function generateLines(snippets: string[]): Line[] {
     duration: 35 + Math.random() * 55,
     delay: Math.random() * -80,
     fadeDuration: 10 + Math.random() * 8,
+    // delay aléatoire pour le cycle de couleur (8s de période → -8 à 0)
+    hueDelay: Math.random() * -8,
     depth: 0.3 + Math.random() * 1.5,
   }));
 }
@@ -99,8 +102,9 @@ export function CodeRain() {
           style={
             {
               top: `${line.top}%`,
-              animationDuration: `${line.duration}s, ${line.fadeDuration}s`,
-              animationDelay: `${line.delay}s, ${line.delay}s`,
+              // 3 animations : drift, fade, hue
+              animationDuration: `${line.duration}s, ${line.fadeDuration}s, 8s`,
+              animationDelay: `${line.delay}s, ${line.delay}s, ${line.hueDelay}s`,
               "--depth": line.depth,
             } as React.CSSProperties
           }
