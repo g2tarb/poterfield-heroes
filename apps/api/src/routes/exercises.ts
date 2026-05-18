@@ -76,7 +76,7 @@ const exercisesRoutes: FastifyPluginAsync = async (app) => {
           .where(eq(modules.id, ex.moduleId))
           .limit(1);
 
-        result = await correctExercise({
+        result = await correctExercise(app.db, {
           statement: ex.statement,
           solutionCode: ex.solutionCode,
           expectedOutput: ex.expectedOutput,
@@ -86,6 +86,7 @@ const exercisesRoutes: FastifyPluginAsync = async (app) => {
           userAnswer: body.answer,
           moduleNumber: mod?.moduleNumber ?? 1,
           phase: mod?.phase ?? 1,
+          exerciseId: ex.id,
         });
       }
 

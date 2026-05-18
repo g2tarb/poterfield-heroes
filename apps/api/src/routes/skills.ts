@@ -59,11 +59,12 @@ const skillsRoutes: FastifyPluginAsync = async (app) => {
         .limit(1);
       if (!mod) throw new NotFoundError("Module");
 
-      const q = await generateSkillQuestion({
+      const q = await generateSkillQuestion(app.db, {
         skillLabel: skill.label,
         moduleTitle: mod.title,
         moduleNumber: mod.moduleNumber,
         phase: mod.phase,
+        skillId: skill.id,
       });
 
       return q;
@@ -102,13 +103,14 @@ const skillsRoutes: FastifyPluginAsync = async (app) => {
         .where(eq(modules.id, skill.moduleId))
         .limit(1);
 
-      const result = await validateSkillAnswer({
+      const result = await validateSkillAnswer(app.db, {
         skillLabel: skill.label,
         question: body.question,
         expectedAnswer: body.expectedAnswer,
         userAnswer: body.userAnswer,
         moduleNumber: mod?.moduleNumber ?? 1,
         phase: mod?.phase ?? 1,
+        skillId: skill.id,
       });
 
       const masteryPct =

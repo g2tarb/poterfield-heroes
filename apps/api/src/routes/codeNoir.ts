@@ -3,8 +3,8 @@ import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { asc, eq } from "drizzle-orm";
 import { modules, moduleProgress } from "@ph/db";
-import { anthropic, MODEL_SONNET } from "../lib/anthropic.js";
-import { AppError } from "../lib/errors.js";
+import { MODEL_SONNET } from "../lib/anthropic.js";
+import { callClaude } from "../lib/claudeCall.js";
 import {
   CODE_NOIR_TECHNIQUES,
   getUnlockedTechniques,
@@ -63,10 +63,6 @@ const codeNoirRoutes: FastifyPluginAsync = async (app) => {
       },
     },
     async ({ body }) => {
-      if (!anthropic) {
-        throw new AppError(503, "ANTHROPIC_API_KEY missing");
-      }
-
       const currentModule = await getCurrentModuleNumber(app);
       const unlocked = getUnlockedTechniques(currentModule);
       const system = buildCodeNoirSystemPrompt({
@@ -74,20 +70,17 @@ const codeNoirRoutes: FastifyPluginAsync = async (app) => {
         unlocked,
       });
 
-      const response = await anthropic.messages.create({
+      const { text } = await callClaude({
+        db: app.db,
+        category: "code_noir",
         model: MODEL_SONNET,
-        max_tokens: 1200,
         system,
         messages: [{ role: "user", content: body.question }],
+        maxTokens: 1200,
       });
 
-      const textBlock = response.content.find((b) => b.type === "text");
-      if (!textBlock || textBlock.type !== "text") {
-        throw new AppError(502, "Claude returned no text");
-      }
-
       return {
-        answer: textBlock.text,
+        answer: text,
         currentModule,
         unlockedCount: unlocked.length,
       };

@@ -154,8 +154,17 @@ Neon supporte pgvector natif. Crée un projet → copie la `DATABASE_URL` → me
 - **API** : si reverse proxy en place, retire `ports: 3031` du compose
 - **CORS** : strictement le domaine du web
 - **Cookie httpOnly** : déjà configuré, `SameSite=lax`
-- **Backups** : configure le workflow GitHub Actions `backup.yml` ou un cron docker
-- **Rate limiting** : pas implémenté — mono-user donc moins critique, mais à ajouter avant exposition
+- **Backups** : workflow GitHub Actions `backup.yml` activé (cron quotidien 3h UTC).
+  Pour qu'il fonctionne, configure ces 4 secrets dans GitHub repo settings :
+  - `DATABASE_URL_PROD` : URL externe Postgres prod (Coolify → DB → "Connection String External")
+  - `R2_ACCOUNT_ID` : Cloudflare R2 account ID
+  - `R2_ACCESS_KEY_ID` : R2 API token access key
+  - `R2_SECRET_ACCESS_KEY` : R2 API token secret
+  - `R2_BUCKET_NAME` : nom du bucket (ex: `porterfield-backups`)
+  Trigger manuel : Actions tab → "Backup Postgres → R2" → Run workflow.
+- **Rate limiting** : 5 tentatives/5min sur `/api/auth/login` (Fastify rate-limit plugin)
+- **Cost cap IA** : `MONTHLY_AI_BUDGET_CENTS` env var (défaut 5000¢ = 50€).
+  Au-delà, tous les calls Claude retournent 429. Vu dans Settings UI.
 
 ---
 

@@ -1,10 +1,7 @@
-import {
-  anthropic,
-  MODEL_HAIKU,
-  computeCostCents,
-  extractCacheTokens,
-} from "../lib/anthropic.js";
+import type { Database } from "@ph/db";
+import { MODEL_HAIKU } from "../lib/anthropic.js";
 import { AppError } from "../lib/errors.js";
+import { callClaude } from "../lib/claudeCall.js";
 import { buildExerciseCorrectionSystemPrompt } from "../lib/modulePersonas.js";
 
 export type CorrectionVerdict = "correct" | "partial" | "incorrect";
@@ -17,21 +14,21 @@ export type CorrectionResult = {
   costCents: number;
 };
 
-export async function correctExercise(input: {
-  statement: string;
-  solutionCode: string | null;
-  expectedOutput: string | null;
-  language: string | null;
-  kind: string;
-  title: string;
-  userAnswer: string;
-  moduleNumber: number;
-  phase: number;
-}): Promise<CorrectionResult> {
-  if (!anthropic) {
-    throw new AppError(503, "ANTHROPIC_API_KEY missing — correction disabled");
-  }
-
+export async function correctExercise(
+  db: Database,
+  input: {
+    statement: string;
+    solutionCode: string | null;
+    expectedOutput: string | null;
+    language: string | null;
+    kind: string;
+    title: string;
+    userAnswer: string;
+    moduleNumber: number;
+    phase: number;
+    exerciseId?: string;
+  },
+): Promise<CorrectionResult> {
   const lang = input.language ?? "text";
   const system = buildExerciseCorrectionSystemPrompt({
     moduleNumber: input.moduleNumber,
@@ -49,19 +46,17 @@ ${input.userAnswer}
 
 Évalue. Réponds en JSON strict, rien d'autre.`;
 
-  const response = await anthropic.messages.create({
+  const { text, costCents } = await callClaude({
+    db,
+    category: "exercise_correction",
     model: MODEL_HAIKU,
-    max_tokens: 1024,
     system,
     messages: [{ role: "user", content: prompt }],
+    maxTokens: 1024,
+    sourceRef: input.exerciseId ? `exercise:${input.exerciseId}` : null,
   });
 
-  const textBlock = response.content.find((b) => b.type === "text");
-  if (!textBlock || textBlock.type !== "text") {
-    throw new AppError(502, "Claude returned no text response");
-  }
-
-  const jsonMatch = textBlock.text.match(/\{[\s\S]*\}/);
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) {
     throw new AppError(502, "Claude response did not contain JSON");
   }
@@ -77,16 +72,6 @@ ${input.userAnswer}
   } catch {
     throw new AppError(502, "Claude returned invalid JSON");
   }
-
-  const usage = response.usage;
-  const cache = extractCacheTokens(usage);
-  const costCents = computeCostCents(
-    MODEL_HAIKU,
-    usage.input_tokens,
-    usage.output_tokens,
-    cache.cacheReadInputTokens,
-    cache.cacheCreationInputTokens,
-  );
 
   return {
     verdict: parsed.verdict,

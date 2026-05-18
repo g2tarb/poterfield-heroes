@@ -9,3 +9,4 @@ export * from "./coach";
 export * from "./github";
 export * from "./exams";
 export * from "./user";
+export * from "./aiCosts";
