@@ -118,7 +118,7 @@ export function ExamRunner() {
 
   if (error === "not_yet") {
     return (
-      <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-6">
+      <div className="ph-panel ph-rivets relative overflow-hidden p-6">
         <p>Pas encore d&apos;examen pour cette semaine.</p>
         <p className="mt-2 text-sm text-[var(--color-fg-secondary)]">
           La génération automatique tourne tous les vendredis à 18h.{" "}
@@ -221,7 +221,7 @@ export function ExamRunner() {
             return (
               <li
                 key={i}
-                className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4"
+                className="ph-panel relative overflow-hidden p-4"
               >
                 <p className="font-semibold">
                   {i + 1}. {q.prompt}
@@ -267,7 +267,7 @@ export function ExamRunner() {
         {exam.questions.map((q, i) => (
           <li
             key={i}
-            className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-5"
+            className="ph-panel ph-rivets relative overflow-hidden p-5"
           >
             <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
               Question {i + 1} / {exam.questions.length} · {q.kind}

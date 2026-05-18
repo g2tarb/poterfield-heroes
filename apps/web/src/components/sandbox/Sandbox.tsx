@@ -87,8 +87,8 @@ export function Sandbox({
 
       <div className="grid grid-cols-1 gap-2 flex-1 min-h-0 md:grid-cols-2">
         {/* Editor */}
-        <div className="flex flex-col min-h-0">
-          <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] px-3 py-2 text-xs font-mono uppercase tracking-wider text-[var(--color-fg-muted)] rounded-t-md">
+        <div className="ph-panel flex flex-col min-h-0 overflow-hidden">
+          <div className="ph-station-header flex items-center justify-between px-3 py-2 text-xs font-mono font-bold uppercase tracking-[0.2em] text-[var(--color-fg-secondary)]">
             {allowLanguageSwitch ? (
               <select
                 value={language}
@@ -138,8 +138,8 @@ export function Sandbox({
         </div>
 
         {/* Console */}
-        <div className="flex flex-col min-h-0 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)]">
-          <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-3 py-2 text-xs font-mono uppercase tracking-wider text-[var(--color-fg-muted)]">
+        <div className="ph-panel flex flex-col min-h-0 overflow-hidden">
+          <div className="ph-station-header flex items-center justify-between px-3 py-2 text-xs font-mono font-bold uppercase tracking-[0.2em] text-[var(--color-fg-secondary)]">
             <span>Console</span>
             <button
               type="button"

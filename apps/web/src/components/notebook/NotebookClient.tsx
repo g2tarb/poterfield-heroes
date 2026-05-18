@@ -276,11 +276,11 @@ export function NotebookClient() {
       {/* Editor */}
       <section
         className={cn(
-          "rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]",
+          "ph-panel relative overflow-hidden",
           // Sur mobile : si pas sélectionné, cache l'éditeur
           !selected && "hidden md:block",
           // Sur mobile : full-screen quand une note est ouverte
-          selected && "max-md:fixed max-md:inset-0 max-md:z-40 max-md:rounded-none max-md:border-0",
+          selected && "max-md:fixed max-md:inset-0 max-md:z-40 max-md:border-0",
         )}
       >
         {!selected ? (
