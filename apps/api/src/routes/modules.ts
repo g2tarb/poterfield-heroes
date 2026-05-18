@@ -49,15 +49,46 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
         .leftJoin(moduleProgress, eq(moduleProgress.moduleId, modules.id))
         .orderBy(asc(modules.moduleNumber));
 
-      return rows.map((r) => ({
-        id: r.id,
-        moduleNumber: r.moduleNumber,
-        phase: r.phase,
-        title: r.title,
-        subtitle: r.subtitle,
-        estimatedHours: r.estimatedHours,
-        status: r.status ?? ("locked" as const),
-      }));
+      // Déverrouillage en cascade : si le module précédent est completed
+      // (ou si c'est M01), un module sans progress est rendu "active".
+      let firstUnstartedFound = false;
+      return rows.map((r) => {
+        if (r.status === "completed") {
+          return {
+            id: r.id,
+            moduleNumber: r.moduleNumber,
+            phase: r.phase,
+            title: r.title,
+            subtitle: r.subtitle,
+            estimatedHours: r.estimatedHours,
+            status: "completed" as const,
+          };
+        }
+        if (r.status === "active") {
+          firstUnstartedFound = true;
+          return {
+            id: r.id,
+            moduleNumber: r.moduleNumber,
+            phase: r.phase,
+            title: r.title,
+            subtitle: r.subtitle,
+            estimatedHours: r.estimatedHours,
+            status: "active" as const,
+          };
+        }
+        // Pas de progress: le premier rencontré devient active, les autres locked
+        const status = firstUnstartedFound ? "locked" : "active";
+        if (!firstUnstartedFound) firstUnstartedFound = true;
+        return {
+          id: r.id,
+          moduleNumber: r.moduleNumber,
+          phase: r.phase,
+          title: r.title,
+          subtitle: r.subtitle,
+          estimatedHours: r.estimatedHours,
+          status: status as "locked" | "active",
+        };
+      });
     },
   );
 
