@@ -5,8 +5,9 @@ import { usePathname } from "next/navigation";
 
 const ITEMS = [
   { href: "/", label: "Atelier", icon: "🪜" },
+  { href: "/roadmap", label: "Plan", icon: "🗺" },
+  { href: "/srs", label: "SRS", icon: "🧠" },
   { href: "/notebook", label: "Carnet", icon: "📓" },
-  { href: "/stats", label: "Stats", icon: "📊" },
   { href: "/settings", label: "Réglages", icon: "⚙️" },
 ] as const;
 
@@ -18,7 +19,7 @@ export function BottomNav() {
       className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-base)]/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom)] lg:hidden"
       aria-label="Navigation principale"
     >
-      <ul className="grid grid-cols-4">
+      <ul className="grid grid-cols-5">
         {ITEMS.map((item) => {
           const active =
             item.href === "/"

@@ -10,13 +10,17 @@ const TITLES: Record<string, string> = {
   "/settings": "Réglages",
   "/srs": "Révisions",
   "/sandbox": "Sandbox",
-  "/roadmap": "Roadmap",
+  "/roadmap": "Plan",
   "/github": "GitHub",
+  "/exams": "Examens",
+  "/exams/current": "Examen",
+  "/code-noir": "Code Noir",
 };
 
 function deriveTitle(pathname: string): string {
   if (pathname.startsWith("/modules/")) return "Module";
   if (pathname.startsWith("/p/")) return "Vitrine";
+  if (pathname.startsWith("/exams/")) return "Examen";
   return TITLES[pathname] ?? "Porterfield";
 }
 
