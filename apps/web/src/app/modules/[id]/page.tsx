@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { apiFetch, ApiError } from "@/lib/api";
 import { ModuleStartButton } from "@/components/module/ModuleStartButton";
+import { ExerciseRunner } from "@/components/module/ExerciseRunner";
 
 type ModuleDetail = {
   module: {
@@ -42,8 +43,18 @@ type ModuleDetail = {
       | "project_validation";
     title: string;
     statement: string;
+    starterCode: string | null;
+    language: string | null;
+    quizQuestions: Array<{
+      question: string;
+      options?: string[];
+      correctIndex?: number;
+      correctText?: string;
+      explanation: string;
+    }> | null;
     estimatedMinutes: number | null;
     displayOrder: number;
+    passThresholdPct: number;
   }>;
   progress: {
     status: "locked" | "active" | "completed";
@@ -66,32 +77,6 @@ function formatDuration(seconds: number | null): string | null {
   const m = Math.floor((seconds % 3600) / 60);
   return h > 0 ? `${h}h${String(m).padStart(2, "0")}` : `${m}min`;
 }
-
-const EXERCISE_META: Record<
-  ModuleDetail["exercises"][number]["kind"],
-  { label: string; icon: string; color: string }
-> = {
-  quiz_activation: {
-    label: "Quiz d'activation",
-    icon: "🎯",
-    color: "text-[var(--color-fg-secondary)]",
-  },
-  quiz_verification: {
-    label: "Quiz de vérification",
-    icon: "✅",
-    color: "text-[var(--color-success)]",
-  },
-  code_exercise: {
-    label: "Exercice code",
-    icon: "💻",
-    color: "text-[var(--color-accent)]",
-  },
-  project_validation: {
-    label: "Projet de validation",
-    icon: "🎓",
-    color: "text-[var(--color-accent)]",
-  },
-};
 
 export default async function ModulePage({
   params,
@@ -257,44 +242,22 @@ export default async function ModulePage({
                 Étapes du parcours ({exercises.length})
               </h2>
               <ol className="space-y-3">
-                {exercises.map((e, i) => {
-                  const meta = EXERCISE_META[e.kind];
-                  return (
-                    <li
-                      key={e.id}
-                      className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4"
-                    >
-                      <div className="flex items-baseline gap-3">
-                        <span
-                          className="shrink-0 text-xl leading-none"
-                          aria-hidden
-                        >
-                          {meta.icon}
-                        </span>
-                        <div className="min-w-0 flex-1">
-                          <p
-                            className={`font-mono text-xs uppercase tracking-wider ${meta.color}`}
-                          >
-                            Étape {i + 1} · {meta.label}
-                            {e.estimatedMinutes && (
-                              <span className="text-[var(--color-fg-muted)]">
-                                {" "}
-                                · ~{e.estimatedMinutes} min
-                              </span>
-                            )}
-                          </p>
-                          <h3 className="mt-1.5 text-base font-semibold">
-                            {e.title}
-                          </h3>
-                          <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-[var(--color-fg-secondary)]">
-                            {e.statement.split("\n").slice(0, 3).join("\n")}
-                            {e.statement.split("\n").length > 3 && "…"}
-                          </p>
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })}
+                {exercises.map((e, i) => (
+                  <li key={e.id}>
+                    <ExerciseRunner
+                      exerciseId={e.id}
+                      kind={e.kind}
+                      title={e.title}
+                      statement={e.statement}
+                      starterCode={e.starterCode}
+                      language={e.language}
+                      quizQuestions={e.quizQuestions}
+                      estimatedMinutes={e.estimatedMinutes}
+                      passThresholdPct={e.passThresholdPct}
+                      index={i}
+                    />
+                  </li>
+                ))}
               </ol>
             </section>
           )}

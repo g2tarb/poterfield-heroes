@@ -122,7 +122,18 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
             .where(eq(videos.moduleId, mod.id))
             .orderBy(asc(videos.displayOrder)),
           app.db
-            .select()
+            .select({
+              id: exercises.id,
+              kind: exercises.kind,
+              title: exercises.title,
+              statement: exercises.statement,
+              starterCode: exercises.starterCode,
+              language: exercises.language,
+              quizQuestions: exercises.quizQuestions,
+              estimatedMinutes: exercises.estimatedMinutes,
+              displayOrder: exercises.displayOrder,
+              passThresholdPct: exercises.passThresholdPct,
+            })
             .from(exercises)
             .where(eq(exercises.moduleId, mod.id))
             .orderBy(asc(exercises.displayOrder)),
