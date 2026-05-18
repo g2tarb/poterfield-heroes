@@ -22,10 +22,12 @@ function generateLines(snippets: string[]): Line[] {
     id: i,
     text: snippets[Math.floor(Math.random() * snippets.length)] ?? "",
     top: Math.random() * 100,
-    duration: 35 + Math.random() * 55,
-    delay: Math.random() * -80,
-    fadeDuration: 10 + Math.random() * 8,
-    // delay aléatoire pour le cycle de couleur (8s de période → -8 à 0)
+    // Drift plus rapide pour qu'un changement de module soit visible vite
+    duration: 18 + Math.random() * 22,
+    // Delay petit (négatif léger) : les lignes apparaissent toutes dans les 2-3 premières secondes
+    delay: Math.random() * -3,
+    // Fade plus rapide (4-8s) → on perçoit le swap de snippets quand on hover
+    fadeDuration: 4 + Math.random() * 4,
     hueDelay: Math.random() * -8,
     depth: 0.3 + Math.random() * 1.5,
   }));
@@ -94,6 +96,16 @@ export function CodeRain() {
   }, [isTouch]);
 
   return (
+    <>
+      {/* Badge indicateur du module courant pour le code ambient */}
+      {focused !== null && (
+        <div
+          className="pointer-events-none fixed bottom-20 right-4 z-30 font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-accent)] opacity-60 lg:bottom-4"
+          aria-hidden
+        >
+          ░ snippets M{String(focused).padStart(2, "0")}
+        </div>
+      )}
     <div ref={containerRef} className="ph-code-bg" aria-hidden>
       {lines.map((line) => (
         <div
@@ -113,5 +125,6 @@ export function CodeRain() {
         </div>
       ))}
     </div>
+    </>
   );
 }
