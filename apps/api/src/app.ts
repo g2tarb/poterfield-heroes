@@ -11,6 +11,7 @@ import authPlugin from "./plugins/auth.js";
 import dbPlugin from "./plugins/db.js";
 import errorHandlerPlugin from "./plugins/error-handler.js";
 import coachRoutes from "./routes/coach.js";
+import codeNoirRoutes from "./routes/codeNoir.js";
 import examsRoutes from "./routes/exams.js";
 import exercisesRoutes from "./routes/exercises.js";
 import githubRoutes from "./routes/github.js";
@@ -78,6 +79,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(healthRoutes);
   await app.register(modulesRoutes, { prefix: "/api" });
   await app.register(coachRoutes, { prefix: "/api" });
+  await app.register(codeNoirRoutes, { prefix: "/api" });
   await app.register(srsRoutes, { prefix: "/api" });
   await app.register(notebookRoutes, { prefix: "/api" });
   await app.register(progressRoutes, { prefix: "/api" });

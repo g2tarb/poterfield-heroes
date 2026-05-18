@@ -367,6 +367,49 @@ body {
   animation: ph-glitch-clip 280ms steps(2, end) 2 reverse;
 }
 
+/* === CODE NOIR — style terminal hacker === */
+.ph-noir {
+  background: #000;
+  color: #00ff88;
+  font-family: var(--font-mono);
+  min-height: 100svh;
+}
+.ph-noir-glow {
+  text-shadow:
+    0 0 4px #00ff88,
+    0 0 12px rgba(0, 255, 136, 0.6),
+    0 0 22px rgba(0, 255, 136, 0.3);
+}
+.ph-noir-scan {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 2px,
+    rgba(0, 255, 136, 0.04) 2px,
+    rgba(0, 255, 136, 0.04) 4px
+  );
+}
+.ph-noir-card {
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  background: rgba(0, 20, 10, 0.4);
+}
+.ph-noir-card-locked {
+  border: 1px solid rgba(255, 0, 80, 0.25);
+  background: rgba(20, 0, 10, 0.3);
+  color: rgba(255, 0, 80, 0.55);
+}
+@keyframes ph-noir-flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.3; }
+  94% { opacity: 1; }
+  95% { opacity: 0.6; }
+  96% { opacity: 1; }
+}
+.ph-noir-flicker {
+  animation: ph-noir-flicker 4s infinite;
+}
+
 /* === Background code ambient — néon ambre + parallax curseur === */
 .ph-code-bg {
   pointer-events: none;

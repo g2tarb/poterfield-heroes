@@ -10,6 +10,7 @@ import {
 } from "../staircase/StaircaseSkeleton";
 import { CodeRain } from "../ambient/CodeRain";
 import { FocusedModuleProvider } from "../ambient/FocusedModuleContext";
+import { KonamiUnlock } from "../ambient/KonamiUnlock";
 
 type Progression = {
   user: {
@@ -73,6 +74,7 @@ export function Dashboard() {
   return (
     <FocusedModuleProvider defaultModule={defaultModuleNumber}>
       <CodeRain />
+      <KonamiUnlock />
       <div className="relative grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px] lg:gap-8">
         <div className="order-1 lg:order-2">
           {loaded && progression ? (
