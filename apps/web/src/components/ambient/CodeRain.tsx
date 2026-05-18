@@ -31,10 +31,18 @@ function generateLines(snippets: string[]): Line[] {
 export function CodeRain() {
   const { focused } = useFocusedModule();
   const [lines, setLines] = useState<Line[]>([]);
+  const [isTouch, setIsTouch] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const targetRef = useRef({ x: 0, y: 0 });
   const currentRef = useRef({ x: 0, y: 0 });
+
+  // Détecte mobile/touch pour skip uniquement le parallax mousemove
+  // (les animations CSS restent actives)
+  useEffect(() => {
+    const touch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    setIsTouch(touch);
+  }, []);
 
   // Re-génère les lignes quand le module focused change
   useEffect(() => {
@@ -42,8 +50,10 @@ export function CodeRain() {
     setLines(generateLines(snippets));
   }, [focused]);
 
-  // Parallax au curseur — lerp pour mouvement fluide
+  // Parallax au curseur — lerp pour mouvement fluide (desktop only,
+  // sur mobile on garde les lignes animées mais sans tracking souris)
   useEffect(() => {
+    if (isTouch) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -78,7 +88,7 @@ export function CodeRain() {
       window.removeEventListener("mouseleave", onLeave);
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
-  }, []);
+  }, [isTouch]);
 
   return (
     <div ref={containerRef} className="ph-code-bg" aria-hidden>

@@ -165,13 +165,13 @@ export function NotebookClient() {
   return (
     <div
       className={cn(
-        "grid grid-cols-1 gap-4 md:grid-cols-[300px_1fr] md:gap-6",
+        "grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-[300px_1fr] md:gap-6",
         // Sur mobile : si une note est ouverte, on cache la liste
         selected && "max-md:[&>aside]:hidden",
       )}
     >
       {/* Sidebar */}
-      <aside className="space-y-3 md:max-h-[calc(100svh-9rem)] md:overflow-y-auto">
+      <aside className="space-y-2 sm:space-y-3 md:max-h-[calc(100svh-9rem)] md:overflow-y-auto">
         {/* Search */}
         <input
           type="search"
@@ -279,6 +279,8 @@ export function NotebookClient() {
           "rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]",
           // Sur mobile : si pas sélectionné, cache l'éditeur
           !selected && "hidden md:block",
+          // Sur mobile : full-screen quand une note est ouverte
+          selected && "max-md:fixed max-md:inset-0 max-md:z-40 max-md:rounded-none max-md:border-0",
         )}
       >
         {!selected ? (
@@ -293,12 +295,12 @@ export function NotebookClient() {
             </div>
           </div>
         ) : (
-          <div className="flex h-full flex-col">
-            <header className="flex items-center gap-2 border-b border-[var(--color-border-subtle)] px-3 py-2.5">
+          <div className="flex h-full flex-col max-md:h-svh">
+            <header className="sticky top-0 z-10 flex items-center gap-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] px-3 py-2.5">
               <button
                 type="button"
                 onClick={() => setSelectedId(null)}
-                className="shrink-0 rounded-md p-1 text-[var(--color-fg-muted)] transition hover:text-[var(--color-fg-primary)] md:hidden"
+                className="shrink-0 rounded-md px-2 py-1 text-base text-[var(--color-fg-muted)] transition hover:text-[var(--color-fg-primary)] md:hidden"
                 aria-label="Retour à la liste"
               >
                 ←
@@ -308,34 +310,35 @@ export function NotebookClient() {
                 onChange={(e) =>
                   setEditing((s) => ({ ...s, title: e.target.value }))
                 }
-                className="flex-1 bg-transparent text-base font-semibold focus:outline-none sm:text-lg"
-                placeholder="Titre de la note"
+                className="min-w-0 flex-1 bg-transparent text-base font-semibold focus:outline-none sm:text-lg"
+                placeholder="Titre"
               />
-              <div className="flex shrink-0 items-center gap-1.5">
+              <div className="flex shrink-0 items-center gap-1">
                 <button
                   type="button"
                   onClick={() => setPreview((v) => !v)}
                   className={cn(
-                    "rounded-md border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition",
+                    "rounded-md border px-2 py-1 font-mono text-[10px] uppercase tracking-wider transition sm:px-2.5",
                     preview
                       ? "border-[var(--color-accent)] text-[var(--color-accent)]"
                       : "border-[var(--color-border-strong)] hover:border-[var(--color-accent)]",
                   )}
+                  aria-label={preview ? "Mode édition" : "Mode aperçu"}
                 >
-                  {preview ? "Éditer" : "Aperçu"}
+                  {preview ? "Éd." : "Aperçu"}
                 </button>
                 <button
                   type="button"
                   onClick={() => remove(selected.id)}
-                  className="rounded-md border border-[var(--color-border-strong)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition hover:border-[var(--color-danger)] hover:text-[var(--color-danger)]"
+                  className="rounded-md border border-[var(--color-border-strong)] px-2 py-1 font-mono text-[10px] uppercase tracking-wider transition hover:border-[var(--color-danger)] hover:text-[var(--color-danger)] sm:px-2.5"
                   aria-label="Supprimer"
                 >
-                  Suppr
+                  🗑
                 </button>
               </div>
             </header>
 
-            <div className="min-h-[400px] flex-1 p-4">
+            <div className="flex-1 overflow-y-auto p-3 sm:p-4 md:min-h-[400px]">
               {preview ? (
                 <Markdown source={editing.content || "_(note vide)_"} />
               ) : (
@@ -344,15 +347,14 @@ export function NotebookClient() {
                   onChange={(e) =>
                     setEditing((s) => ({ ...s, content: e.target.value }))
                   }
-                  className="h-full min-h-[400px] w-full resize-none bg-transparent font-mono text-sm leading-relaxed focus:outline-none"
+                  className="h-full min-h-[300px] w-full resize-none bg-transparent font-mono text-sm leading-relaxed focus:outline-none md:min-h-[400px]"
                   placeholder="Markdown…"
-                  autoFocus
                 />
               )}
             </div>
 
-            <footer className="flex items-center justify-between border-t border-[var(--color-border-subtle)] px-4 py-2 font-mono text-[10px] text-[var(--color-fg-muted)]">
-              <span>
+            <footer className="sticky bottom-0 flex items-center justify-between gap-2 border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] px-3 py-2 font-mono text-[10px] text-[var(--color-fg-muted)] sm:px-4">
+              <span className="truncate">
                 {saving ? (
                   <span className="text-[var(--color-accent)]">● Sauvegarde…</span>
                 ) : (
@@ -360,9 +362,9 @@ export function NotebookClient() {
                 )}
               </span>
               {error ? (
-                <span className="text-[var(--color-danger)]">{error}</span>
+                <span className="truncate text-[var(--color-danger)]">{error}</span>
               ) : (
-                <span>{relativeDate(selected.updatedAt)}</span>
+                <span className="shrink-0">{relativeDate(selected.updatedAt)}</span>
               )}
             </footer>
           </div>
