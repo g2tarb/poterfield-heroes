@@ -17,18 +17,30 @@ export default async function LoginPage({
 
   const params = await searchParams;
   return (
-    <main className="grid min-h-svh place-items-center px-6">
-      <div className="w-full max-w-sm">
-        <header className="mb-10 text-center">
-          <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
+    <main className="grid min-h-svh place-items-center px-4 sm:px-6">
+      <div className="ph-panel ph-rivets relative w-full max-w-sm overflow-hidden">
+        <span className="ph-rivet-tl" />
+        <span className="ph-rivet-tr" />
+
+        <header className="ph-station-header flex items-center justify-between px-4 py-2">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--color-fg-secondary)]">
             Porterfield Heroes
-          </p>
-          <h1 className="mt-3 text-3xl font-semibold">Accès</h1>
-          <p className="mt-2 text-sm text-[var(--color-fg-secondary)]">
-            Atelier privé. Mot de passe requis.
-          </p>
+          </span>
+          <span className="ph-ref">AUTH</span>
         </header>
-        <LoginForm redirectTo={params.redirect ?? "/"} />
+
+        <div className="px-5 py-6 sm:px-6 sm:py-8">
+          <h1 className="text-2xl font-bold uppercase tracking-wide">
+            Atelier privé
+          </h1>
+          <p className="mt-2 text-xs text-[var(--color-fg-secondary)]">
+            Mot de passe requis pour entrer.
+          </p>
+
+          <div className="mt-6">
+            <LoginForm redirectTo={params.redirect ?? "/"} />
+          </div>
+        </div>
       </div>
     </main>
   );

@@ -181,11 +181,13 @@ export function SrsReviewer() {
 
   if (cards.length === 0) {
     return (
-      <div className="mx-auto max-w-md rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-8 text-center">
+      <div className="ph-panel ph-rivets relative mx-auto max-w-md overflow-hidden p-8 text-center">
+        <span className="ph-rivet-tl" />
+        <span className="ph-rivet-tr" />
         <p className="text-4xl" aria-hidden>
           ✅
         </p>
-        <p className="mt-4 text-xl font-semibold">Aucune carte à réviser.</p>
+        <p className="mt-4 text-xl font-semibold uppercase tracking-wide">Aucune carte à réviser.</p>
         <p className="mt-2 text-sm text-[var(--color-fg-secondary)]">
           Rien n&apos;arrive à échéance pour l&apos;instant. Reviens demain ou
           continue un module.
@@ -202,11 +204,13 @@ export function SrsReviewer() {
 
   if (index >= cards.length) {
     return (
-      <div className="mx-auto max-w-md rounded-2xl border border-[var(--color-success)] bg-[var(--color-bg-elevated)] p-8 text-center">
+      <div className="ph-panel ph-rivets relative mx-auto max-w-md overflow-hidden border-l-4 border-l-[var(--color-success)] p-8 text-center">
+        <span className="ph-rivet-tl" />
+        <span className="ph-rivet-tr" />
         <p className="text-4xl" aria-hidden>
           🎉
         </p>
-        <p className="mt-4 text-xl font-semibold">Session terminée.</p>
+        <p className="mt-4 text-xl font-semibold uppercase tracking-wide">Session terminée.</p>
         <p className="mt-2 text-sm text-[var(--color-fg-secondary)]">
           {cards.length} carte{cards.length > 1 ? "s" : ""} traitée
           {cards.length > 1 ? "s" : ""}. Reviens demain ou continue un module.
@@ -260,11 +264,13 @@ export function SrsReviewer() {
       {/* Card */}
       <article
         className={cn(
-          "rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-6 transition-all duration-300 sm:p-8",
-          revealed && "border-[var(--color-accent)]",
+          "ph-panel ph-rivets relative overflow-hidden p-6 transition-all duration-300 sm:p-8",
+          revealed && "border-l-4 border-l-[var(--color-accent)]",
         )}
       >
-        <p className="mb-4 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
+        <span className="ph-rivet-tl" />
+        <span className="ph-rivet-tr" />
+        <p className="mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
           {current.skillLabel}
         </p>
         <div className="text-xl leading-relaxed">

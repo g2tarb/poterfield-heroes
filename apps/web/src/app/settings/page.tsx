@@ -1,33 +1,18 @@
 import { SettingsClient } from "@/components/settings/SettingsClient";
-import Link from "next/link";
+import { AtelierPageHeader } from "@/components/shell/AtelierPageHeader";
 
 export const metadata = { title: "Réglages" };
 
 export default function SettingsPage() {
   return (
-    <main className="min-h-svh px-4 pb-8 pt-4 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
-        <nav className="mb-8 font-mono text-xs">
-          <Link
-            href="/"
-            className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-primary)]"
-          >
-            ← Accueil
-          </Link>
-        </nav>
-
-        <header className="mb-10 max-w-2xl">
-          <p className="font-mono text-sm uppercase tracking-widest text-[var(--color-fg-muted)]">
-            Réglages
-          </p>
-          <h1 className="mt-3 text-3xl font-semibold md:text-4xl">
-            Atelier
-          </h1>
-          <p className="mt-3 text-[var(--color-fg-secondary)]">
-            Préférences, budget IA, actions destructives.
-          </p>
-        </header>
-
-        <SettingsClient />
+    <main className="min-h-svh px-3 pb-8 pt-3 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
+      <AtelierPageHeader
+        eyebrow="Atelier · Configuration"
+        title="Réglages"
+        subtitle="Préférences, budget IA, actions destructives."
+        ref="CONFIG"
+      />
+      <SettingsClient />
     </main>
   );
 }

@@ -96,8 +96,8 @@ export default async function ModulePage({
   const status = progress?.status ?? "locked";
 
   return (
-    <main className="min-h-svh px-4 pb-8 pt-4 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
-      <nav className="mb-6 font-mono text-xs">
+    <main className="min-h-svh px-3 pb-8 pt-3 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
+      <nav className="mb-3 font-mono text-xs sm:mb-6">
         <Link
           href="/"
           className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-primary)]"
@@ -106,23 +106,32 @@ export default async function ModulePage({
         </Link>
       </nav>
 
-      {/* Layout 2 colonnes desktop, 1 col mobile */}
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px] lg:gap-12">
-        {/* === COLONNE PRINCIPALE === */}
-        <article className="min-w-0 space-y-12">
-          <header>
-            <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
-              M{String(mod.moduleNumber).padStart(2, "0")} · Phase {mod.phase}
+      {/* Header style atelier */}
+      <header className="ph-panel ph-rivets relative mb-6 overflow-hidden sm:mb-8">
+        <span className="ph-rivet-tl" />
+        <span className="ph-rivet-tr" />
+        <div className="ph-station-header flex items-center justify-between px-4 py-2">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--color-fg-secondary)]">
+            Station {String(mod.moduleNumber).padStart(2, "0")} · Phase {mod.phase}
+          </span>
+          <span className="ph-ref">M{String(mod.moduleNumber).padStart(2, "0")}-{mod.phase}</span>
+        </div>
+        <div className="px-4 py-4 sm:px-5 sm:py-5">
+          <h1 className="text-2xl font-bold uppercase leading-tight tracking-wide sm:text-3xl md:text-4xl">
+            {mod.title}
+          </h1>
+          {mod.subtitle && (
+            <p className="mt-2 text-sm leading-relaxed text-[var(--color-fg-secondary)] sm:mt-3 sm:text-base">
+              {mod.subtitle}
             </p>
-            <h1 className="mt-3 text-3xl font-semibold leading-tight md:text-5xl">
-              {mod.title}
-            </h1>
-            {mod.subtitle && (
-              <p className="mt-4 text-lg text-[var(--color-fg-secondary)] lg:hidden">
-                {mod.subtitle}
-              </p>
-            )}
-          </header>
+          )}
+        </div>
+      </header>
+
+      {/* Layout 2 colonnes desktop, 1 col mobile */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px] lg:gap-10">
+        {/* === COLONNE PRINCIPALE === */}
+        <article className="min-w-0 space-y-10">
 
           {/* Pourquoi */}
           <section>

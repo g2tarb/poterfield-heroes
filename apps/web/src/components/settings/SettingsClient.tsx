@@ -285,11 +285,16 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-5">
-      <h2 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-        {title}
-      </h2>
-      <div className="space-y-1">{children}</div>
+    <section className="ph-panel ph-rivets relative overflow-hidden">
+      <span className="ph-rivet-tl" />
+      <span className="ph-rivet-tr" />
+      <header className="ph-station-header flex items-center justify-between px-4 py-2">
+        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-fg-secondary)]">
+          {title}
+        </span>
+        <span className="ph-ref">CFG</span>
+      </header>
+      <div className="space-y-1 px-4 py-3 sm:px-5 sm:py-4">{children}</div>
     </section>
   );
 }
