@@ -1,4 +1,4 @@
-import { anthropic, MODEL_SONNET } from "../lib/anthropic.js";
+import { anthropic, MODEL_HAIKU } from "../lib/anthropic.js";
 import { AppError } from "../lib/errors.js";
 
 const QUESTION_SYSTEM = `Tu es un examinateur senior dans l'atelier privé d'apprentissage d'Erwin (Porterfield Heroes).
@@ -71,7 +71,7 @@ Compétence à valider : "${input.skillLabel}"
 Génère UNE question de validation. Réponds en JSON strict, rien d'autre.`;
 
   const response = await anthropic.messages.create({
-    model: MODEL_SONNET,
+    model: MODEL_HAIKU,
     max_tokens: 512,
     system: QUESTION_SYSTEM,
     messages: [{ role: "user", content: prompt }],
@@ -107,7 +107,7 @@ ${input.userAnswer}
 Évalue. JSON strict.`;
 
   const response = await anthropic.messages.create({
-    model: MODEL_SONNET,
+    model: MODEL_HAIKU,
     max_tokens: 512,
     system: VALIDATION_SYSTEM,
     messages: [{ role: "user", content: prompt }],

@@ -1,6 +1,6 @@
 import {
   anthropic,
-  MODEL_SONNET,
+  MODEL_HAIKU,
   computeCostCents,
   extractCacheTokens,
 } from "../lib/anthropic.js";
@@ -73,7 +73,7 @@ ${input.userAnswer}
 Évalue. Réponds en JSON strict, rien d'autre.`;
 
   const response = await anthropic.messages.create({
-    model: MODEL_SONNET,
+    model: MODEL_HAIKU,
     max_tokens: 1024,
     system: CORRECTION_SYSTEM,
     messages: [{ role: "user", content: prompt }],
@@ -104,7 +104,7 @@ ${input.userAnswer}
   const usage = response.usage;
   const cache = extractCacheTokens(usage);
   const costCents = computeCostCents(
-    MODEL_SONNET,
+    MODEL_HAIKU,
     usage.input_tokens,
     usage.output_tokens,
     cache.cacheReadInputTokens,
