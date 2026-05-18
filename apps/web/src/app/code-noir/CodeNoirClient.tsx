@@ -14,6 +14,7 @@ type Technique = {
   hack: string;
   antiHack: string;
   ctfRef?: string;
+  cve?: string;
 };
 
 type Locked = {
@@ -205,10 +206,11 @@ function TechniqueCard({ t }: { t: Technique }) {
               <Markdown source={t.antiHack} />
             </div>
           </section>
-          {t.ctfRef && (
-            <p className="border-t border-[rgba(0,255,136,0.2)] pt-3 font-mono text-[10px] uppercase tracking-widest text-[rgba(0,255,136,0.5)]">
-              ► CTF : {t.ctfRef}
-            </p>
+          {(t.ctfRef || t.cve) && (
+            <div className="space-y-1 border-t border-[rgba(0,255,136,0.2)] pt-3 font-mono text-[10px] uppercase tracking-widest text-[rgba(0,255,136,0.5)]">
+              {t.ctfRef && <p>► CTF : {t.ctfRef}</p>}
+              {t.cve && <p className="text-[rgba(255,80,80,0.7)]">► CVE : {t.cve}</p>}
+            </div>
           )}
         </div>
       )}
@@ -253,9 +255,11 @@ function MentorChat({ currentModule: _cur }: { currentModule: number }) {
             <p>$ Black Hat Mentor en attente…</p>
             <p className="mt-3 text-xs">Pose une question sur les techniques débloquées. Ex :</p>
             <ul className="mt-2 space-y-1 text-xs">
-              <li>{"> "}Explique-moi XSS reflected avec un mini PoC sur OWASP Juice Shop.</li>
-              <li>{"> "}Comment détecter un SSRF dans une code review ?</li>
-              <li>{"> "}C'est quoi la différence entre HSTS et CSP ?</li>
+              <li>{"> "}Donne-moi le payload XSS qui bypass DOMPurify v3.0.</li>
+              <li>{"> "}Comment exploiter SSRF vers IMDSv1 avec curl, étape par étape ?</li>
+              <li>{"> "}Explique Log4Shell — la mécanique exacte JNDI + payload.</li>
+              <li>{"> "}sqlmap : options pour bypass un WAF Cloudflare ?</li>
+              <li>{"> "}Décortique le CVE Heartbleed (commit fix + payload).</li>
             </ul>
           </div>
         )}
