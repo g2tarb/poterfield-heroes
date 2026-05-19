@@ -59,8 +59,11 @@ export function CodeNoirClient() {
 
   if (!state) {
     return (
-      <div className="ph-noir-card p-4 text-sm text-[rgba(0,255,136,0.6)]">
-        $ loading techniques...
+      <div className="ph-noir-card p-6 text-center text-sm text-[rgba(0,255,136,0.7)]">
+        <p className="font-mono">
+          <span className="ph-loader-cursor" style={{ background: "#00ff88" }} aria-hidden />
+          {" "}$ decrypting techniques...
+        </p>
       </div>
     );
   }

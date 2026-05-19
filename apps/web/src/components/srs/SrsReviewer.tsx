@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { apiFetch } from "@/lib/api";
 import { cn } from "@/lib/cn";
 import { Markdown } from "@/components/coach/Markdown";
+import { PorterfieldLoader } from "@/components/ambient/PorterfieldLoader";
 import Link from "next/link";
 
 type Card = {
@@ -171,10 +172,8 @@ export function SrsReviewer() {
 
   if (!cards) {
     return (
-      <div className="mx-auto max-w-2xl animate-pulse">
-        <div className="mb-6 h-1.5 rounded-full bg-[var(--color-bg-elevated)]" />
-        <div className="h-64 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]" />
-        <div className="mt-6 h-14 rounded-xl bg-[var(--color-bg-elevated)]" />
+      <div className="ph-panel mx-auto max-w-2xl">
+        <PorterfieldLoader label="> srs.due_cards.fetch()" />
       </div>
     );
   }

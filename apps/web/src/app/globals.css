@@ -410,6 +410,67 @@ body {
   animation: ph-noir-flicker 4s infinite;
 }
 
+/* === PORTERFIELD LOADER — glitch infini + lignes code === */
+.ph-loader-title {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-mono);
+  color: var(--color-fg-primary);
+  letter-spacing: -0.02em;
+}
+.ph-loader-title::before,
+.ph-loader-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ph-loader-title::before {
+  color: oklch(0.7 0.3 0); /* RGB rouge */
+  mix-blend-mode: screen;
+  animation: ph-loader-glitch-r 3s steps(2, end) infinite;
+}
+.ph-loader-title::after {
+  color: oklch(0.7 0.3 220); /* RGB bleu */
+  mix-blend-mode: screen;
+  animation: ph-loader-glitch-b 3s steps(2, end) infinite reverse;
+}
+@keyframes ph-loader-glitch-r {
+  0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  3% { clip-path: inset(20% 0 50% 0); transform: translate(-3px, 1px); }
+  6% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  8% { clip-path: inset(60% 0 20% 0); transform: translate(2px, -1px); }
+  11% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  35% { clip-path: inset(40% 0 30% 0); transform: translate(-2px, 0); }
+  38% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  70% { clip-path: inset(80% 0 0 0); transform: translate(3px, -2px); }
+  73% { clip-path: inset(0 0 0 0); transform: translate(0); }
+}
+@keyframes ph-loader-glitch-b {
+  0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  4% { clip-path: inset(30% 0 40% 0); transform: translate(2px, -1px); }
+  7% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  9% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 1px); }
+  12% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  50% { clip-path: inset(20% 0 60% 0); transform: translate(2px, 1px); }
+  53% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  85% { clip-path: inset(0 0 80% 0); transform: translate(-3px, 0); }
+  88% { clip-path: inset(0 0 0 0); transform: translate(0); }
+}
+.ph-loader-cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1em;
+  margin-left: 0.3em;
+  background: var(--color-accent);
+  vertical-align: text-bottom;
+  animation: ph-loader-blink 1s steps(2) infinite;
+}
+@keyframes ph-loader-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
 /* === Background code ambient — néon ambre + parallax curseur === */
 .ph-code-bg {
   pointer-events: none;

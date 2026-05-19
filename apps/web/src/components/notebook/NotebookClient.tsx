@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { apiFetch, ApiError } from "@/lib/api";
 import { Markdown } from "@/components/coach/Markdown";
+import { PorterfieldSpinner } from "@/components/ambient/PorterfieldLoader";
 import { cn } from "@/lib/cn";
 
 type Entry = {
@@ -208,14 +209,9 @@ export function NotebookClient() {
         {/* List */}
         <ul className="space-y-1.5">
           {loading && (
-            <>
-              {[0, 1, 2].map((i) => (
-                <li
-                  key={i}
-                  className="h-16 animate-pulse rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)]"
-                />
-              ))}
-            </>
+            <li className="ph-panel p-4">
+              <PorterfieldSpinner label="loading notes" />
+            </li>
           )}
           {!loading && filteredEntries.length === 0 && entries.length === 0 && (
             <li className="rounded-xl border border-dashed border-[var(--color-border-subtle)] p-6 text-center">
