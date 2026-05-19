@@ -2,13 +2,16 @@
 
 import { useState } from "react";
 import { apiFetch, ApiError } from "@/lib/api";
+import { SkillVideos, type SkillVideo } from "./SkillVideos";
 
 type Skill = {
   id: string;
   slug: string;
   label: string;
+  description?: string | null;
   weight: number;
   displayOrder: number;
+  videos?: SkillVideo[];
   status: "discovering" | "practicing" | "mastered" | null;
   masteryPct: number | null;
 };
@@ -141,6 +144,8 @@ function SkillRow({ skill, index }: { skill: Skill; index: number }) {
               <span className="ph-ref shrink-0">{status === "practicing" ? "en pratique" : "à creuser"}</span>
             )}
           </div>
+
+          <SkillVideos videos={skill.videos ?? []} skillLabel={skill.label} />
 
           {/* Question + réponse en mode déplié */}
           {question && !validation && (

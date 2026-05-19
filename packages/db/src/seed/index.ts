@@ -1,9 +1,10 @@
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import * as schema from "../schema/index";
 import { masteryAxesSeed } from "./00-mastery-axes";
 import { levelsSeed } from "./01-levels";
+import { skillVideosByModule } from "./skill-videos";
 import {
   M01_ID,
   m01Module,
@@ -205,6 +206,24 @@ async function seedModule(
 
   await db.insert(schema.videos).values(videosData).onConflictDoNothing();
   await db.insert(schema.exercises).values(exercisesData).onConflictDoNothing();
+
+  // Skill-level YouTube videos (FR + EN curation) — applied after
+  // skill insert, idempotent UPDATE.
+  const curated = skillVideosByModule[moduleId];
+  if (curated) {
+    for (const [slug, vids] of Object.entries(curated)) {
+      if (!vids || vids.length === 0) continue;
+      await db
+        .update(schema.skills)
+        .set({ videos: vids })
+        .where(
+          and(
+            eq(schema.skills.moduleId, moduleId),
+            eq(schema.skills.slug, slug),
+          ),
+        );
+    }
+  }
 }
 
 async function seedUserState() {

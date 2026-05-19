@@ -90,6 +90,18 @@ export const skills = pgTable(
     description: text("description"),
     displayOrder: integer("display_order").notNull(),
     weight: integer("weight").notNull().default(1), // pondération XP
+    // Vidéos YouTube par skill : [{ youtubeId, title?, channel?, lang: "fr"|"en" }]
+    videos: jsonb("videos")
+      .$type<
+        Array<{
+          youtubeId: string;
+          title?: string;
+          channel?: string;
+          lang: "fr" | "en";
+        }>
+      >()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

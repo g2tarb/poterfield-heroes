@@ -144,8 +144,10 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
               id: skills.id,
               slug: skills.slug,
               label: skills.label,
+              description: skills.description,
               weight: skills.weight,
               displayOrder: skills.displayOrder,
+              videos: skills.videos,
               status: skillProgress.status,
               masteryPct: skillProgress.masteryPct,
             })

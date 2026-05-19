@@ -22,8 +22,15 @@ type ModuleDetail = {
     id: string;
     slug: string;
     label: string;
+    description: string | null;
     weight: number;
     displayOrder: number;
+    videos: Array<{
+      youtubeId: string;
+      title?: string;
+      channel?: string;
+      lang: "fr" | "en";
+    }>;
     status: "discovering" | "practicing" | "mastered" | null;
     masteryPct: number | null;
   }>;

@@ -45,13 +45,14 @@ export default async function RoadmapPage() {
 
   const totalHours = modules.reduce((s, m) => s + m.estimatedHours, 0);
   const completed = modules.filter((m) => m.status === "completed").length;
+  const nextTarget = modules.find((m) => m.status === "active") ?? null;
 
   return (
-    <main className="min-h-svh px-3 pb-8 pt-3 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
+    <main className="min-h-svh px-3 pb-12 pt-3 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
       <AtelierPageHeader
         eyebrow="Atelier · Plan général"
         title="25 stations · 8 sections"
-        subtitle={`Chaîne complète : ~${totalHours}h. Chaque station se déverrouille quand la précédente est terminée. Pas de raccourci, pas de skip.`}
+        subtitle={`Chaîne complète : ~${totalHours}h. Chaque module a ses compétences avec vidéos FR+EN curées. Tu déverrouilles la suite quand la précédente est validée.`}
         refCode="ROADMAP"
       />
 
@@ -69,15 +70,21 @@ export default async function RoadmapPage() {
           <GaugeCell label="Total" value={totalHours} sub="h" />
         </section>
 
-        {Object.entries(byPhase)
-          .sort(([a], [b]) => Number(a) - Number(b))
-          .map(([phase, list]) => (
-            <PhaseSection
-              key={phase}
-              phase={Number(phase)}
-              modules={list}
-            />
-          ))}
+        {/* Prochaine cible (style Code Noir) */}
+        {nextTarget && <NextTargetCard mod={nextTarget} />}
+
+        {/* Skill tree zigzag */}
+        <div className="space-y-10">
+          {Object.entries(byPhase)
+            .sort(([a], [b]) => Number(a) - Number(b))
+            .map(([phase, list]) => (
+              <PhaseTree
+                key={phase}
+                phase={Number(phase)}
+                modules={list}
+              />
+            ))}
+        </div>
       </div>
     </main>
   );
@@ -107,7 +114,33 @@ function GaugeCell({
   );
 }
 
-function PhaseSection({
+function NextTargetCard({ mod }: { mod: ModuleSummary }) {
+  return (
+    <Link href={`/modules/${mod.id}`} className="block">
+      <article className="ph-panel relative overflow-hidden border-2 border-[var(--color-accent)] bg-[color-mix(in_oklab,var(--color-accent)_8%,transparent)] p-4 transition hover:bg-[color-mix(in_oklab,var(--color-accent)_14%,transparent)] sm:p-5">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--color-accent)]">
+          ► Prochaine cible
+        </p>
+        <div className="mt-2 flex items-baseline justify-between gap-3">
+          <p className="text-lg font-bold uppercase tracking-wide sm:text-xl">
+            M{String(mod.moduleNumber).padStart(2, "0")} · {mod.title}
+          </p>
+          <span className="ph-ref shrink-0 tabular-nums">{mod.estimatedHours}h</span>
+        </div>
+        {mod.subtitle && (
+          <p className="mt-1 text-sm text-[var(--color-fg-secondary)]">
+            {mod.subtitle}
+          </p>
+        )}
+        <p className="mt-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-accent)]">
+          ▶ Commencer
+        </p>
+      </article>
+    </Link>
+  );
+}
+
+function PhaseTree({
   phase,
   modules,
 }: {
@@ -119,7 +152,7 @@ function PhaseSection({
 
   return (
     <section>
-      <div className="ph-panel mb-3 flex items-center gap-3 px-4 py-2">
+      <div className="ph-panel mb-4 flex items-center gap-3 px-4 py-2">
         <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--color-fg-secondary)]">
           Section {phaseChar}
         </span>
@@ -129,32 +162,55 @@ function PhaseSection({
         </span>
       </div>
 
-      <ol className="space-y-2">
-        {modules.map((m) => (
-          <li key={m.id}>
-            <ModuleRow mod={m} />
-          </li>
-        ))}
-      </ol>
+      <div className="relative">
+        {/* Ligne verticale (chemin) */}
+        <span
+          className="pointer-events-none absolute left-1/2 top-2 bottom-2 w-px -translate-x-1/2 bg-[var(--color-border-strong)]"
+          aria-hidden
+        />
+        <ol className="space-y-3">
+          {modules.map((m, i) => (
+            <li
+              key={m.id}
+              className={`relative flex ${i % 2 === 0 ? "justify-start pr-[10%]" : "justify-end pl-[10%]"}`}
+            >
+              <ModuleNode mod={m} side={i % 2 === 0 ? "left" : "right"} />
+            </li>
+          ))}
+        </ol>
+      </div>
     </section>
   );
 }
 
-function ModuleRow({ mod }: { mod: ModuleSummary }) {
+function ModuleNode({
+  mod,
+  side,
+}: {
+  mod: ModuleSummary;
+  side: "left" | "right";
+}) {
   const isLocked = mod.status === "locked";
   const isActive = mod.status === "active";
   const isDone = mod.status === "completed";
 
-  const accentClass = isActive
-    ? "border-l-4 border-l-[var(--color-accent)]"
-    : isDone
-      ? "border-l-4 border-l-[var(--color-success)]"
-      : "border-l-4 border-l-[var(--color-border-strong)]";
+  const borderClass = isDone
+    ? "border-[var(--color-success)]"
+    : isActive
+      ? "border-[var(--color-accent)] shadow-[0_0_18px_color-mix(in_oklab,var(--color-accent)_30%,transparent)]"
+      : "border-[var(--color-border-strong)]";
 
   const content = (
     <article
-      className={`ph-panel relative flex items-center gap-3 overflow-hidden px-3 py-3 transition sm:gap-4 sm:px-4 ${accentClass} ${isLocked ? "opacity-55" : "lg:hover:translate-y-[-1px]"}`}
+      className={`ph-panel relative flex w-full max-w-[88%] items-center gap-3 overflow-hidden border-2 px-3 py-3 transition sm:max-w-[80%] sm:gap-4 sm:px-4 ${borderClass} ${isLocked ? "opacity-55" : "lg:hover:-translate-y-0.5"}`}
     >
+      {/* Connecteur vers la ligne centrale */}
+      <span
+        className={`pointer-events-none absolute top-1/2 hidden h-px w-[10%] bg-[var(--color-border-strong)] sm:block ${
+          side === "left" ? "-right-[10%]" : "-left-[10%]"
+        }`}
+        aria-hidden
+      />
       {isActive && (
         <div
           className="ph-stripes pointer-events-none absolute inset-0 opacity-30"
@@ -187,7 +243,7 @@ function ModuleRow({ mod }: { mod: ModuleSummary }) {
 
   if (isLocked) return content;
   return (
-    <Link href={`/modules/${mod.id}`} className="block">
+    <Link href={`/modules/${mod.id}`} className="block w-full">
       {content}
     </Link>
   );
