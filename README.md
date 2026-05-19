@@ -7,6 +7,19 @@ embeddings, GitHub code review IA, examens hebdomadaires auto-générés.
 > Pour utiliser l'app au quotidien, voir [ONBOARDING.md](ONBOARDING.md).
 > Pour le déploiement prod, voir [DEPLOY.md](DEPLOY.md).
 
+## Démarrage rapide
+
+```bash
+pnpm install        # Node 20+, pnpm 10+
+pnpm docker:up      # Postgres 16 (pgvector) + Redis
+cp .env.example .env && $EDITOR .env   # SESSION_SECRET + ACCESS_PASSWORD + ANTHROPIC_API_KEY
+pnpm db:push && pnpm db:seed
+pnpm dev            # Web → http://localhost:3030 | API → http://localhost:3031
+```
+
+Ports : **web 3030**, **api 3031**. Login : `ACCESS_PASSWORD` du `.env`.
+Pour déployer en prod, voir [DEPLOY.md](DEPLOY.md).
+
 ## Stack
 
 - **Frontend** : Next.js 15 + React 19 + Tailwind v4 + TypeScript strict
@@ -115,9 +128,11 @@ MONTHLY_AI_BUDGET_CENTS=5000       # cap mensuel (50€)
 
 ## Tests
 
-- **Unit** : `packages/shared` (FSRS-4 testé exhaustivement)
-- **Intégration** : `apps/api/src/routes/*.integration.test.ts` (health, auth)
-- Pas de tests e2e Playwright pour l'instant — à venir
+- **Unit** : `packages/shared` (FSRS-4 testé exhaustivement) — `pnpm -r test:unit`
+- **Intégration** : `apps/api/src/routes/*.integration.test.ts` (health, auth) — `pnpm -r test:integration`
+- **e2e Playwright** : `e2e/*.spec.ts` (login, dashboard, code-noir, module, srs)
+  - `pnpm test:e2e` (lance `pnpm dev` automatiquement via webServer)
+  - Chromium uniquement (installé via `npx playwright install chromium`)
 
 ## Owner
 

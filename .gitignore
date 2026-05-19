@@ -29,4 +29,11 @@ drizzle/meta/_journal.json.bak
 
 # Serwist generated service worker (built at next build)
 apps/web/public/sw.js
+apps/web/public/sw.js.map
 apps/web/public/swe-worker-*.js
+apps/web/public/swe-worker-*.js.map
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/

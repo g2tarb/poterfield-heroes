@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import withSerwistInit from "@serwist/next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const apiUrl = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3031";
 
@@ -84,4 +85,12 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSerwist(nextConfig);
+// On wrappe d'abord avec Sentry (dormant si pas de DSN), puis Serwist par-dessus.
+// Si Sentry n'est pas configuré (pas de DSN ni d'auth token), withSentryConfig
+// retourne la config telle quelle sans toucher au runtime — donc safe pour la PWA.
+const withSentry = (config: NextConfig) =>
+  withSentryConfig(config, {
+    silent: true,
+  });
+
+export default withSerwist(withSentry(nextConfig));

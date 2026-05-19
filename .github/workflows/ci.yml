@@ -97,6 +97,21 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:testpassword@localhost:5432/porterfield_test
 
+      - name: Vérifier que les migrations Drizzle sont commit
+        # Si pnpm db:generate crée un nouveau fichier, c'est qu'un schema TS
+        # n'a pas eu sa migration générée → on bloque la PR.
+        run: |
+          pnpm db:generate
+          if [[ -n "$(git status --porcelain packages/db/drizzle)" ]]; then
+            echo "::error::Schema TS modifié sans migration Drizzle correspondante."
+            echo "Run 'pnpm db:generate' localement et commit les fichiers générés."
+            git status --porcelain packages/db/drizzle
+            git diff packages/db/drizzle
+            exit 1
+          fi
+        env:
+          DATABASE_URL: postgresql://postgres:testpassword@localhost:5432/porterfield_test
+
       - name: Run integration tests
         run: pnpm -r --if-present run test:integration
         env:
@@ -104,3 +119,65 @@ jobs:
           SESSION_SECRET: ci_session_secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
           ACCESS_PASSWORD: ci_password_test
           NODE_ENV: test
+
+  test-e2e:
+    name: Tests e2e Playwright
+    runs-on: ubuntu-latest
+    # Best-effort : si le seed ou le boot échoue, on ne bloque pas la PR
+    # (l'app est mono-user en prod, les e2e tournent surtout en local).
+    continue-on-error: true
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: porterfield_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Activate Postgres extensions
+        run: |
+          PGPASSWORD=testpassword psql -h localhost -U postgres -d porterfield_test \
+            -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; CREATE EXTENSION IF NOT EXISTS pgcrypto; CREATE EXTENSION IF NOT EXISTS vector; CREATE EXTENSION IF NOT EXISTS pg_trgm;'
+
+      - name: Push schema
+        run: pnpm db:push
+        env:
+          DATABASE_URL: postgresql://postgres:testpassword@localhost:5432/porterfield_test
+
+      - name: Seed
+        run: pnpm db:seed
+        env:
+          DATABASE_URL: postgresql://postgres:testpassword@localhost:5432/porterfield_test
+
+      - name: Install Playwright browser (chromium only)
+        run: npx playwright install --with-deps chromium
+
+      - name: Run e2e
+        run: pnpm test:e2e
+        env:
+          CI: "true"
+          DATABASE_URL: postgresql://postgres:testpassword@localhost:5432/porterfield_test
+          SESSION_SECRET: ci_session_secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          ACCESS_PASSWORD: ci_password_test
+          NODE_ENV: test
+          NEXT_PUBLIC_API_URL: http://localhost:3031
+          CORS_ORIGIN: http://localhost:3030

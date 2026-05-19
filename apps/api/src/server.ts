@@ -1,9 +1,11 @@
 import { buildApp } from "./app.js";
 import { env } from "./config/env.js";
+import { initErrorReporter } from "./lib/errorReporter.js";
 import { maybeGenerateThisWeekExam } from "./services/examGenerator.js";
 import { maybeSendSrsReminder } from "./services/push.js";
 
 const app = await buildApp();
+await initErrorReporter(app.log);
 
 // Weekly exam cron tick (every hour, idempotent)
 const examInterval = setInterval(

@@ -11,6 +11,7 @@ import {
 import { CodeRain } from "../ambient/CodeRain";
 import { FocusedModuleProvider } from "../ambient/FocusedModuleContext";
 import { CodeNoirUnlock } from "../ambient/CodeNoirUnlock";
+import { OnboardingTip } from "./OnboardingTip";
 
 type Progression = {
   user: {
@@ -75,6 +76,7 @@ export function Dashboard() {
     <FocusedModuleProvider defaultModule={defaultModuleNumber}>
       <CodeRain />
       <CodeNoirUnlock />
+      <OnboardingTip />
       <div className="relative grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px] lg:gap-8">
         <div className="order-1 lg:order-2">
           {loaded && progression ? (

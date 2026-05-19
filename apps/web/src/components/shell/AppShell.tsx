@@ -6,6 +6,7 @@ import { apiFetch } from "@/lib/api";
 import { CoachPanel } from "@/components/coach/CoachPanel";
 import { FocusTimer } from "@/components/focus/FocusTimer";
 import { LevelUpReveal } from "@/components/ambient/LevelUpReveal";
+import { BootSplash } from "@/components/ambient/BootSplash";
 import { BottomNav } from "./BottomNav";
 import { TopBar } from "./TopBar";
 
@@ -60,7 +61,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>
+    <BootSplash>
       <TopBar />
       <div className="pb-[calc(env(safe-area-inset-bottom)+64px)] lg:pb-0">
         {children}
@@ -69,6 +70,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <CoachPanel {...(moduleId ? { moduleId } : {})} />
       <FocusTimer />
       <LevelUpReveal level={reveal} onClose={close} />
-    </>
+    </BootSplash>
   );
 }

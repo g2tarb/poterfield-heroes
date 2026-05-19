@@ -4,6 +4,35 @@ Trois cibles supportées. **Coolify sur VPS Hostinger** est la cible recommandé
 
 ---
 
+## Variables d'environnement
+
+Toutes celles ci-dessous se posent au niveau du **service web** ET **service api**
+(Coolify duplique ; en docker-compose elles sont mutualisées via `.env.production`).
+
+| Variable | Obligatoire | Description |
+|---|---|---|
+| `DATABASE_URL` | oui | `postgresql://user:pwd@host:5432/db` (pgvector requis) |
+| `SESSION_SECRET` | oui | Clé HMAC cookie session. `openssl rand -hex 32` |
+| `ACCESS_PASSWORD` | oui | Mot de passe perso (login mono-user) |
+| `CORS_ORIGIN` | oui | URL exacte du web prod (ex: `https://porterfield.online`) |
+| `NEXT_PUBLIC_API_URL` | oui | URL publique de l'API (web → api) |
+| `ANTHROPIC_API_KEY` | oui | `sk-ant-api03-...` (coach + exercice + skill validator) |
+| `NODE_ENV` | oui | `production` |
+| `API_PORT` | non | défaut `3031` |
+| `API_HOST` | non | défaut `0.0.0.0` |
+| `MONTHLY_AI_BUDGET_CENTS` | non | défaut `5000` (50€). 429 si dépassé |
+| `VOYAGE_API_KEY` | non | RAG embeddings (sans → RAG désactivé) |
+| `REDIS_URL` | non | rate-limit distribué (sans → en mémoire) |
+| `GITHUB_APP_ID` / `GITHUB_APP_PRIVATE_KEY` / `GITHUB_WEBHOOK_SECRET` / `GITHUB_INSTALLATION_ID` | non | Code review IA via webhook GitHub App |
+| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | non | Push notifications PWA |
+| `SENTRY_DSN` | non | Reporting erreurs côté API (et server/edge web) |
+| `NEXT_PUBLIC_SENTRY_DSN` | non | Reporting erreurs côté navigateur (web) |
+
+Si Sentry n'est pas configuré, les exceptions tombent dans les logs Pino seulement —
+l'app fonctionne normalement.
+
+---
+
 ## 🟢 Option A — Coolify sur VPS Hostinger (recommandé)
 
 ### Pré-requis côté toi

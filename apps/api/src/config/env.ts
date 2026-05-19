@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
-  API_PORT: z.coerce.number().int().positive().default(3001),
+  API_PORT: z.coerce.number().int().positive().default(3031),
   API_HOST: z.string().default("0.0.0.0"),
   DATABASE_URL: z.string().url(),
   REDIS_URL: z.string().url().optional(),
@@ -11,7 +11,7 @@ const envSchema = z.object({
   ACCESS_PASSWORD: z.string().min(8),
   ANTHROPIC_API_KEY: z.string().min(10).optional(),
   VOYAGE_API_KEY: z.string().min(10).optional(),
-  ELEVENLABS_API_KEY: z.string().optional(),
+  // ELEVENLABS_API_KEY retirée : feature TTS reportée à Sprint 9.
   MONTHLY_AI_BUDGET_CENTS: z.coerce.number().int().nonnegative().default(5000),
   GITHUB_APP_ID: z.string().optional(),
   GITHUB_APP_PRIVATE_KEY: z.string().optional(),
@@ -20,6 +20,7 @@ const envSchema = z.object({
   VAPID_PUBLIC_KEY: z.string().optional(),
   VAPID_PRIVATE_KEY: z.string().optional(),
   VAPID_SUBJECT: z.string().email().or(z.string().url()).optional(),
+  SENTRY_DSN: z.string().url().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);

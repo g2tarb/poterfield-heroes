@@ -1,8 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { apiFetch, ApiError } from "@/lib/api";
 import { Markdown } from "@/components/coach/Markdown";
+
+type TechniqueProgress = {
+  status: "in_progress" | "mastered";
+  quizScore: number | null;
+  masteredAt: string | null;
+};
 
 type Technique = {
   slug: string;
@@ -15,6 +22,9 @@ type Technique = {
   antiHack: string;
   ctfRef?: string;
   cve?: string;
+  youtubeSearch?: string;
+  youtubeIds?: string[];
+  progress: TechniqueProgress | null;
 };
 
 type Locked = {
@@ -61,8 +71,12 @@ export function CodeNoirClient() {
     return (
       <div className="ph-noir-card p-6 text-center text-sm text-[rgba(0,255,136,0.7)]">
         <p className="font-mono">
-          <span className="ph-loader-cursor" style={{ background: "#00ff88" }} aria-hidden />
-          {" "}$ decrypting techniques...
+          <span
+            className="ph-loader-cursor"
+            style={{ background: "#00ff88" }}
+            aria-hidden
+          />{" "}
+          $ decrypting techniques...
         </p>
       </div>
     );
@@ -71,8 +85,11 @@ export function CodeNoirClient() {
   return (
     <>
       <nav className="mb-6 flex gap-2 border-b border-[rgba(0,255,136,0.2)]">
-        <TabButton active={tab === "techniques"} onClick={() => setTab("techniques")}>
-          $ techniques [{state.unlocked.length}/{state.totalTechniques}]
+        <TabButton
+          active={tab === "techniques"}
+          onClick={() => setTab("techniques")}
+        >
+          $ skill tree [{state.unlocked.length}/{state.totalTechniques}]
         </TabButton>
         <TabButton active={tab === "mentor"} onClick={() => setTab("mentor")}>
           $ ./mentor
@@ -80,7 +97,7 @@ export function CodeNoirClient() {
       </nav>
 
       {tab === "techniques" ? (
-        <TechniquesView state={state} />
+        <SkillTreeView state={state} />
       ) : (
         <MentorChat currentModule={state.currentModule} />
       )}
@@ -106,120 +123,281 @@ function TabButton({
           ? "border-[#00ff88] text-[#00ff88] ph-noir-glow"
           : "border-transparent text-[rgba(0,255,136,0.5)] hover:text-[#00ff88]"
       }`}
+      style={{ minHeight: 40 }}
     >
       {children}
     </button>
   );
 }
 
-function TechniquesView({ state }: { state: State }) {
+// =============================================================
+// SKILL TREE VIEW
+// =============================================================
+
+type NodeStatus = "locked" | "available" | "in_progress" | "mastered";
+
+type TreeNode = {
+  slug: string;
+  title: string;
+  kind: "offensive" | "defensive" | "duo";
+  moduleNumber: number;
+  status: NodeStatus;
+};
+
+function SkillTreeView({ state }: { state: State }) {
+  const masteredCount = state.unlocked.filter(
+    (t) => t.progress?.status === "mastered",
+  ).length;
+
+  // Compute the "next target" = first unlocked, not mastered, in module order.
+  const sortedUnlocked = useMemo(
+    () => [...state.unlocked].sort((a, b) => a.moduleNumber - b.moduleNumber),
+    [state.unlocked],
+  );
+
+  const nextTarget = useMemo(
+    () =>
+      sortedUnlocked.find((t) => t.progress?.status !== "mastered") ?? null,
+    [sortedUnlocked],
+  );
+
+  // Group by module number (only modules that have at least one technique)
+  const groupedByModule = useMemo(() => {
+    const map = new Map<
+      number,
+      Array<TreeNode>
+    >();
+
+    for (const t of state.unlocked) {
+      const node: TreeNode = {
+        slug: t.slug,
+        title: t.title,
+        kind: t.kind,
+        moduleNumber: t.moduleNumber,
+        status:
+          t.progress?.status === "mastered"
+            ? "mastered"
+            : t.progress?.status === "in_progress"
+              ? "in_progress"
+              : "available",
+      };
+      const arr = map.get(t.moduleNumber) ?? [];
+      arr.push(node);
+      map.set(t.moduleNumber, arr);
+    }
+    for (const l of state.locked) {
+      const node: TreeNode = {
+        slug: l.slug,
+        title: l.title,
+        kind: l.kind,
+        moduleNumber: l.moduleNumber,
+        status: "locked",
+      };
+      const arr = map.get(l.moduleNumber) ?? [];
+      arr.push(node);
+      map.set(l.moduleNumber, arr);
+    }
+
+    return [...map.entries()]
+      .sort(([a], [b]) => a - b)
+      .map(([moduleNumber, nodes]) => ({ moduleNumber, nodes }));
+  }, [state.unlocked, state.locked]);
+
   return (
     <div className="space-y-6">
+      {/* Status header */}
       <div className="ph-noir-card p-4">
-        <p className="text-xs uppercase tracking-widest text-[rgba(0,255,136,0.5)]">
+        <p className="font-mono text-[10px] uppercase tracking-widest text-[rgba(0,255,136,0.5)]">
           ╳ STATUS
         </p>
-        <p className="mt-2 text-sm">
-          Module actif : <span className="ph-noir-glow font-bold">M{String(state.currentModule).padStart(2, "0")}</span>
-        </p>
-        <p className="mt-1 text-xs text-[rgba(0,255,136,0.5)]">
-          {state.unlocked.length} technique(s) débloquée(s) · {state.locked.length} encore verrouillée(s)
-        </p>
+        <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
+          <span>
+            Code Noir —{" "}
+            <span className="ph-noir-glow font-bold">
+              {masteredCount}/{state.totalTechniques}
+            </span>{" "}
+            maîtrisées
+          </span>
+          <span className="text-[rgba(0,255,136,0.6)]">
+            · module actif M{String(state.currentModule).padStart(2, "0")}
+          </span>
+          <span className="text-[rgba(0,255,136,0.6)]">
+            · {state.unlocked.length} débloquée(s)
+          </span>
+        </div>
       </div>
 
-      {/* Débloquées */}
-      <section>
-        <h2 className="mb-3 text-xs uppercase tracking-widest text-[rgba(0,255,136,0.6)]">
-          ▼ DÉBLOQUÉES
-        </h2>
-        <ul className="space-y-3">
-          {state.unlocked.length === 0 && (
-            <li className="ph-noir-card p-4 text-sm text-[rgba(0,255,136,0.5)]">
-              Aucune technique débloquée. Avance dans les modules pour ouvrir le coffre.
-            </li>
-          )}
-          {state.unlocked.map((t) => (
-            <TechniqueCard key={t.slug} t={t} />
-          ))}
-        </ul>
-      </section>
-
-      {/* Verrouillées (teasers) */}
-      {state.locked.length > 0 && (
-        <section>
-          <h2 className="mb-3 text-xs uppercase tracking-widest text-[rgba(255,0,80,0.5)]">
-            ╳ VERROUILLÉES
-          </h2>
-          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {state.locked.map((l) => (
-              <li
-                key={l.slug}
-                className="ph-noir-card-locked rounded p-3 text-sm"
-              >
-                <p className="font-mono text-[10px] uppercase tracking-widest opacity-70">
-                  M{String(l.moduleNumber).padStart(2, "0")} · {l.kind}
-                </p>
-                <p className="mt-1 font-semibold blur-[2px] hover:blur-0 transition">
-                  {l.title}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
+      {/* Next target card */}
+      {nextTarget && (
+        <NextTargetCard technique={nextTarget} />
       )}
+
+      {/* Skill path */}
+      <div className="space-y-8">
+        {groupedByModule.map(({ moduleNumber, nodes }) => (
+          <ModuleSection
+            key={moduleNumber}
+            moduleNumber={moduleNumber}
+            nodes={nodes}
+          />
+        ))}
+      </div>
     </div>
   );
 }
 
-function TechniqueCard({ t }: { t: Technique }) {
-  const [open, setOpen] = useState(false);
+function NextTargetCard({ technique }: { technique: Technique }) {
   const kindLabel =
-    t.kind === "offensive" ? "⚔ OFFENSIVE" : t.kind === "defensive" ? "🛡 DEFENSIVE" : "⇋ DUO";
+    technique.kind === "offensive"
+      ? "⚔ OFFENSIVE"
+      : technique.kind === "defensive"
+        ? "🛡 DEFENSIVE"
+        : "⇋ DUO";
   return (
-    <li className="ph-noir-card rounded">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-baseline justify-between gap-3 px-4 py-3 text-left transition hover:bg-[rgba(0,255,136,0.05)]"
-      >
-        <div className="min-w-0 flex-1">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-[rgba(0,255,136,0.5)]">
-            M{String(t.moduleNumber).padStart(2, "0")} · {kindLabel} · {t.language.toUpperCase()}
-          </p>
-          <p className="mt-1 text-sm font-bold ph-noir-glow">{t.title}</p>
-          <p className="mt-1 text-xs text-[rgba(0,255,136,0.7)]">{t.oneLiner}</p>
+    <Link
+      href={`/code-noir/${technique.slug}` as unknown as string}
+      className="block"
+    >
+      <div className="ph-noir-card ph-noir-glow rounded border-2 border-[#00ff88] bg-[rgba(0,255,136,0.06)] p-5 transition hover:bg-[rgba(0,255,136,0.12)]">
+        <p className="font-mono text-[10px] uppercase tracking-widest text-[rgba(0,255,136,0.7)]">
+          ► PROCHAINE CIBLE
+        </p>
+        <p className="mt-2 text-xs font-mono uppercase tracking-widest text-[rgba(0,255,136,0.7)]">
+          M{String(technique.moduleNumber).padStart(2, "0")} · {kindLabel}
+        </p>
+        <h2 className="mt-2 text-xl font-bold uppercase tracking-wider text-[#00ff88] sm:text-2xl">
+          {technique.title}
+        </h2>
+        <p className="mt-2 text-sm text-[rgba(0,255,136,0.85)]">
+          {technique.oneLiner}
+        </p>
+        <div className="mt-4 inline-flex items-center gap-2 border-2 border-[#00ff88] bg-black/40 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#00ff88]">
+          <span aria-hidden>▶</span>
+          <span>
+            {technique.progress?.status === "in_progress"
+              ? "reprendre"
+              : "commencer"}
+          </span>
         </div>
-        <span className="shrink-0 text-xs">{open ? "▼" : "▶"}</span>
-      </button>
-      {open && (
-        <div className="space-y-4 border-t border-[rgba(0,255,136,0.2)] p-4 text-sm">
-          <section>
-            <p className="mb-2 font-mono text-xs uppercase tracking-widest text-[rgba(255,80,80,0.8)]">
-              ⚔ HACK
-            </p>
-            <div className="prose-coach text-[rgba(0,255,136,0.85)]">
-              <Markdown source={t.hack} />
-            </div>
-          </section>
-          <section>
-            <p className="mb-2 font-mono text-xs uppercase tracking-widest text-[#00ff88]">
-              🛡 ANTI-HACK
-            </p>
-            <div className="prose-coach text-[rgba(0,255,136,0.85)]">
-              <Markdown source={t.antiHack} />
-            </div>
-          </section>
-          {(t.ctfRef || t.cve) && (
-            <div className="space-y-1 border-t border-[rgba(0,255,136,0.2)] pt-3 font-mono text-[10px] uppercase tracking-widest text-[rgba(0,255,136,0.5)]">
-              {t.ctfRef && <p>► CTF : {t.ctfRef}</p>}
-              {t.cve && <p className="text-[rgba(255,80,80,0.7)]">► CVE : {t.cve}</p>}
-            </div>
-          )}
-        </div>
-      )}
-    </li>
+      </div>
+    </Link>
   );
 }
+
+function ModuleSection({
+  moduleNumber,
+  nodes,
+}: {
+  moduleNumber: number;
+  nodes: TreeNode[];
+}) {
+  return (
+    <section>
+      <header className="mb-3 flex items-center gap-3">
+        <span className="font-mono text-xs uppercase tracking-widest text-[rgba(0,255,136,0.6)]">
+          ▼ M{String(moduleNumber).padStart(2, "0")}
+        </span>
+        <span className="h-px flex-1 bg-[rgba(0,255,136,0.15)]" aria-hidden />
+        <span className="font-mono text-[10px] uppercase tracking-widest text-[rgba(0,255,136,0.4)]">
+          {nodes.filter((n) => n.status === "mastered").length}/{nodes.length}
+        </span>
+      </header>
+
+      <ol className="relative space-y-4">
+        {/* Trait vertical "chemin" */}
+        <span
+          className="pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-[rgba(0,255,136,0.18)]"
+          aria-hidden
+        />
+        {nodes.map((node, i) => (
+          <li
+            key={node.slug}
+            className={`relative flex ${i % 2 === 0 ? "justify-start" : "justify-end"}`}
+          >
+            <TreeNodeCard node={node} />
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+function TreeNodeCard({ node }: { node: TreeNode }) {
+  const kindIcon =
+    node.kind === "offensive" ? "⚔" : node.kind === "defensive" ? "🛡" : "⇋";
+
+  if (node.status === "locked") {
+    return (
+      <div className="ph-noir-card-locked relative w-[80%] max-w-md rounded p-3 sm:w-[55%]">
+        <p className="font-mono text-[10px] uppercase tracking-widest opacity-70">
+          M{String(node.moduleNumber).padStart(2, "0")} · {kindIcon} ·{" "}
+          🔒 LOCKED
+        </p>
+        <p className="mt-1 font-semibold blur-[2px] transition hover:blur-0">
+          {node.title}
+        </p>
+      </div>
+    );
+  }
+
+  const baseCls =
+    "relative block w-[80%] max-w-md rounded p-3 transition sm:w-[55%]";
+  const stateCls =
+    node.status === "mastered"
+      ? "ph-noir-card border-2 border-[#00ff88] bg-[rgba(0,255,136,0.08)]"
+      : node.status === "in_progress"
+        ? "ph-noir-card ph-noir-glow border-2 border-[#00ff88] bg-[rgba(0,255,136,0.04)]"
+        : "ph-noir-card hover:bg-[rgba(0,255,136,0.05)]";
+
+  const icon =
+    node.status === "mastered" ? "⚑" : node.status === "in_progress" ? "▶" : "▶";
+
+  const tag =
+    node.status === "mastered"
+      ? "✓ MAÎTRISÉE"
+      : node.status === "in_progress"
+        ? "· EN COURS"
+        : null;
+
+  return (
+    <Link
+      href={`/code-noir/${node.slug}` as unknown as string}
+      className={`${baseCls} ${stateCls}`}
+    >
+      <p className="font-mono text-[10px] uppercase tracking-widest text-[rgba(0,255,136,0.55)]">
+        M{String(node.moduleNumber).padStart(2, "0")} · {kindIcon}
+        {tag && (
+          <span
+            className={`ml-2 ${
+              node.status === "mastered"
+                ? "text-[#00ff88]"
+                : "text-[rgba(0,255,136,0.8)]"
+            }`}
+          >
+            {tag}
+          </span>
+        )}
+      </p>
+      <div className="mt-1 flex items-start gap-2">
+        <span
+          className={`shrink-0 font-mono text-base ${
+            node.status === "mastered" ? "text-[#00ff88]" : "text-[#00ff88]"
+          }`}
+          aria-hidden
+        >
+          {icon}
+        </span>
+        <p className="text-sm font-bold text-[rgba(0,255,136,0.95)]">
+          {node.title}
+        </p>
+      </div>
+    </Link>
+  );
+}
+
+// =============================================================
+// MENTOR CHAT (inchangé)
+// =============================================================
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -256,10 +434,15 @@ function MentorChat({ currentModule: _cur }: { currentModule: number }) {
         {messages.length === 0 && (
           <div className="text-sm text-[rgba(0,255,136,0.5)]">
             <p>$ Black Hat Mentor en attente…</p>
-            <p className="mt-3 text-xs">Pose une question sur les techniques débloquées. Ex :</p>
+            <p className="mt-3 text-xs">
+              Pose une question sur les techniques débloquées. Ex :
+            </p>
             <ul className="mt-2 space-y-1 text-xs">
               <li>{"> "}Donne-moi le payload XSS qui bypass DOMPurify v3.0.</li>
-              <li>{"> "}Comment exploiter SSRF vers IMDSv1 avec curl, étape par étape ?</li>
+              <li>
+                {"> "}Comment exploiter SSRF vers IMDSv1 avec curl, étape par
+                étape ?
+              </li>
               <li>{"> "}Explique Log4Shell — la mécanique exacte JNDI + payload.</li>
               <li>{"> "}sqlmap : options pour bypass un WAF Cloudflare ?</li>
               <li>{"> "}Décortique le CVE Heartbleed (commit fix + payload).</li>
@@ -288,10 +471,14 @@ function MentorChat({ currentModule: _cur }: { currentModule: number }) {
           </div>
         ))}
         {sending && (
-          <p className="font-mono text-xs text-[rgba(0,255,136,0.5)]">$ mentor thinking...</p>
+          <p className="font-mono text-xs text-[rgba(0,255,136,0.5)]">
+            $ mentor thinking...
+          </p>
         )}
         {error && (
-          <p className="font-mono text-xs text-[rgba(255,80,80,0.8)]">$ ERROR: {error}</p>
+          <p className="font-mono text-xs text-[rgba(255,80,80,0.8)]">
+            $ ERROR: {error}
+          </p>
         )}
       </div>
       <div className="flex gap-2 border-t border-[rgba(0,255,136,0.2)] p-3">
@@ -314,6 +501,7 @@ function MentorChat({ currentModule: _cur }: { currentModule: number }) {
           onClick={() => void send()}
           disabled={sending || !input.trim()}
           className="shrink-0 border-2 border-[#00ff88] px-3 py-1 font-mono text-xs uppercase tracking-widest text-[#00ff88] transition hover:bg-[rgba(0,255,136,0.1)] disabled:opacity-30"
+          style={{ minHeight: 40 }}
         >
           send
         </button>

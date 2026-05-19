@@ -10,3 +10,4 @@ export * from "./github";
 export * from "./exams";
 export * from "./user";
 export * from "./aiCosts";
+export * from "./codeNoir";

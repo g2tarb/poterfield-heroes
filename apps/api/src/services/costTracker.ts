@@ -18,6 +18,8 @@ export type AiCostCategory =
   | "github_review"
   | "srs_generation"
   | "code_noir"
+  | "code_noir_eli5"
+  | "code_noir_quiz"
   | "memory_embedding";
 
 // Persiste le coût d'un appel Claude après que la réponse soit reçue.

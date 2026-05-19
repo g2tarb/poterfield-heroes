@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { apiFetch, ApiError } from "@/lib/api";
-import { Sandbox } from "@/components/sandbox/Sandbox";
+import { LazySandbox as Sandbox } from "@/components/sandbox/LazySandbox";
 import { cn } from "@/lib/cn";
 
 type QuestionQcm = {

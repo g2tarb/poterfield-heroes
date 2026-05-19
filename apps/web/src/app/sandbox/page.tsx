@@ -1,5 +1,5 @@
-import { Sandbox } from "@/components/sandbox/Sandbox";
 import { AtelierPageHeader } from "@/components/shell/AtelierPageHeader";
+import { LazySandbox } from "@/components/sandbox/LazySandbox";
 
 export const metadata = { title: "Sandbox" };
 
@@ -12,7 +12,7 @@ export default function SandboxPage() {
         subtitle="Exécution isolée dans un Web Worker. Timeout 5s. Pas d'accès DOM. Pour expérimenter, débugger un snippet, vérifier une intuition."
         refCode="SANDBOX"
       />
-      <Sandbox title="JS Runtime" />
+      <LazySandbox title="JS Runtime" />
     </main>
   );
 }

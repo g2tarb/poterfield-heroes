@@ -95,23 +95,26 @@ export function CodeNoirUnlock() {
   if (revealed) {
     return (
       <div
-        className="fixed inset-x-0 top-4 z-50 mx-auto flex max-w-md items-center justify-between gap-3 rounded border-2 border-[#00ff88] bg-black px-4 py-3 font-mono text-sm text-[#00ff88] shadow-[0_0_24px_rgba(0,255,136,0.4)]"
+        className="fixed inset-x-2 z-50 mx-auto flex max-w-md flex-wrap items-center justify-between gap-2 rounded border-2 border-[#00ff88] bg-black px-3 py-3 font-mono text-sm text-[#00ff88] shadow-[0_0_24px_rgba(0,255,136,0.4)] sm:inset-x-0 sm:gap-3 sm:px-4"
+        style={{
+          top: "calc(env(safe-area-inset-top, 0px) + 12px)",
+        }}
         role="status"
       >
-        <span className="uppercase tracking-widest">
+        <span className="flex-1 text-xs uppercase tracking-widest sm:text-sm">
           ╳ CODE NOIR débloqué
         </span>
         <button
           type="button"
           onClick={() => router.push("/code-noir")}
-          className="border border-[#00ff88] px-3 py-1 text-xs uppercase tracking-widest hover:bg-[rgba(0,255,136,0.1)]"
+          className="inline-flex min-h-[40px] items-center border border-[#00ff88] px-3 py-1.5 text-xs uppercase tracking-widest hover:bg-[rgba(0,255,136,0.1)] active:bg-[rgba(0,255,136,0.2)]"
         >
           entrer
         </button>
         <button
           type="button"
           onClick={() => setRevealed(false)}
-          className="text-xs opacity-70 hover:opacity-100"
+          className="inline-flex min-h-[40px] min-w-[40px] items-center justify-center text-base opacity-70 hover:opacity-100 active:opacity-100"
           aria-label="Fermer"
         >
           ×
