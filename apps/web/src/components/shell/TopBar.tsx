@@ -10,7 +10,6 @@ const TITLES: Record<string, string> = {
   "/settings": "Réglages",
   "/srs": "Révisions",
   "/sandbox": "Sandbox",
-  "/roadmap": "Plan",
   "/github": "GitHub",
   "/exams": "Examens",
   "/exams/current": "Examen",

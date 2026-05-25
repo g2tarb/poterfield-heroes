@@ -83,7 +83,7 @@ function VideoFacade({ video }: { video: SkillVideo }) {
     <button
       type="button"
       onClick={() => setPlaying(true)}
-      className="group relative block w-full overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg-base)] text-left transition hover:border-[var(--color-accent)]"
+      className="group relative block w-full overflow-hidden border border-[var(--color-border-strong)] bg-[var(--color-bg-base)] text-left transition hover:border-[var(--color-accent)]"
       aria-label={`Lancer la vidéo ${video.title ?? video.youtubeId}`}
     >
       <div className="relative aspect-video w-full">

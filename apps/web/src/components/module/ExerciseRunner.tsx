@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { apiFetch, ApiError } from "@/lib/api";
+import { burstSuccess, burstXp } from "@/lib/feedback";
 
 type QuizQ = {
   question: string;
@@ -61,6 +62,7 @@ export function ExerciseRunner({
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<CorrectionResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const submitBtnRef = useRef<HTMLButtonElement | null>(null);
 
   const kindLabel = {
     quiz_activation: { label: "Quiz d'activation", icon: "🎯" },
@@ -102,6 +104,15 @@ export function ExerciseRunner({
         },
       );
       setResult(res);
+      if (res.passed) {
+        const xpReward = res.scorePct >= 100 ? 50 : 25;
+        burstXp(xpReward, "exercise");
+        const rect = submitBtnRef.current?.getBoundingClientRect();
+        const origin = rect
+          ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
+          : undefined;
+        burstSuccess(origin, res.scorePct >= 100 ? "Parfait !" : "Validé !");
+      }
     } catch (e) {
       const msg = e instanceof ApiError ? e.message : "Erreur correction";
       setError(msg);
@@ -189,6 +200,7 @@ export function ExerciseRunner({
                   Seuil de validation : {passThresholdPct}%
                 </span>
                 <button
+                  ref={submitBtnRef}
                   type="button"
                   onClick={handleSubmit}
                   disabled={submitting}

@@ -115,6 +115,7 @@ export function ProgressionPanel({
               ? `record ${progression.user.longestStreak}j`
               : null
           }
+          flame
         />
         <Gauge
           label="Modules"
@@ -187,11 +188,13 @@ function Gauge({
   value,
   unit,
   sub,
+  flame,
 }: {
   label: string;
   value: number;
   unit: string;
   sub: string | null;
+  flame?: boolean;
 }) {
   return (
     <div className="ph-panel ph-rivets relative overflow-hidden px-4 py-3">
@@ -200,7 +203,12 @@ function Gauge({
       <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
         {label}
       </p>
-      <p className="mt-2 text-2xl font-bold tabular-nums">
+      <p className="mt-2 flex items-baseline gap-1 text-2xl font-bold tabular-nums">
+        {flame && value > 0 && (
+          <span className="ph-streak-pulse text-xl" aria-hidden>
+            🔥
+          </span>
+        )}
         {value}
         <span className="ml-0.5 text-xs font-normal text-[var(--color-fg-muted)]">
           {unit}

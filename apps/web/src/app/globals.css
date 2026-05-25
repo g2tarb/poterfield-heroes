@@ -549,6 +549,97 @@ body {
   100% { color: oklch(0.85 0.25 200); }
 }
 
+/* ========================================
+   FEEDBACK ADDICTIF — XP toast + confetti
+   ======================================== */
+
+/* XP toast : float-up + fade */
+@keyframes ph-xp-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 16px) scale(0.85);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.05);
+  }
+  30% {
+    transform: translate(-50%, 0) scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -28px) scale(1);
+  }
+}
+.ph-xp-toast {
+  animation: ph-xp-float 2200ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Confetti particles : éclat radial */
+@keyframes ph-confetti-shoot {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(
+        calc(-50% + var(--dx, 0px)),
+        calc(-50% + var(--dy, 0px))
+      )
+      scale(0.6);
+  }
+}
+.ph-confetti-particle {
+  transform-origin: center;
+  animation: ph-confetti-shoot 1500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* Confetti success message */
+@keyframes ph-confetti-msg {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -100%) scale(0.85);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -120%) scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -160%) scale(1);
+  }
+}
+.ph-confetti-message {
+  animation: ph-confetti-msg 1800ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Streak flame pulse (utilisé quand série maintenue) */
+@keyframes ph-streak-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 4px color-mix(in oklch, var(--color-accent), transparent 50%));
+  }
+  50% {
+    transform: scale(1.18);
+    filter: drop-shadow(0 0 12px color-mix(in oklch, var(--color-accent), transparent 20%));
+  }
+}
+.ph-streak-pulse {
+  animation: ph-streak-pulse 2200ms ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

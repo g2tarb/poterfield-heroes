@@ -168,7 +168,7 @@ function ProgressGauge({
           </span>
         </div>
       </div>
-      <div className="relative mt-3 h-2.5 overflow-hidden rounded-full border border-[var(--color-border)] bg-[var(--color-bg-elev)]">
+      <div className="relative mt-3 h-2.5 overflow-hidden rounded-full border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)]">
         <div
           className="absolute inset-y-0 left-0 rounded-full bg-[var(--color-accent)] shadow-[0_0_12px_var(--color-accent)] transition-[width] duration-150 ease-out"
           style={{ width: `${pct}%` }}

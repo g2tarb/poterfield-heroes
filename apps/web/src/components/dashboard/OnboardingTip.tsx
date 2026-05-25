@@ -50,7 +50,7 @@ export function OnboardingTip() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 px-3 pb-[calc(env(safe-area-inset-bottom)+12px)] sm:bottom-6 sm:px-6">
-      <div className="mx-auto max-w-xl rounded-lg border border-[var(--color-accent)]/40 bg-[var(--color-bg-elev)]/95 p-4 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] sm:p-5">
+      <div className="mx-auto max-w-xl rounded-lg border border-[var(--color-accent)]/40 bg-[var(--color-bg-elevated)]/95 p-4 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] sm:p-5">
         <div className="flex items-baseline justify-between gap-3">
           <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
             // intro · {step + 1}/{STEPS.length}
@@ -81,7 +81,7 @@ export function OnboardingTip() {
                 className={`h-1.5 w-6 rounded-full transition ${
                   i === step
                     ? "bg-[var(--color-accent)]"
-                    : "bg-[var(--color-border)]"
+                    : "bg-[var(--color-border-strong)]"
                 }`}
                 aria-hidden
               />
@@ -92,7 +92,7 @@ export function OnboardingTip() {
               <button
                 type="button"
                 onClick={() => setStep((s) => s - 1)}
-                className="inline-flex min-h-[40px] items-center border border-[var(--color-border)] px-3 text-xs font-mono uppercase tracking-widest text-[var(--color-fg-muted)] transition hover:text-[var(--color-fg-primary)]"
+                className="inline-flex min-h-[40px] items-center border border-[var(--color-border-strong)] px-3 text-xs font-mono uppercase tracking-widest text-[var(--color-fg-muted)] transition hover:text-[var(--color-fg-primary)]"
               >
                 ← prev
               </button>

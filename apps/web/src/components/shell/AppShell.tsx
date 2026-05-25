@@ -7,6 +7,7 @@ import { CoachPanel } from "@/components/coach/CoachPanel";
 import { FocusTimer } from "@/components/focus/FocusTimer";
 import { LevelUpReveal } from "@/components/ambient/LevelUpReveal";
 import { BootSplash } from "@/components/ambient/BootSplash";
+import { FeedbackOverlay } from "@/components/feedback/FeedbackOverlay";
 import { BottomNav } from "./BottomNav";
 import { TopBar } from "./TopBar";
 
@@ -70,6 +71,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <CoachPanel {...(moduleId ? { moduleId } : {})} />
       <FocusTimer />
       <LevelUpReveal level={reveal} onClose={close} />
+      <FeedbackOverlay />
     </BootSplash>
   );
 }

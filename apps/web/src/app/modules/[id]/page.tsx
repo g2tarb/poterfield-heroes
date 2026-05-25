@@ -1,9 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { apiFetch, ApiError } from "@/lib/api";
-import { ModuleStartButton } from "@/components/module/ModuleStartButton";
-import { ExerciseRunner } from "@/components/module/ExerciseRunner";
-import { SkillChecklist } from "@/components/module/SkillChecklist";
+import { LessonPlayer } from "@/components/module/LessonPlayer";
 
 type ModuleDetail = {
   module: {
@@ -81,13 +79,6 @@ async function getModule(id: string): Promise<ModuleDetail | null> {
   }
 }
 
-function formatDuration(seconds: number | null): string | null {
-  if (seconds == null) return null;
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  return h > 0 ? `${h}h${String(m).padStart(2, "0")}` : `${m}min`;
-}
-
 export default async function ModulePage({
   params,
 }: {
@@ -97,14 +88,50 @@ export default async function ModulePage({
   const data = await getModule(id);
   if (!data) notFound();
 
-  const { module: mod, skills, videos, exercises, progress } = data;
-  const primaryVideo = videos.find((v) => v.isPrimary === 1);
-  const additionalVideos = videos.filter((v) => v.isPrimary === 0);
-  const status = progress?.status ?? "locked";
+  const status = data.progress?.status ?? "locked";
+
+  if (status === "locked") {
+    return (
+      <main className="min-h-svh px-3 pb-8 pt-3 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
+        <nav className="mb-3 font-mono text-xs sm:mb-6">
+          <Link
+            href="/"
+            className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-primary)]"
+          >
+            ← Atelier
+          </Link>
+        </nav>
+        <div className="ph-panel ph-rivets relative overflow-hidden">
+          <span className="ph-rivet-tl" />
+          <span className="ph-rivet-tr" />
+          <div className="ph-station-header flex items-center justify-between px-4 py-2">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--color-fg-secondary)]">
+              Station {String(data.module.moduleNumber).padStart(2, "0")} ·
+              Verrouillée
+            </span>
+            <span className="ph-ref">LOCKED</span>
+          </div>
+          <div className="px-5 py-6">
+            <h1 className="text-2xl font-bold uppercase tracking-wide">
+              🔒 {data.module.title}
+            </h1>
+            <p className="mt-3 text-sm text-[var(--color-fg-secondary)]">
+              Termine le module précédent pour déverrouiller celui-ci.
+            </p>
+            {data.module.prerequisites && (
+              <p className="mt-2 text-xs text-[var(--color-fg-muted)]">
+                Prérequis : {data.module.prerequisites}
+              </p>
+            )}
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <main className="min-h-svh px-3 pb-8 pt-3 sm:px-6 lg:px-12 lg:pt-12 xl:px-24">
-      <nav className="mb-3 font-mono text-xs sm:mb-6">
+    <main className="min-h-svh px-3 pb-8 pt-3 sm:px-6 lg:px-12 lg:pt-6 xl:px-24">
+      <nav className="mb-3 font-mono text-xs">
         <Link
           href="/"
           className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-primary)]"
@@ -113,239 +140,7 @@ export default async function ModulePage({
         </Link>
       </nav>
 
-      {/* Header style atelier */}
-      <header className="ph-panel ph-rivets relative mb-6 overflow-hidden sm:mb-8">
-        <span className="ph-rivet-tl" />
-        <span className="ph-rivet-tr" />
-        <div className="ph-station-header flex items-center justify-between px-4 py-2">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--color-fg-secondary)]">
-            Station {String(mod.moduleNumber).padStart(2, "0")} · Phase {mod.phase}
-          </span>
-          <span className="ph-ref">M{String(mod.moduleNumber).padStart(2, "0")}-{mod.phase}</span>
-        </div>
-        <div className="px-4 py-4 sm:px-5 sm:py-5">
-          <h1 className="text-2xl font-bold uppercase leading-tight tracking-wide sm:text-3xl md:text-4xl">
-            {mod.title}
-          </h1>
-          {mod.subtitle && (
-            <p className="mt-2 text-sm leading-relaxed text-[var(--color-fg-secondary)] sm:mt-3 sm:text-base">
-              {mod.subtitle}
-            </p>
-          )}
-        </div>
-      </header>
-
-      {/* Layout 2 colonnes desktop, 1 col mobile */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px] lg:gap-10">
-        {/* === COLONNE PRINCIPALE === */}
-        <article className="min-w-0 space-y-10">
-
-          {/* Pourquoi */}
-          <section>
-            <h2 className="mb-3 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
-              Pourquoi
-            </h2>
-            <blockquote className="border-l-2 border-[var(--color-accent)] pl-4">
-              <p className="whitespace-pre-line text-base leading-relaxed">
-                {mod.pourquoi}
-              </p>
-            </blockquote>
-          </section>
-
-          {/* Vidéo principale */}
-          {primaryVideo && (
-            <section>
-              <h2 className="mb-4 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
-                Vidéo principale · {primaryVideo.creator}
-                {primaryVideo.durationSeconds && (
-                  <span> · {formatDuration(primaryVideo.durationSeconds)}</span>
-                )}
-              </h2>
-              <h3 className="mb-3 text-xl font-semibold">{primaryVideo.title}</h3>
-              {primaryVideo.youtubeId && (
-                <>
-                  <div className="aspect-video w-full overflow-hidden rounded-xl border border-[var(--color-border-subtle)] bg-black">
-                    <iframe
-                      src={`https://www.youtube.com/embed/${primaryVideo.youtubeId}`}
-                      title={primaryVideo.title}
-                      allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
-                      allowFullScreen
-                      className="h-full w-full"
-                    />
-                  </div>
-                  <a
-                    href={`https://www.youtube.com/watch?v=${primaryVideo.youtubeId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 inline-block font-mono text-xs text-[var(--color-fg-muted)] hover:text-[var(--color-accent)]"
-                  >
-                    Ouvrir sur YouTube ↗
-                  </a>
-                </>
-              )}
-              {primaryVideo.whyThisOne && (
-                <p className="mt-4 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-3 text-sm italic text-[var(--color-fg-secondary)]">
-                  💡 {primaryVideo.whyThisOne}
-                </p>
-              )}
-            </section>
-          )}
-
-          {/* Vidéos approfondissement */}
-          {additionalVideos.length > 0 && (
-            <section>
-              <h2 className="mb-4 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
-                Pour approfondir
-              </h2>
-              <ul className="space-y-3">
-                {additionalVideos.map((v) => {
-                  const href = v.youtubeId
-                    ? `https://www.youtube.com/watch?v=${v.youtubeId}`
-                    : null;
-                  const Inner = (
-                    <>
-                      <div className="flex items-baseline justify-between gap-3">
-                        <h3 className="font-semibold">
-                          {v.title}
-                          {href && (
-                            <span className="ml-2 font-mono text-xs font-normal text-[var(--color-accent)]">
-                              ↗
-                            </span>
-                          )}
-                        </h3>
-                        {v.durationSeconds && (
-                          <span className="shrink-0 font-mono text-xs text-[var(--color-fg-muted)]">
-                            {formatDuration(v.durationSeconds)}
-                          </span>
-                        )}
-                      </div>
-                      {v.creator && (
-                        <p className="mt-1 text-sm text-[var(--color-fg-secondary)]">
-                          {v.creator}
-                        </p>
-                      )}
-                      {v.whyThisOne && (
-                        <p className="mt-2 text-sm italic text-[var(--color-fg-secondary)]">
-                          {v.whyThisOne}
-                        </p>
-                      )}
-                    </>
-                  );
-                  return (
-                    <li key={v.id}>
-                      {href ? (
-                        <a
-                          href={href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4 transition hover:border-[var(--color-accent)] hover:bg-[var(--color-bg-high)]"
-                        >
-                          {Inner}
-                        </a>
-                      ) : (
-                        <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
-                          {Inner}
-                        </div>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-          )}
-
-          {/* Étapes */}
-          {exercises.length > 0 && (
-            <section id="exercises" className="scroll-mt-24">
-              <h2 className="mb-4 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
-                Étapes du parcours ({exercises.length})
-              </h2>
-              <ol className="space-y-3">
-                {exercises.map((e, i) => (
-                  <li key={e.id}>
-                    <ExerciseRunner
-                      exerciseId={e.id}
-                      kind={e.kind}
-                      title={e.title}
-                      statement={e.statement}
-                      starterCode={e.starterCode}
-                      language={e.language}
-                      quizQuestions={e.quizQuestions}
-                      estimatedMinutes={e.estimatedMinutes}
-                      passThresholdPct={e.passThresholdPct}
-                      index={i}
-                    />
-                  </li>
-                ))}
-              </ol>
-            </section>
-          )}
-        </article>
-
-        {/* === COLONNE LATÉRALE (desktop sticky) === */}
-        <aside className="space-y-5 lg:sticky lg:top-6 lg:self-start">
-          {/* CTA */}
-          <ModuleStartButton moduleId={mod.id} initialStatus={status} />
-
-          {/* Méta */}
-          <section className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
-            <h3 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-              Informations
-            </h3>
-            <dl className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <dt className="text-[var(--color-fg-muted)]">Durée</dt>
-                <dd className="font-mono tabular-nums">
-                  {mod.estimatedHours}h
-                  {mod.estimatedWeeks && (
-                    <span className="text-[var(--color-fg-muted)]">
-                      {" "}
-                      · ~{mod.estimatedWeeks}sem
-                    </span>
-                  )}
-                </dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-[var(--color-fg-muted)]">Phase</dt>
-                <dd className="font-mono tabular-nums">{mod.phase} / 8</dd>
-              </div>
-              {mod.prerequisites && (
-                <div>
-                  <dt className="text-[var(--color-fg-muted)]">Prérequis</dt>
-                  <dd className="mt-1 text-xs text-[var(--color-fg-secondary)]">
-                    {mod.prerequisites}
-                  </dd>
-                </div>
-              )}
-            </dl>
-          </section>
-
-          {/* Objectifs */}
-          {mod.objectives.length > 0 && (
-            <section className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] p-4">
-              <h3 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-                Tu sauras ({mod.objectives.length})
-              </h3>
-              <ul className="space-y-2 text-xs">
-                {mod.objectives.map((obj, i) => (
-                  <li key={i} className="flex gap-2 leading-snug">
-                    <span
-                      className="shrink-0 text-[var(--color-accent)]"
-                      aria-hidden
-                    >
-                      ◇
-                    </span>
-                    <span>{obj}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {/* Compétences cochables */}
-          {skills.length > 0 && <SkillChecklist skills={skills} />}
-        </aside>
-      </div>
+      <LessonPlayer data={data} />
     </main>
   );
 }

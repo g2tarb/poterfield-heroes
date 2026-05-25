@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { PorterfieldLoader } from "./PorterfieldLoader";
 
 const SESSION_KEY = "ph_boot_splash_shown";
-const BOOT_DURATION_MS = 5000;
+const BOOT_DURATION_MS = 2500;
 
 export function BootSplash({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(true);
