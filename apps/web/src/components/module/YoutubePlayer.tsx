@@ -26,6 +26,10 @@ export type YoutubePlayerHandle = {
 type Props = {
   videoId: string;
   title?: string;
+  /** Si > 5s, le player seek à cette position à onReady. Utilisé pour "reprendre où je m'étais arrêté". */
+  initialSeekSeconds?: number;
+  /** Fired toutes les ~5s pendant la lecture avec le temps courant. */
+  onTimeUpdate?: (seconds: number, duration: number) => void;
   onReady?: () => void;
   onStateChange?: (state: number) => void;
 };
@@ -71,6 +75,7 @@ function loadYoutubeIframeApi(): Promise<void> {
 
 type YTPlayerInstance = {
   getCurrentTime: () => number;
+  getDuration: () => number;
   seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   pauseVideo: () => void;
   playVideo: () => void;
@@ -90,10 +95,23 @@ type YTPlayerConstructor = new (
 ) => YTPlayerInstance;
 
 export const YoutubePlayer = forwardRef<YoutubePlayerHandle, Props>(
-  function YoutubePlayer({ videoId, title, onReady, onStateChange }, ref) {
+  function YoutubePlayer(
+    { videoId, title, initialSeekSeconds, onTimeUpdate, onReady, onStateChange },
+    ref,
+  ) {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const playerRef = useRef<YTPlayerInstance | null>(null);
     const [error, setError] = useState<string | null>(null);
+
+    // Refs stables sur les callbacks pour ne pas recréer le player à chaque rerender
+    const onReadyRef = useRef(onReady);
+    const onStateChangeRef = useRef(onStateChange);
+    const onTimeUpdateRef = useRef(onTimeUpdate);
+    const initialSeekRef = useRef(initialSeekSeconds);
+    onReadyRef.current = onReady;
+    onStateChangeRef.current = onStateChange;
+    onTimeUpdateRef.current = onTimeUpdate;
+    initialSeekRef.current = initialSeekSeconds;
 
     useImperativeHandle(ref, () => ({
       getCurrentTime: () => playerRef.current?.getCurrentTime() ?? 0,
@@ -105,6 +123,7 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, Props>(
 
     useEffect(() => {
       let cancelled = false;
+      let timeUpdateInterval: number | null = null;
       const elementId = `yt-player-${videoId}-${Math.random().toString(36).slice(2, 8)}`;
       if (containerRef.current) containerRef.current.id = elementId;
 
@@ -123,8 +142,41 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, Props>(
               playsinline: 1,
             },
             events: {
-              onReady: () => onReady?.(),
-              onStateChange: (e) => onStateChange?.(e.data),
+              onReady: () => {
+                // Restore position : seek si on a un point de reprise > 5s
+                const seekTo = initialSeekRef.current;
+                if (seekTo && seekTo > 5 && playerRef.current) {
+                  playerRef.current.seekTo(seekTo, true);
+                }
+                onReadyRef.current?.();
+              },
+              onStateChange: (e) => {
+                onStateChangeRef.current?.(e.data);
+                // PLAYING (1) → démarre le polling, PAUSED/ENDED → arrête
+                if (e.data === YT_STATE.PLAYING) {
+                  if (timeUpdateInterval === null) {
+                    timeUpdateInterval = window.setInterval(() => {
+                      const p = playerRef.current;
+                      if (!p) return;
+                      onTimeUpdateRef.current?.(
+                        p.getCurrentTime(),
+                        p.getDuration(),
+                      );
+                    }, 5000);
+                  }
+                } else if (timeUpdateInterval !== null) {
+                  // Fire un dernier update avant d'arrêter (pour catch le pause précis)
+                  const p = playerRef.current;
+                  if (p) {
+                    onTimeUpdateRef.current?.(
+                      p.getCurrentTime(),
+                      p.getDuration(),
+                    );
+                  }
+                  window.clearInterval(timeUpdateInterval);
+                  timeUpdateInterval = null;
+                }
+              },
             },
           });
         })
@@ -134,6 +186,18 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, Props>(
 
       return () => {
         cancelled = true;
+        if (timeUpdateInterval !== null) {
+          window.clearInterval(timeUpdateInterval);
+        }
+        // Save final position avant destroy
+        const p = playerRef.current;
+        if (p) {
+          try {
+            onTimeUpdateRef.current?.(p.getCurrentTime(), p.getDuration());
+          } catch {
+            /* ignore */
+          }
+        }
         try {
           playerRef.current?.destroy();
         } catch {
@@ -141,8 +205,8 @@ export const YoutubePlayer = forwardRef<YoutubePlayerHandle, Props>(
         }
         playerRef.current = null;
       };
-      // videoId change = recréer le player
-    }, [videoId, onReady, onStateChange]);
+      // videoId change = recréer le player ; callbacks via refs ne déclenchent pas
+    }, [videoId]);
 
     if (error) {
       return (

@@ -9,6 +9,7 @@ import { LazySandbox } from "@/components/sandbox/LazySandbox";
 import { Markdown } from "@/components/coach/Markdown";
 import { YoutubePlayer, type YoutubePlayerHandle } from "./YoutubePlayer";
 import { VideoNotesPanel } from "./VideoNotesPanel";
+import { useVideoProgress } from "@/hooks/useVideoProgress";
 
 type Video = {
   id: string;
@@ -430,6 +431,7 @@ function StepVideo({
   moduleId: string;
 }) {
   const playerRef = useRef<YoutubePlayerHandle | null>(null);
+  const { initialSeek, loaded, saveProgress } = useVideoProgress(video.id);
 
   return (
     <article className="space-y-4 pb-32 lg:pb-20">
@@ -440,18 +442,31 @@ function StepVideo({
           {video.durationSeconds && (
             <span> · {formatDuration(video.durationSeconds)}</span>
           )}
+          {loaded && initialSeek !== null && (
+            <span className="ml-2 text-[var(--color-accent)]">
+              · reprise à {formatDuration(initialSeek)}
+            </span>
+          )}
         </p>
         <h2 className="mt-2 text-xl font-bold leading-tight sm:text-2xl">
           {video.title}
         </h2>
       </header>
 
-      {video.youtubeId ? (
+      {video.youtubeId && loaded ? (
         <YoutubePlayer
           ref={playerRef}
           videoId={video.youtubeId}
           title={video.title}
+          {...(initialSeek !== null ? { initialSeekSeconds: initialSeek } : {})}
+          onTimeUpdate={saveProgress}
         />
+      ) : video.youtubeId ? (
+        <div className="ph-panel grid aspect-video w-full place-items-center bg-black">
+          <p className="font-mono text-xs text-[var(--color-fg-muted)]">
+            chargement…
+          </p>
+        </div>
       ) : (
         <p className="text-sm text-[var(--color-fg-muted)]">
           Lien vidéo manquant.
