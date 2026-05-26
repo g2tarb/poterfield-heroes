@@ -83,40 +83,43 @@ function NodeCircle({ mod }: { mod: Module }) {
   const glyph = isDone ? "✓" : isActive ? "⚡" : isLocked ? "🔒" : (PHASE_ICONS[mod.phase] ?? "·");
 
   const content = (
-    <div className={`group relative inline-block ${isLocked ? "opacity-55" : ""}`}>
-      {/* Orbite de code autour du module actif */}
-      {isActive && (
-        <svg
-          aria-hidden
-          viewBox="0 0 160 160"
-          className="ph-orbit-spin pointer-events-none absolute inset-0 -m-6 z-0"
-        >
-          <defs>
-            <path
-              id={`orbit-${mod.id}`}
-              d="M 80,80 m -72,0 a 72,72 0 1,1 144,0 a 72,72 0 1,1 -144,0"
-              fill="none"
-            />
-          </defs>
-          <text
-            className="fill-[var(--color-accent)]"
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "8.5px",
-              letterSpacing: "0.06em",
-              fontWeight: 700,
-            }}
+    <div className={`group inline-block ${isLocked ? "opacity-55" : ""}`}>
+      {/* Wrapper du cercle (taille fixe) — l'orbite SVG est positionnée par rapport à LUI, pas au parent */}
+      <div className="relative mx-auto h-24 w-24 sm:h-28 sm:w-28">
+        {/* Orbite de code autour du module actif (déborde de 20px de chaque côté) */}
+        {isActive && (
+          <svg
+            aria-hidden
+            viewBox="0 0 144 144"
+            preserveAspectRatio="xMidYMid meet"
+            className="ph-orbit-spin pointer-events-none absolute -inset-5 z-0"
           >
-            <textPath href={`#orbit-${mod.id}`} startOffset="0">
-              ⚡ active · const skill = next() · await mastery() · if (done) break · // M{String(mod.moduleNumber).padStart(2, "0")} · console.log("⚙") · return level + 1 ·
-            </textPath>
-          </text>
-        </svg>
-      )}
+            <defs>
+              <path
+                id={`orbit-${mod.id}`}
+                d="M 72,72 m -64,0 a 64,64 0 1,1 128,0 a 64,64 0 1,1 -128,0"
+                fill="none"
+              />
+            </defs>
+            <text
+              className="fill-[var(--color-accent)]"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "8.5px",
+                letterSpacing: "0.06em",
+                fontWeight: 700,
+              }}
+            >
+              <textPath href={`#orbit-${mod.id}`} startOffset="0">
+                {`⚡ active · const skill = next() · await mastery() · if (done) break · // M${String(mod.moduleNumber).padStart(2, "0")} · console.log("⚙") · return level + 1 · `}
+              </textPath>
+            </text>
+          </svg>
+        )}
 
-      {/* Cercle station */}
-      <div
-        className={`relative grid h-24 w-24 place-items-center rounded-full border-[3px] sm:h-28 sm:w-28 ${borderColor} ${isActive ? "ph-pulse-glow" : ""} transition-transform duration-300 ${isLocked ? "" : "group-hover:-translate-y-1 group-hover:scale-105"}`}
+        {/* Cercle station */}
+        <div
+          className={`relative grid h-full w-full place-items-center rounded-full border-[3px] ${borderColor} ${isActive ? "ph-pulse-glow" : ""} transition-transform duration-300 ${isLocked ? "" : "group-hover:-translate-y-1 group-hover:scale-105"}`}
         style={{
           background: `linear-gradient(180deg, color-mix(in oklch, var(--color-bg-elevated), white 4%) 0%, var(--color-bg-elevated) 50%, color-mix(in oklch, var(--color-bg-elevated), black 6%) 100%)`,
           boxShadow: isActive
@@ -137,16 +140,17 @@ function NodeCircle({ mod }: { mod: Module }) {
         <Rivet pos="l" />
         <Rivet pos="r" />
 
-        <div className="relative flex flex-col items-center">
-          <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-[var(--color-fg-muted)]">
-            M{String(mod.moduleNumber).padStart(2, "0")}
-          </span>
-          <span
-            className={`mt-0.5 text-3xl ${isLocked ? "opacity-50 grayscale" : ""}`}
-            aria-hidden
-          >
-            {glyph}
-          </span>
+          <div className="relative flex flex-col items-center">
+            <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-[var(--color-fg-muted)]">
+              M{String(mod.moduleNumber).padStart(2, "0")}
+            </span>
+            <span
+              className={`mt-0.5 text-3xl ${isLocked ? "opacity-50 grayscale" : ""}`}
+              aria-hidden
+            >
+              {glyph}
+            </span>
+          </div>
         </div>
       </div>
 
