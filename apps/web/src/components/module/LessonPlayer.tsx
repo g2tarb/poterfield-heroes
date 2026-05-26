@@ -10,6 +10,7 @@ import { Markdown } from "@/components/coach/Markdown";
 import { YoutubePlayer, type YoutubePlayerHandle } from "./YoutubePlayer";
 import { VideoNotesPanel } from "./VideoNotesPanel";
 import { useVideoProgress } from "@/hooks/useVideoProgress";
+import { getCodeNoirLink } from "@/lib/codeNoirSkillMap";
 
 type Video = {
   id: string;
@@ -550,6 +551,8 @@ function StepSkill({
 
       <ExternalResourcesList resources={skill.resources} />
 
+      <CodeNoirBridge skill={skill} />
+
       {skill.description && (
         <p className="text-sm leading-relaxed text-[var(--color-fg-secondary)]">
           {skill.description}
@@ -646,6 +649,68 @@ function StepSkill({
       <div className="hidden lg:block">{ReadPane}</div>
       <div className="hidden lg:block">{CodePane}</div>
     </div>
+  );
+}
+
+// ============================================================
+// CodeNoirBridge — invitation contextuelle vers /code-noir/[slug]
+// ============================================================
+function CodeNoirBridge({ skill }: { skill: Skill }) {
+  const link = getCodeNoirLink(skill.slug);
+  if (!link) return null;
+
+  const isMastered = skill.status === "mastered";
+  const kindIcon =
+    link.kind === "offensive"
+      ? "⚔"
+      : link.kind === "defensive"
+        ? "🛡"
+        : "⇋";
+  const kindLabel =
+    link.kind === "offensive"
+      ? "OFFENSIVE"
+      : link.kind === "defensive"
+        ? "DEFENSIVE"
+        : "DUO";
+
+  return (
+    <Link
+      href={`/code-noir/${link.techniqueSlug}`}
+      className={`block border-2 transition ${
+        isMastered
+          ? "border-[#00ff88] bg-[rgba(0,255,136,0.06)] hover:bg-[rgba(0,255,136,0.12)]"
+          : "border-[rgba(0,255,136,0.3)] bg-[rgba(0,255,136,0.02)] hover:bg-[rgba(0,255,136,0.06)]"
+      }`}
+      style={{ fontFamily: "var(--font-mono)" }}
+    >
+      <div className="border-b border-[rgba(0,255,136,0.2)] bg-black/40 px-4 py-1.5">
+        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgba(0,255,136,0.7)]">
+          ╳ CODE NOIR · {kindIcon} {kindLabel}
+          {isMastered ? (
+            <span className="ml-2 text-[#00ff88]">▶ ACCESSIBLE</span>
+          ) : (
+            <span className="ml-2 text-[rgba(0,255,136,0.5)]">
+              ⌛ après maîtrise
+            </span>
+          )}
+        </p>
+      </div>
+      <div className="px-4 py-3">
+        <p className="text-sm font-bold text-[#00ff88] sm:text-base">
+          {link.techniqueTitle}
+        </p>
+        <p className="mt-1.5 text-xs leading-relaxed text-[rgba(0,255,136,0.75)]">
+          {link.invitation}
+        </p>
+        <p
+          className={`mt-3 text-[10px] uppercase tracking-widest ${
+            isMastered ? "text-[#00ff88]" : "text-[rgba(0,255,136,0.6)]"
+          }`}
+        >
+          {isMastered ? "▶ attaquer maintenant" : "▼ aperçu sandboxé"}
+        </p>
+      </div>
+    </Link>
   );
 }
 
