@@ -27,7 +27,32 @@ type TechniqueProgress = {
   status: "in_progress" | "mastered";
   quizScore: number | null;
   masteredAt: string | null;
+  bestTimeMs?: number | null;
+  killCount?: number | null;
 };
+
+type AchievementUnlocked = {
+  slug: string;
+  title: string;
+  description: string;
+  rarity: "common" | "rare" | "epic" | "legendary";
+  icon: string;
+};
+
+type KillResponse = {
+  ok: boolean;
+  newRecord: boolean;
+  bestTimeMs: number;
+  killCount: number;
+  unlockedAchievements: AchievementUnlocked[];
+};
+
+function formatTimer(ms: number): string {
+  const s = Math.floor(ms / 1000);
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec.toString().padStart(2, "0")}`;
+}
 
 type TechniqueResponse = {
   technique: Technique;
@@ -82,6 +107,49 @@ export function CodeNoirLessonClient({ slug }: { slug: string }) {
   const [step, setStep] = useState<Step>("intro");
   const [visited, setVisited] = useState<Set<Step>>(new Set(["intro"]));
   const [progress, setProgress] = useState<TechniqueProgress | null>(null);
+
+  // Kill timer (Paroxysme) — démarre au mount, sert au POST /kill
+  const [startedAt] = useState<number>(() => Date.now());
+  const [now, setNow] = useState<number>(() => Date.now());
+  const [killing, setKilling] = useState(false);
+  const [unlockedAchievements, setUnlockedAchievements] = useState<
+    AchievementUnlocked[]
+  >([]);
+  const elapsedMs = now - startedAt;
+
+  // Tick timer chaque seconde
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  async function recordKill(): Promise<void> {
+    setKilling(true);
+    try {
+      const res = await apiFetch<KillResponse>(
+        `/api/code-noir/${encodeURIComponent(slug)}/kill`,
+        {
+          method: "POST",
+          body: JSON.stringify({ durationMs: elapsedMs }),
+        },
+      );
+      setProgress({
+        status: "mastered",
+        quizScore: progress?.quizScore ?? null,
+        masteredAt: new Date().toISOString(),
+        bestTimeMs: res.bestTimeMs,
+        killCount: res.killCount,
+      });
+      if (res.unlockedAchievements.length > 0) {
+        setUnlockedAchievements(res.unlockedAchievements);
+      }
+    } catch (e) {
+      const msg = e instanceof ApiError ? e.message : "Erreur kill";
+      setError(msg);
+    } finally {
+      setKilling(false);
+    }
+  }
 
   // Load technique
   useEffect(() => {
@@ -241,13 +309,63 @@ export function CodeNoirLessonClient({ slug }: { slug: string }) {
         )}
       </section>
 
-      {/* Sticky nav bottom */}
+      {/* Achievement modal */}
+      {unlockedAchievements.length > 0 && (
+        <AchievementsUnlockedModal
+          achievements={unlockedAchievements}
+          onClose={() => setUnlockedAchievements([])}
+        />
+      )}
+
+      {/* Sticky nav bottom — Kill timer + Prev/Next */}
       <div
         className="sticky bottom-0 -mx-4 border-t border-[rgba(0,255,136,0.25)] bg-black/85 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6"
         style={{
           paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
         }}
       >
+        {/* Kill timer panel */}
+        <div className="mb-3 flex items-center justify-between gap-3 border-b border-[rgba(0,255,136,0.15)] pb-2">
+          <div className="flex flex-col leading-tight">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-[rgba(0,255,136,0.5)]">
+              ⏱ elapsed
+            </span>
+            <span className="font-mono text-lg tabular-nums text-[#00ff88] ph-noir-glow">
+              {formatTimer(elapsedMs)}
+            </span>
+          </div>
+
+          {progress?.bestTimeMs != null && (
+            <div className="flex flex-col items-end leading-tight">
+              <span className="font-mono text-[9px] uppercase tracking-widest text-[rgba(0,255,136,0.5)]">
+                ▼ best
+              </span>
+              <span className="font-mono text-sm tabular-nums text-[rgba(0,255,136,0.85)]">
+                {formatTimer(progress.bestTimeMs)}
+                {progress.killCount && progress.killCount > 1 && (
+                  <span className="ml-1 text-[rgba(0,255,136,0.4)]">
+                    · ×{progress.killCount}
+                  </span>
+                )}
+              </span>
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={recordKill}
+            disabled={killing}
+            className="ph-noir-glow border-2 border-[#00ff88] bg-[rgba(0,255,136,0.08)] px-4 py-2 font-mono text-xs font-bold uppercase tracking-widest text-[#00ff88] transition hover:bg-[rgba(0,255,136,0.18)] disabled:opacity-50"
+            style={{ minHeight: 40 }}
+          >
+            {killing
+              ? "killing..."
+              : progress?.status === "mastered"
+                ? `▶ RE-KILL · ${formatTimer(elapsedMs)}`
+                : `✓ KILL · ${formatTimer(elapsedMs)}`}
+          </button>
+        </div>
+
         <div className="flex items-center justify-between gap-3">
           <button
             type="button"
@@ -418,6 +536,91 @@ function VideosStep({ technique }: { technique: Technique }) {
           ? { videoIds: technique.youtubeIds }
           : {})}
       />
+    </div>
+  );
+}
+
+// ============================================================
+// Achievements unlocked modal — célébration ph-noir
+// ============================================================
+const RARITY_COLOR: Record<AchievementUnlocked["rarity"], string> = {
+  common: "rgba(0,255,136,0.7)",
+  rare: "rgba(80,180,255,0.85)",
+  epic: "rgba(200,120,255,0.9)",
+  legendary: "rgba(255,215,80,0.95)",
+};
+
+function AchievementsUnlockedModal({
+  achievements,
+  onClose,
+}: {
+  achievements: AchievementUnlocked[];
+  onClose: () => void;
+}) {
+  // Auto-close après 6s par achievement, ou close immédiat au click
+  useEffect(() => {
+    const id = window.setTimeout(
+      onClose,
+      Math.min(12_000, 4_000 + achievements.length * 2_000),
+    );
+    return () => window.clearTimeout(id);
+  }, [achievements, onClose]);
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+      className="fixed inset-0 z-[80] grid place-items-center bg-black/85 backdrop-blur-sm ph-noir-scan"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md space-y-4 px-6 py-8"
+      >
+        <p className="text-center font-mono text-xs uppercase tracking-[0.35em] text-[rgba(0,255,136,0.5)] ph-noir-flicker">
+          ╳ ACHIEVEMENT{achievements.length > 1 ? "S" : ""} UNLOCKED ╳
+        </p>
+        {achievements.map((a) => {
+          const tone = RARITY_COLOR[a.rarity];
+          return (
+            <article
+              key={a.slug}
+              className="border-2 bg-[rgba(0,255,136,0.04)] p-4"
+              style={{ borderColor: tone }}
+            >
+              <div className="flex items-start gap-3">
+                <span
+                  className="text-3xl ph-noir-glow"
+                  style={{ color: tone }}
+                  aria-hidden
+                >
+                  {a.icon}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p
+                    className="font-mono text-[10px] uppercase tracking-widest"
+                    style={{ color: tone, opacity: 0.7 }}
+                  >
+                    {a.rarity}
+                  </p>
+                  <h3
+                    className="text-base font-bold uppercase tracking-wider"
+                    style={{ color: tone }}
+                  >
+                    {a.title}
+                  </h3>
+                  <p className="mt-1 text-xs leading-relaxed text-[rgba(0,255,136,0.75)]">
+                    {a.description}
+                  </p>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+        <p className="text-center font-mono text-[10px] uppercase tracking-widest text-[rgba(0,255,136,0.4)]">
+          click anywhere to dismiss
+        </p>
+      </div>
     </div>
   );
 }

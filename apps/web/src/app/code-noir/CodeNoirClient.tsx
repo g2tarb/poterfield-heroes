@@ -9,7 +9,16 @@ type TechniqueProgress = {
   status: "in_progress" | "mastered";
   quizScore: number | null;
   masteredAt: string | null;
+  bestTimeMs: number | null;
+  killCount: number;
 };
+
+function formatBestTime(ms: number): string {
+  const s = Math.floor(ms / 1000);
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec.toString().padStart(2, "0")}`;
+}
 
 type Technique = {
   slug: string;
@@ -142,6 +151,8 @@ type TreeNode = {
   kind: "offensive" | "defensive" | "duo";
   moduleNumber: number;
   status: NodeStatus;
+  bestTimeMs?: number | null;
+  killCount?: number;
 };
 
 function SkillTreeView({ state }: { state: State }) {
@@ -180,6 +191,8 @@ function SkillTreeView({ state }: { state: State }) {
             : t.progress?.status === "in_progress"
               ? "in_progress"
               : "available",
+        bestTimeMs: t.progress?.bestTimeMs ?? null,
+        killCount: t.progress?.killCount ?? 0,
       };
       const arr = map.get(t.moduleNumber) ?? [];
       arr.push(node);
@@ -391,6 +404,16 @@ function TreeNodeCard({ node }: { node: TreeNode }) {
           {node.title}
         </p>
       </div>
+      {node.status === "mastered" && node.bestTimeMs != null && (
+        <p className="mt-1.5 font-mono text-[10px] uppercase tracking-widest text-[#00ff88] ph-noir-glow">
+          ▶ KILLED in {formatBestTime(node.bestTimeMs)}
+          {node.killCount && node.killCount > 1 && (
+            <span className="ml-1 text-[rgba(0,255,136,0.5)]">
+              · ×{node.killCount}
+            </span>
+          )}
+        </p>
+      )}
     </Link>
   );
 }
@@ -411,18 +434,82 @@ function MentorChat({ currentModule: _cur }: { currentModule: number }) {
     if (!input.trim() || sending) return;
     const question = input;
     setInput("");
-    setMessages((m) => [...m, { role: "user", content: question }]);
+    setMessages((m) => [
+      ...m,
+      { role: "user", content: question },
+      { role: "assistant", content: "" }, // placeholder pour le streaming
+    ]);
     setSending(true);
     setError(null);
+
     try {
-      const res = await apiFetch<{ answer: string }>("/api/code-noir/ask", {
+      const res = await fetch("/api/code-noir/ask-stream", {
         method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),
       });
-      setMessages((m) => [...m, { role: "assistant", content: res.answer }]);
+      if (!res.ok || !res.body) {
+        throw new Error(`Stream HTTP ${res.status}`);
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let assembled = "";
+
+      // Parsing SSE manuel : event: <name>\ndata: <json>\n\n
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const events = buffer.split("\n\n");
+        buffer = events.pop() ?? "";
+
+        for (const ev of events) {
+          let evtName = "";
+          let dataStr = "";
+          for (const line of ev.split("\n")) {
+            if (line.startsWith("event: ")) evtName = line.slice(7).trim();
+            else if (line.startsWith("data: ")) dataStr = line.slice(6);
+          }
+          if (!dataStr) continue;
+
+          if (evtName === "chunk") {
+            try {
+              const payload = JSON.parse(dataStr) as { text: string };
+              assembled += payload.text;
+              setMessages((m) => {
+                const copy = [...m];
+                const lastIdx = copy.length - 1;
+                if (copy[lastIdx]?.role === "assistant") {
+                  copy[lastIdx] = { role: "assistant", content: assembled };
+                }
+                return copy;
+              });
+            } catch {
+              /* ignore parse errors */
+            }
+          } else if (evtName === "error") {
+            try {
+              const payload = JSON.parse(dataStr) as { message: string };
+              setError(payload.message);
+            } catch {
+              setError("Stream error");
+            }
+          }
+        }
+      }
     } catch (e) {
-      const msg = e instanceof ApiError ? e.message : "Erreur mentor";
+      const msg = e instanceof Error ? e.message : "Erreur mentor";
       setError(msg);
+      // Si stream a échoué dès le départ, retirer le placeholder vide
+      setMessages((m) => {
+        if (m[m.length - 1]?.role === "assistant" && m[m.length - 1]?.content === "") {
+          return m.slice(0, -1);
+        }
+        return m;
+      });
     } finally {
       setSending(false);
     }

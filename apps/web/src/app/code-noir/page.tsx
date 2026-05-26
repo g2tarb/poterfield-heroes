@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CodeNoirClient } from "./CodeNoirClient";
+import { CodeNoirBoot } from "@/components/code-noir/CodeNoirBoot";
 
 export const metadata = {
   title: "Code Noir",
@@ -8,6 +9,7 @@ export const metadata = {
 
 export default function CodeNoirPage() {
   return (
+    <CodeNoirBoot>
     <main className="ph-noir ph-noir-scan relative">
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
         <nav className="mb-6 text-xs">
@@ -39,5 +41,6 @@ export default function CodeNoirPage() {
         <CodeNoirClient />
       </div>
     </main>
+    </CodeNoirBoot>
   );
 }

@@ -2,7 +2,12 @@ import type { FastifyInstance, FastifyPluginAsync } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { asc, eq } from "drizzle-orm";
-import { modules, moduleProgress, codeNoirProgress } from "@ph/db";
+import {
+  modules,
+  moduleProgress,
+  codeNoirProgress,
+  codeNoirAchievements,
+} from "@ph/db";
 import { anthropic, MODEL_HAIKU, MODEL_SONNET } from "../lib/anthropic.js";
 import { callClaude } from "../lib/claudeCall.js";
 import {
@@ -12,6 +17,11 @@ import {
   type CodeNoirTechnique,
 } from "../lib/codeNoirData.js";
 import { buildCodeNoirSystemPrompt } from "../lib/codeNoirPersona.js";
+import {
+  ACHIEVEMENTS,
+  evaluateAchievements,
+  type ProgressSnapshot,
+} from "../lib/codeNoirAchievements.js";
 import { AppError, NotFoundError } from "../lib/errors.js";
 import { trackAiCost } from "../services/costTracker.js";
 
@@ -98,6 +108,8 @@ const codeNoirRoutes: FastifyPluginAsync = async (app) => {
           status: "in_progress" | "mastered";
           quizScore: number | null;
           masteredAt: string | null;
+          bestTimeMs: number | null;
+          killCount: number;
         }
       >();
       for (const row of progressRows) {
@@ -105,6 +117,8 @@ const codeNoirRoutes: FastifyPluginAsync = async (app) => {
           status: row.status as "in_progress" | "mastered",
           quizScore: row.quizScore,
           masteredAt: row.masteredAt ? row.masteredAt.toISOString() : null,
+          bestTimeMs: row.bestTimeMs,
+          killCount: row.killCount,
         });
       }
 
@@ -125,7 +139,86 @@ const codeNoirRoutes: FastifyPluginAsync = async (app) => {
     },
   );
 
-  // POST /code-noir/ask — chat one-shot avec Black Hat Mentor
+  // POST /code-noir/ask-stream — SSE streaming mentor (effet live typing)
+  a.post(
+    "/code-noir/ask-stream",
+    {
+      preHandler: [app.authenticate],
+      schema: {
+        body: z.object({
+          question: z.string().min(1).max(2000),
+        }),
+      },
+    },
+    async (req, reply) => {
+      if (!anthropic) {
+        throw new AppError(503, "Anthropic not configured");
+      }
+
+      const { question } = req.body;
+      const currentModule = await getCurrentModuleNumber(app);
+      const unlocked = getUnlockedTechniques(currentModule);
+      const system = buildCodeNoirSystemPrompt({
+        currentModuleNumber: currentModule,
+        unlocked,
+      });
+
+      reply.raw.writeHead(200, {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache, no-transform",
+        Connection: "keep-alive",
+        "X-Accel-Buffering": "no",
+      });
+
+      const send = (event: string, data: unknown) => {
+        reply.raw.write(`event: ${event}\n`);
+        reply.raw.write(`data: ${JSON.stringify(data)}\n\n`);
+      };
+
+      let closed = false;
+      req.raw.on("close", () => {
+        closed = true;
+      });
+
+      try {
+        const stream = anthropic.messages.stream({
+          model: MODEL_SONNET,
+          max_tokens: 1200,
+          system,
+          messages: [{ role: "user", content: question }],
+        });
+
+        for await (const event of stream) {
+          if (closed) break;
+          if (
+            event.type === "content_block_delta" &&
+            event.delta.type === "text_delta"
+          ) {
+            send("chunk", { text: event.delta.text });
+          }
+        }
+
+        const finalMessage = await stream.finalMessage();
+        if (!closed) {
+          await trackAiCost(app.db, {
+            category: "code_noir",
+            model: MODEL_SONNET,
+            usage: finalMessage.usage,
+            sourceRef: "code_noir:ask-stream",
+          });
+          send("done", { currentModule, unlockedCount: unlocked.length });
+        }
+      } catch (err) {
+        if (!closed) {
+          send("error", { message: (err as Error).message ?? "Stream error" });
+        }
+      } finally {
+        if (!closed) reply.raw.end();
+      }
+    },
+  );
+
+  // POST /code-noir/ask — chat one-shot avec Black Hat Mentor (legacy, gardé pour compat)
   a.post(
     "/code-noir/ask",
     {
@@ -473,6 +566,134 @@ Appelle l'outil \`emit_quiz\` avec ta sortie.`;
               ? (existing?.masteredAt ?? masteredAt)?.toISOString() ?? null
               : null,
         },
+      };
+    },
+  );
+
+  // POST /code-noir/:slug/kill — capture d'une technique avec chrono + check achievements
+  a.post(
+    "/code-noir/:slug/kill",
+    {
+      preHandler: [app.authenticate],
+      schema: {
+        params: z.object({ slug: z.string().min(1).max(120) }),
+        body: z.object({
+          durationMs: z.number().int().min(0).max(24 * 60 * 60 * 1000),
+        }),
+      },
+    },
+    async ({ params, body }) => {
+      const technique = findTechnique(params.slug);
+      if (!technique) throw new NotFoundError("Technique");
+
+      const currentModule = await getCurrentModuleNumber(app);
+      if (technique.moduleNumber > currentModule) {
+        throw new AppError(403, "Technique verrouillée.");
+      }
+
+      const now = new Date();
+      const [existing] = await app.db
+        .select()
+        .from(codeNoirProgress)
+        .where(eq(codeNoirProgress.techniqueSlug, params.slug))
+        .limit(1);
+
+      const isNewRecord =
+        !existing?.bestTimeMs || body.durationMs < existing.bestTimeMs;
+      const newBestTime = isNewRecord
+        ? body.durationMs
+        : existing!.bestTimeMs;
+
+      if (existing) {
+        await app.db
+          .update(codeNoirProgress)
+          .set({
+            status: "mastered",
+            killCount: (existing.killCount ?? 0) + 1,
+            bestTimeMs: newBestTime,
+            firstKillAt: existing.firstKillAt ?? now,
+            masteredAt: existing.masteredAt ?? now,
+            updatedAt: now,
+          })
+          .where(eq(codeNoirProgress.techniqueSlug, params.slug));
+      } else {
+        await app.db.insert(codeNoirProgress).values({
+          techniqueSlug: params.slug,
+          status: "mastered",
+          killCount: 1,
+          bestTimeMs: body.durationMs,
+          firstKillAt: now,
+          masteredAt: now,
+          updatedAt: now,
+        });
+      }
+
+      // Évaluer les achievements depuis le snapshot complet
+      const allProgress = await app.db.select().from(codeNoirProgress);
+      const snapshot: ProgressSnapshot[] = allProgress.map((p) => ({
+        techniqueSlug: p.techniqueSlug,
+        status: p.status as "in_progress" | "mastered",
+        quizScore: p.quizScore,
+        bestTimeMs: p.bestTimeMs,
+        firstKillAt: p.firstKillAt,
+      }));
+      const candidateAchievements = evaluateAchievements(snapshot);
+
+      // Filtrer ceux pas encore unlocked
+      const alreadyUnlocked = await app.db
+        .select({ slug: codeNoirAchievements.slug })
+        .from(codeNoirAchievements);
+      const alreadySlugs = new Set(alreadyUnlocked.map((a) => a.slug));
+      const newlyUnlocked = candidateAchievements.filter(
+        (s) => !alreadySlugs.has(s),
+      );
+
+      if (newlyUnlocked.length > 0) {
+        await app.db
+          .insert(codeNoirAchievements)
+          .values(
+            newlyUnlocked.map((slug) => ({
+              slug,
+              context: params.slug,
+            })),
+          )
+          .onConflictDoNothing();
+      }
+
+      // Retourne les achievements enrichis (avec leurs définitions)
+      const unlockedDefs = newlyUnlocked
+        .map((slug) => ACHIEVEMENTS.find((a) => a.slug === slug))
+        .filter((a): a is NonNullable<typeof a> => a !== undefined);
+
+      return {
+        ok: true,
+        newRecord: isNewRecord,
+        bestTimeMs: newBestTime,
+        killCount: ((existing?.killCount ?? 0) + 1),
+        unlockedAchievements: unlockedDefs,
+      };
+    },
+  );
+
+  // GET /code-noir/achievements — liste tous les achievements avec état
+  a.get(
+    "/code-noir/achievements",
+    { preHandler: [app.authenticate] },
+    async () => {
+      const unlocked = await app.db.select().from(codeNoirAchievements);
+      const unlockedBySlug = new Map(
+        unlocked.map((u) => [
+          u.slug,
+          { unlockedAt: u.unlockedAt.toISOString(), context: u.context },
+        ]),
+      );
+      return {
+        achievements: ACHIEVEMENTS.map((def) => ({
+          ...def,
+          unlocked: unlockedBySlug.has(def.slug),
+          unlockedAt: unlockedBySlug.get(def.slug)?.unlockedAt ?? null,
+          context: unlockedBySlug.get(def.slug)?.context ?? null,
+        })),
       };
     },
   );
