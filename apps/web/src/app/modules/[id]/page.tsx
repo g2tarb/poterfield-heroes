@@ -30,6 +30,20 @@ type ModuleDetail = {
       lang: "fr" | "en";
     }>;
     prereqSkillSlugs: string[];
+    contentMarkdown: string | null;
+    resources: Array<{
+      id: string;
+      kind: string;
+      provider: string;
+      title: string;
+      url: string;
+      language: string;
+      level: string;
+      whyThisOne: string | null;
+      estimatedMinutes: number | null;
+      lastVerifiedAt: string | Date | null;
+      httpStatus: number | null;
+    }>;
     status: "discovering" | "practicing" | "mastered" | null;
     masteryPct: number | null;
   }>;

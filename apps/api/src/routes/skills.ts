@@ -8,6 +8,7 @@ import {
   generateSkillQuestion,
   validateSkillAnswer,
 } from "../services/skillValidator.js";
+import { generateLessonForSkill } from "../services/lessonGenerator.js";
 
 const skillsRoutes: FastifyPluginAsync = async (app) => {
   const a = app.withTypeProvider<ZodTypeProvider>();
@@ -142,6 +143,28 @@ const skillsRoutes: FastifyPluginAsync = async (app) => {
         feedback: result.feedback,
         masteryPct,
       };
+    },
+  );
+
+  // POST /skills/:id/generate-lesson — génère le contenu markdown via Claude
+  a.post(
+    "/skills/:id/generate-lesson",
+    {
+      preHandler: [app.authenticate],
+      schema: {
+        params: z.object({ id: z.string().uuid() }),
+        body: z
+          .object({ force: z.boolean().optional() })
+          .optional()
+          .default({}),
+      },
+    },
+    async ({ params, body }) => {
+      const result = await generateLessonForSkill(app.db, {
+        skillId: params.id,
+        ...(body?.force !== undefined ? { force: body.force } : {}),
+      });
+      return result;
     },
   );
 };

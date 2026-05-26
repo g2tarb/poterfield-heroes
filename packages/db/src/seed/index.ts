@@ -136,6 +136,11 @@ import { M23_ID, m23Module, m23Skills, m23SkillAxisRules, m23Videos, m23Exercise
 import { M24_ID, m24Module, m24Skills, m24SkillAxisRules, m24Videos, m24Exercises } from "./modules/m24";
 import { M25_ID, m25Module, m25Skills, m25SkillAxisRules, m25Videos, m25Exercises } from "./modules/m25";
 import { M00_ID, m00Module, m00Skills, m00SkillAxisRules, m00Videos, m00Exercises } from "./modules/m00-algo";
+import {
+  m00LessonContent,
+  m00Resources,
+  m00SkillResourceLinks,
+} from "./modules/m00-extras";
 
 const databaseUrl = process.env["DATABASE_URL"];
 if (!databaseUrl) {
@@ -225,6 +230,69 @@ async function seedModule(
         );
     }
   }
+}
+
+async function seedM00Extras() {
+  console.log("→ Seeding M00 extras (lessons + external resources)…");
+
+  // 1) UPDATE skills content_markdown
+  for (const [slug, markdown] of Object.entries(m00LessonContent)) {
+    await db
+      .update(schema.skills)
+      .set({ contentMarkdown: markdown })
+      .where(
+        and(
+          eq(schema.skills.moduleId, M00_ID),
+          eq(schema.skills.slug, slug),
+        ),
+      );
+  }
+
+  // 2) INSERT external_resources (idempotent par URL)
+  const existing = await db
+    .select({ url: schema.externalResources.url, id: schema.externalResources.id })
+    .from(schema.externalResources);
+  const byUrl = new Map(existing.map((r) => [r.url, r.id]));
+
+  const toInsert = m00Resources.filter((r) => !byUrl.has(r.url));
+  if (toInsert.length > 0) {
+    const inserted = await db
+      .insert(schema.externalResources)
+      .values(toInsert)
+      .returning({ id: schema.externalResources.id, url: schema.externalResources.url });
+    for (const r of inserted) byUrl.set(r.url, r.id);
+  }
+
+  // 3) INSERT skill_resources (resolve by title + skill slug)
+  const byTitle = new Map(
+    m00Resources.map((r) => [r.title, byUrl.get(r.url)!]),
+  );
+  const skillRows = await db
+    .select({ id: schema.skills.id, slug: schema.skills.slug })
+    .from(schema.skills)
+    .where(eq(schema.skills.moduleId, M00_ID));
+  const skillIdBySlug = new Map(skillRows.map((s) => [s.slug, s.id]));
+
+  for (const link of m00SkillResourceLinks) {
+    const skillId = skillIdBySlug.get(link.skillSlug);
+    if (!skillId) continue;
+    for (let i = 0; i < link.resourceTitles.length; i++) {
+      const title = link.resourceTitles[i]!;
+      const resourceId = byTitle.get(title);
+      if (!resourceId) {
+        console.warn(`  ⚠ resource title not found: "${title}"`);
+        continue;
+      }
+      await db
+        .insert(schema.skillResources)
+        .values({ skillId, resourceId, displayOrder: i })
+        .onConflictDoNothing();
+    }
+  }
+
+  console.log(
+    `  → ${Object.keys(m00LessonContent).length} lessons, ${m00Resources.length} resources, ${m00SkillResourceLinks.length} skills with links`,
+  );
 }
 
 async function seedUserState() {
@@ -404,6 +472,7 @@ async function main() {
   // Module transversal M00 (algorithmie) — seedé en dernier pour pas casser
   // l'ordre logique des dépendances, mais affiché en TÊTE côté frontend.
   await seedModule(M00_ID, m00Module, m00Skills, m00SkillAxisRules, m00Videos, m00Exercises);
+  await seedM00Extras();
   await seedUserState();
   await seedPublicProfile();
   console.log("\nDone.");

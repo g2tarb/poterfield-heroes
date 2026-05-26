@@ -3,6 +3,7 @@ import { env } from "./config/env.js";
 import { initErrorReporter } from "./lib/errorReporter.js";
 import { maybeGenerateThisWeekExam } from "./services/examGenerator.js";
 import { maybeSendSrsReminder } from "./services/push.js";
+import { verifyAllResources } from "./services/resourceVerifier.js";
 
 const app = await buildApp();
 await initErrorReporter(app.log);
@@ -27,6 +28,23 @@ const srsReminderInterval = setInterval(
   60 * 60 * 1000,
 );
 
+// Sprint D — Resource freshness check (daily, 24h interval)
+const resourceVerifyInterval = setInterval(
+  () => {
+    void verifyAllResources(app.db)
+      .then((res) =>
+        app.log.info(
+          { checked: res.checked, broken: res.broken, durationMs: res.durationMs },
+          "resource verification tick",
+        ),
+      )
+      .catch((err) =>
+        app.log.error({ err }, "resource verification tick failed"),
+      );
+  },
+  24 * 60 * 60 * 1000,
+);
+
 const signals = ["SIGINT", "SIGTERM"] as const;
 for (const signal of signals) {
   process.on(signal, async () => {
@@ -34,6 +52,7 @@ for (const signal of signals) {
     try {
       clearInterval(examInterval);
       clearInterval(srsReminderInterval);
+      clearInterval(resourceVerifyInterval);
       await app.close();
       process.exit(0);
     } catch (err) {

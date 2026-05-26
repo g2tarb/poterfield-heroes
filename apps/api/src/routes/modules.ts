@@ -1,7 +1,7 @@
 import type { FastifyPluginAsync } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
-import { asc, eq } from "drizzle-orm";
+import { asc, eq, inArray } from "drizzle-orm";
 import {
   modules,
   skills,
@@ -9,8 +9,11 @@ import {
   exercises,
   moduleProgress,
   skillProgress,
+  externalResources,
+  skillResources,
 } from "@ph/db";
 import { NotFoundError } from "../lib/errors.js";
+import { verifyAllResources } from "../services/resourceVerifier.js";
 
 const modulesRoutes: FastifyPluginAsync = async (app) => {
   const a = app.withTypeProvider<ZodTypeProvider>();
@@ -167,6 +170,7 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
               displayOrder: skills.displayOrder,
               videos: skills.videos,
               prereqSkillSlugs: skills.prereqSkillSlugs,
+              contentMarkdown: skills.contentMarkdown,
               status: skillProgress.status,
               masteryPct: skillProgress.masteryPct,
             })
@@ -203,9 +207,62 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
             .then((rows) => rows[0] ?? null),
         ]);
 
+      // Ressources externes par skill (Sprint C)
+      const skillIds = skillsList.map((s) => s.id);
+      const resourcesRows = skillIds.length > 0
+        ? await app.db
+            .select({
+              skillId: skillResources.skillId,
+              displayOrder: skillResources.displayOrder,
+              id: externalResources.id,
+              kind: externalResources.kind,
+              provider: externalResources.provider,
+              title: externalResources.title,
+              url: externalResources.url,
+              language: externalResources.language,
+              level: externalResources.level,
+              whyThisOne: externalResources.whyThisOne,
+              estimatedMinutes: externalResources.estimatedMinutes,
+              lastVerifiedAt: externalResources.lastVerifiedAt,
+              httpStatus: externalResources.httpStatus,
+            })
+            .from(skillResources)
+            .innerJoin(
+              externalResources,
+              eq(externalResources.id, skillResources.resourceId),
+            )
+            .where(inArray(skillResources.skillId, skillIds))
+            .orderBy(asc(skillResources.displayOrder))
+        : [];
+
+      // Group resources by skillId
+      const resourcesBySkill = new Map<string, typeof resourcesRows>();
+      for (const r of resourcesRows) {
+        const arr = resourcesBySkill.get(r.skillId) ?? [];
+        arr.push(r);
+        resourcesBySkill.set(r.skillId, arr);
+      }
+
+      const skillsWithResources = skillsList.map((s) => ({
+        ...s,
+        resources: (resourcesBySkill.get(s.id) ?? []).map((r) => ({
+          id: r.id,
+          kind: r.kind,
+          provider: r.provider,
+          title: r.title,
+          url: r.url,
+          language: r.language,
+          level: r.level,
+          whyThisOne: r.whyThisOne,
+          estimatedMinutes: r.estimatedMinutes,
+          lastVerifiedAt: r.lastVerifiedAt,
+          httpStatus: r.httpStatus,
+        })),
+      }));
+
       return {
         module: mod,
-        skills: skillsList,
+        skills: skillsWithResources,
         videos: videosList,
         exercises: exercisesList,
         progress: progress
@@ -215,6 +272,16 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
               secondsSpent: 0,
             },
       };
+    },
+  );
+
+  // POST /admin/verify-resources — Sprint D : check toutes les URLs externes
+  a.post(
+    "/admin/verify-resources",
+    { preHandler: [app.authenticate] },
+    async () => {
+      const result = await verifyAllResources(app.db);
+      return result;
     },
   );
 };

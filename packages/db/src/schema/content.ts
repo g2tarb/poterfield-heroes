@@ -107,6 +107,9 @@ export const skills = pgTable(
       .$type<string[]>()
       .notNull()
       .default(sql`'[]'::jsonb`),
+    // Contenu pédagogique markdown rendu inline dans le step skill du LessonPlayer.
+    // Null = pas encore généré ; CTA "Générer cette leçon" appellera Claude.
+    contentMarkdown: text("content_markdown"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -114,6 +117,54 @@ export const skills = pgTable(
   (table) => ({
     moduleIdx: index("idx_skills_module").on(table.moduleId),
     moduleSlugUq: index("uq_skills_module_slug").on(table.moduleId, table.slug),
+  }),
+);
+
+// =============================================================
+// EXTERNAL RESOURCES (Sprint C — agrégation MDN, fCC, web.dev, …)
+// =============================================================
+export const externalResources = pgTable(
+  "external_resources",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    // Kind : article (MDN, blog), video, exercise (LeetCode, Codewars),
+    // doc (specs), course (fCC, Coursera).
+    kind: varchar("kind", { length: 16 }).notNull(),
+    provider: varchar("provider", { length: 64 }).notNull(), // "MDN", "freeCodeCamp", "NeetCode", "web.dev", …
+    title: text("title").notNull(),
+    url: text("url").notNull(),
+    language: varchar("language", { length: 8 }).notNull().default("en"), // "fr", "en", "es", …
+    level: varchar("level", { length: 16 }).notNull().default("beginner"), // "beginner", "intermediate", "advanced"
+    whyThisOne: text("why_this_one"),
+    estimatedMinutes: integer("estimated_minutes"),
+    // Sprint D — fraîcheur
+    lastVerifiedAt: timestamp("last_verified_at", { withTimezone: true }),
+    httpStatus: integer("http_status"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    providerIdx: index("idx_resources_provider").on(table.provider),
+    kindIdx: index("idx_resources_kind").on(table.kind),
+  }),
+);
+
+// Junction skill ↔ resource (un skill peut avoir N ressources)
+export const skillResources = pgTable(
+  "skill_resources",
+  {
+    skillId: uuid("skill_id")
+      .notNull()
+      .references(() => skills.id, { onDelete: "cascade" }),
+    resourceId: uuid("resource_id")
+      .notNull()
+      .references(() => externalResources.id, { onDelete: "cascade" }),
+    displayOrder: integer("display_order").notNull().default(0),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.skillId, table.resourceId] }),
+    skillIdx: index("idx_skill_resources_skill").on(table.skillId),
   }),
 );
 
@@ -232,3 +283,9 @@ export type NewVideo = typeof videos.$inferInsert;
 
 export type Exercise = typeof exercises.$inferSelect;
 export type NewExercise = typeof exercises.$inferInsert;
+
+export type ExternalResource = typeof externalResources.$inferSelect;
+export type NewExternalResource = typeof externalResources.$inferInsert;
+
+export type SkillResource = typeof skillResources.$inferSelect;
+export type NewSkillResource = typeof skillResources.$inferInsert;

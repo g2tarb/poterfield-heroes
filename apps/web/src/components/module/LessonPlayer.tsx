@@ -6,6 +6,7 @@ import { apiFetch, ApiError } from "@/lib/api";
 import { burstSuccess, burstXp } from "@/lib/feedback";
 import { ExerciseRunner } from "./ExerciseRunner";
 import { LazySandbox } from "@/components/sandbox/LazySandbox";
+import { Markdown } from "@/components/coach/Markdown";
 
 type Video = {
   id: string;
@@ -25,6 +26,20 @@ type SkillVideo = {
   lang: "fr" | "en";
 };
 
+type ExternalResource = {
+  id: string;
+  kind: string;
+  provider: string;
+  title: string;
+  url: string;
+  language: string;
+  level: string;
+  whyThisOne: string | null;
+  estimatedMinutes: number | null;
+  lastVerifiedAt: string | Date | null;
+  httpStatus: number | null;
+};
+
 type Skill = {
   id: string;
   slug: string;
@@ -34,6 +49,8 @@ type Skill = {
   displayOrder: number;
   videos: SkillVideo[];
   prereqSkillSlugs: string[];
+  contentMarkdown: string | null;
+  resources: ExternalResource[];
   status: "discovering" | "practicing" | "mastered" | null;
   masteryPct: number | null;
 };
@@ -496,6 +513,10 @@ function StepSkill({
 
       <PrereqsBanner prereqs={skill.prereqSkillSlugs} allSkills={allSkills} />
 
+      <SkillLesson skill={skill} />
+
+      <ExternalResourcesList resources={skill.resources} />
+
       {skill.description && (
         <p className="text-sm leading-relaxed text-[var(--color-fg-secondary)]">
           {skill.description}
@@ -592,6 +613,178 @@ function StepSkill({
       <div className="hidden lg:block">{ReadPane}</div>
       <div className="hidden lg:block">{CodePane}</div>
     </div>
+  );
+}
+
+// ============================================================
+// SkillLesson (Sprint B) — markdown rendu inline ou CTA "Générer"
+// ============================================================
+function SkillLesson({ skill }: { skill: Skill }) {
+  const [markdown, setMarkdown] = useState(skill.contentMarkdown);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function generate() {
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await apiFetch<{
+        contentMarkdown: string;
+        costCents: number;
+        cached: boolean;
+      }>(`/api/skills/${skill.id}/generate-lesson`, {
+        method: "POST",
+        body: JSON.stringify({}),
+      });
+      setMarkdown(res.contentMarkdown);
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : "Erreur génération leçon");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (markdown) {
+    return (
+      <section className="ph-panel relative overflow-hidden px-5 py-4">
+        <header className="mb-3 flex items-center justify-between">
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-fg-muted)]">
+            📖 Leçon Porterfield
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              if (
+                !confirm(
+                  "Régénérer la leçon ? L'actuelle sera remplacée.",
+                )
+              )
+                return;
+              setMarkdown(null);
+            }}
+            className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)] hover:text-[var(--color-accent)]"
+          >
+            ↻ régénérer
+          </button>
+        </header>
+        <Markdown source={markdown} />
+      </section>
+    );
+  }
+
+  return (
+    <section className="ph-panel ph-rivets relative overflow-hidden border-l-4 border-l-[var(--color-accent)]">
+      <span className="ph-rivet-tl" />
+      <span className="ph-rivet-tr" />
+      <div className="px-5 py-4">
+        <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-accent)]">
+          📝 Leçon pas encore générée
+        </p>
+        <p className="mt-2 text-sm text-[var(--color-fg-secondary)]">
+          Le coach Porterfield peut rédiger une leçon markdown ciblée sur ce
+          skill (intro · concept · exemple code · pièges · question
+          réflexion). ~10-15s.
+        </p>
+        <button
+          type="button"
+          onClick={generate}
+          disabled={loading}
+          className="mt-3 inline-flex min-h-[40px] items-center border-2 border-[var(--color-accent)] bg-[var(--color-bg-elevated)] px-3 font-mono text-[10px] font-bold uppercase tracking-widest text-[var(--color-accent)] transition hover:bg-[var(--color-bg-high)] disabled:opacity-50"
+        >
+          {loading ? "génération…" : "▶ Générer cette leçon"}
+        </button>
+        {error && (
+          <p className="mt-2 text-xs text-[var(--color-danger)]">{error}</p>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
+// ExternalResourcesList (Sprint C) — agrégation MDN/fCC/web.dev/…
+// ============================================================
+function ExternalResourcesList({
+  resources,
+}: {
+  resources: ExternalResource[];
+}) {
+  if (resources.length === 0) return null;
+
+  return (
+    <section>
+      <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-fg-muted)]">
+        📚 Aller plus loin · {resources.length} sources curées
+      </p>
+      <ul className="space-y-2">
+        {resources.map((r) => (
+          <li key={r.id}>
+            <ExternalResourceCard resource={r} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function ExternalResourceCard({ resource }: { resource: ExternalResource }) {
+  const isBroken =
+    resource.httpStatus !== null &&
+    (resource.httpStatus >= 400 || resource.httpStatus === 0);
+
+  const kindIcon =
+    resource.kind === "video"
+      ? "▶"
+      : resource.kind === "exercise"
+        ? "✎"
+        : resource.kind === "course"
+          ? "🎓"
+          : resource.kind === "doc"
+            ? "📄"
+            : "📰";
+
+  const levelTone =
+    resource.level === "advanced"
+      ? "text-[var(--color-danger)]"
+      : resource.level === "intermediate"
+        ? "text-[var(--color-warning)]"
+        : "text-[var(--color-success)]";
+
+  return (
+    <a
+      href={resource.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="ph-panel block px-4 py-3 transition hover:border-[var(--color-accent)]"
+    >
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="ph-ref shrink-0">
+            {kindIcon} {resource.provider}
+          </span>
+          <span className={`ph-ref shrink-0 ${levelTone}`}>
+            {resource.level}
+          </span>
+          <span className="ph-ref shrink-0">{resource.language.toUpperCase()}</span>
+          {isBroken && (
+            <span className="ph-ref shrink-0 text-[var(--color-danger)]">
+              ⚠ à vérifier
+            </span>
+          )}
+        </div>
+        {resource.estimatedMinutes && (
+          <span className="shrink-0 font-mono text-[10px] text-[var(--color-fg-muted)]">
+            ~{resource.estimatedMinutes} min
+          </span>
+        )}
+      </div>
+      <p className="mt-2 text-sm font-semibold leading-snug">{resource.title}</p>
+      {resource.whyThisOne && (
+        <p className="mt-1 text-xs italic text-[var(--color-fg-secondary)]">
+          {resource.whyThisOne}
+        </p>
+      )}
+    </a>
   );
 }
 
