@@ -29,6 +29,7 @@ type ModuleDetail = {
       channel?: string;
       lang: "fr" | "en";
     }>;
+    prereqSkillSlugs: string[];
     status: "discovering" | "practicing" | "mastered" | null;
     masteryPct: number | null;
   }>;

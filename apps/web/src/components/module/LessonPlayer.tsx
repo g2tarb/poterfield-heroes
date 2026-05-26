@@ -33,6 +33,7 @@ type Skill = {
   weight: number;
   displayOrder: number;
   videos: SkillVideo[];
+  prereqSkillSlugs: string[];
   status: "discovering" | "practicing" | "mastered" | null;
   masteryPct: number | null;
 };
@@ -183,7 +184,11 @@ export function LessonPlayer({ data }: { data: ModuleData }) {
         {current.kind === "intro" && <StepIntro module={data.module} />}
         {current.kind === "video" && <StepVideo video={current.video} />}
         {current.kind === "skill" && (
-          <StepSkill skill={current.skill} moduleNumber={data.module.moduleNumber} />
+          <StepSkill
+            skill={current.skill}
+            allSkills={data.skills}
+            moduleNumber={data.module.moduleNumber}
+          />
         )}
         {current.kind === "exercise" && (
           <StepExercise exercise={current.exercise} index={stepIndex} />
@@ -450,9 +455,11 @@ function StepVideo({ video }: { video: Video }) {
 
 function StepSkill({
   skill,
+  allSkills,
   moduleNumber,
 }: {
   skill: Skill;
+  allSkills: Skill[];
   moduleNumber: number;
 }) {
   const [mobileTab, setMobileTab] = useState<"read" | "code">("read");
@@ -486,6 +493,8 @@ function StepSkill({
           </p>
         )}
       </header>
+
+      <PrereqsBanner prereqs={skill.prereqSkillSlugs} allSkills={allSkills} />
 
       {skill.description && (
         <p className="text-sm leading-relaxed text-[var(--color-fg-secondary)]">
@@ -583,6 +592,91 @@ function StepSkill({
       <div className="hidden lg:block">{ReadPane}</div>
       <div className="hidden lg:block">{CodePane}</div>
     </div>
+  );
+}
+
+function PrereqsBanner({
+  prereqs,
+  allSkills,
+}: {
+  prereqs: string[];
+  allSkills: Skill[];
+}) {
+  if (prereqs.length === 0) return null;
+
+  const bySlug = new Map(allSkills.map((s) => [s.slug, s]));
+
+  const resolved = prereqs.map((slug) => {
+    const s = bySlug.get(slug);
+    if (!s) {
+      // Prereq d'un autre module (cross-module) — pas résolu ici en V1
+      return {
+        slug,
+        label: slug,
+        status: null as Skill["status"],
+        crossModule: true,
+      };
+    }
+    return {
+      slug,
+      label: s.label,
+      status: s.status,
+      crossModule: false,
+    };
+  });
+
+  const allMastered = resolved.every((r) => r.status === "mastered");
+
+  return (
+    <section
+      className={`ph-panel ph-rivets relative overflow-hidden border-l-4 ${allMastered ? "border-l-[var(--color-success)]" : "border-l-[var(--color-warning)]"}`}
+    >
+      <span className="ph-rivet-tl" />
+      <span className="ph-rivet-tr" />
+      <header className="ph-station-header flex items-center justify-between px-4 py-1.5">
+        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-fg-secondary)]">
+          Prérequis · {resolved.length}
+        </span>
+        <span className="ph-ref">
+          {allMastered ? "✓ prêt" : "⚠ à acquérir"}
+        </span>
+      </header>
+      <ul className="divide-y divide-[var(--color-border-subtle)]">
+        {resolved.map((r) => {
+          const isMastered = r.status === "mastered";
+          const isPracticing = r.status === "practicing";
+          const tone = isMastered
+            ? "text-[var(--color-success)]"
+            : isPracticing
+              ? "text-[var(--color-warning)]"
+              : "text-[var(--color-fg-muted)]";
+          const icon = isMastered ? "✓" : isPracticing ? "≈" : "·";
+          return (
+            <li
+              key={r.slug}
+              className="flex items-center gap-3 px-4 py-2"
+            >
+              <span className={`shrink-0 font-mono text-base ${tone}`}>
+                {icon}
+              </span>
+              <span className="flex-1 truncate text-sm">{r.label}</span>
+              {r.crossModule && (
+                <span className="ph-ref shrink-0">externe</span>
+              )}
+              {!r.crossModule && r.status && (
+                <span className={`ph-ref shrink-0 ${tone}`}>
+                  {r.status === "mastered"
+                    ? "acquis"
+                    : r.status === "practicing"
+                      ? "en cours"
+                      : "découverte"}
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
 

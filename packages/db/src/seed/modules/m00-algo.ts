@@ -82,6 +82,7 @@ export const m00Skills: NewSkill[] = [
       "Avant la notation : développer l'intuition. Si tu doubles l'input, est-ce que ton algo prend 2× plus, 4× plus, ou la même chose ? L'analogie de l'élève qui range ses fiches.",
     displayOrder: 1,
     weight: 2,
+    prereqSkillSlugs: [],
   },
   {
     moduleId: M00_ID,
@@ -91,6 +92,7 @@ export const m00Skills: NewSkill[] = [
       "O(1), O(log n), O(n), O(n log n), O(n²), O(2ⁿ), O(n!). Pourquoi log n est presque comme constant. Pourquoi n² casse à 10 000 éléments. Pourquoi 2ⁿ casse à 30.",
     displayOrder: 2,
     weight: 3,
+    prereqSkillSlugs: ["big-o-intuition"],
   },
   {
     moduleId: M00_ID,
@@ -100,6 +102,7 @@ export const m00Skills: NewSkill[] = [
       "Compter les boucles. Boucles imbriquées = produit. Récursion = arbre d'appels. Calculer la complexité temporelle ET spatiale d'un snippet.",
     displayOrder: 3,
     weight: 3,
+    prereqSkillSlugs: ["big-o-notation"],
   },
   {
     moduleId: M00_ID,
@@ -109,6 +112,7 @@ export const m00Skills: NewSkill[] = [
       "Call stack, base case, problème plus petit. Pourquoi la récursion fonctionne. Comment tracer mentalement un appel récursif. Les 2 questions à se poser à chaque récursion.",
     displayOrder: 4,
     weight: 3,
+    prereqSkillSlugs: [],
   },
   {
     moduleId: M00_ID,
@@ -118,6 +122,7 @@ export const m00Skills: NewSkill[] = [
       "Factorielle, Fibonacci, Tower of Hanoi, traversées d'arbre. Reconnaître le pattern divide & conquer.",
     displayOrder: 5,
     weight: 2,
+    prereqSkillSlugs: ["recursion-mental-model"],
   },
   {
     moduleId: M00_ID,
@@ -127,6 +132,7 @@ export const m00Skills: NewSkill[] = [
       "Fibonacci naïf = O(2ⁿ). Avec mémoïsation = O(n). Le top-down DP en 5 minutes. Introduction conceptuelle au DP avant le module avancé.",
     displayOrder: 6,
     weight: 2,
+    prereqSkillSlugs: ["recursion-patterns", "hashmaps", "analyze-complexity"],
   },
   {
     moduleId: M00_ID,
@@ -136,6 +142,7 @@ export const m00Skills: NewSkill[] = [
       "Comment Array de JS / list de Python fonctionnent réellement. Capacité vs taille. Croissance par doublement = append amorti O(1). Accès O(1) par index, insertion au milieu O(n).",
     displayOrder: 7,
     weight: 2,
+    prereqSkillSlugs: ["big-o-notation"],
   },
   {
     moduleId: M00_ID,
@@ -145,6 +152,7 @@ export const m00Skills: NewSkill[] = [
       "Différence array vs liste chaînée. Implémenter en JS et Python. Insertion / suppression en O(1) à la tête, O(n) ailleurs. Cas d'usage réels (LRU cache).",
     displayOrder: 8,
     weight: 2,
+    prereqSkillSlugs: ["arrays-internals"],
   },
   {
     moduleId: M00_ID,
@@ -154,6 +162,7 @@ export const m00Skills: NewSkill[] = [
       "Push / pop / peek en O(1). Applications : équilibrage de parenthèses, undo/redo, conversion infix→postfix, DFS itératif. Implem à la main en JS et Python.",
     displayOrder: 9,
     weight: 2,
+    prereqSkillSlugs: ["arrays-internals", "linked-lists"],
   },
   {
     moduleId: M00_ID,
@@ -163,6 +172,7 @@ export const m00Skills: NewSkill[] = [
       "Enqueue / dequeue en O(1) (avec linked list ou ring buffer). Applications : BFS, scheduling, message broker. Variante Deque. Aperçu Priority Queue (heap).",
     displayOrder: 10,
     weight: 2,
+    prereqSkillSlugs: ["arrays-internals", "linked-lists"],
   },
   {
     moduleId: M00_ID,
@@ -172,6 +182,7 @@ export const m00Skills: NewSkill[] = [
       "Comment Map de JS / dict de Python fonctionnent. Hash function, distribution, collisions. Chaining vs open addressing. Load factor et resize. Pourquoi get/set = O(1) amorti.",
     displayOrder: 11,
     weight: 3,
+    prereqSkillSlugs: ["arrays-internals", "analyze-complexity"],
   },
   {
     moduleId: M00_ID,
@@ -181,6 +192,7 @@ export const m00Skills: NewSkill[] = [
       "Prérequis : input trié. O(log n). Les 3 erreurs classiques (off-by-one, mid overflow, infinite loop). Variantes (lower_bound, upper_bound). Coder à la main 5 fois sans aide.",
     displayOrder: 12,
     weight: 3,
+    prereqSkillSlugs: ["arrays-internals", "big-o-notation"],
   },
   {
     moduleId: M00_ID,
@@ -190,6 +202,7 @@ export const m00Skills: NewSkill[] = [
       "Tous en O(n²). Implem à la main pour intégrer les patterns. Quand insertion sort bat O(n log n) (petits inputs, presque trié). Stable vs unstable.",
     displayOrder: 13,
     weight: 2,
+    prereqSkillSlugs: ["arrays-internals", "analyze-complexity"],
   },
   {
     moduleId: M00_ID,
@@ -199,6 +212,7 @@ export const m00Skills: NewSkill[] = [
       "O(n log n) garanti, stable. Demande O(n) mémoire supplémentaire. Implem complète + version externe pour les fichiers trop gros pour la RAM.",
     displayOrder: 14,
     weight: 3,
+    prereqSkillSlugs: ["sorting-elementary", "recursion-patterns", "analyze-complexity"],
   },
   {
     moduleId: M00_ID,
@@ -208,6 +222,7 @@ export const m00Skills: NewSkill[] = [
       "Avg O(n log n), worst O(n²). In-place. Pourquoi la randomisation du pivot. Implem Lomuto vs Hoare. C'est l'algo de sort par défaut dans la plupart des langages.",
     displayOrder: 15,
     weight: 3,
+    prereqSkillSlugs: ["sorting-merge", "arrays-internals"],
   },
   {
     moduleId: M00_ID,
@@ -217,6 +232,7 @@ export const m00Skills: NewSkill[] = [
       "Vocabulaire : root, leaf, height, depth. BST property. Insertion / search / delete en O(log n) si équilibré, O(n) si dégénéré. Traversals : pre-order, in-order, post-order, level-order.",
     displayOrder: 16,
     weight: 3,
+    prereqSkillSlugs: ["linked-lists", "recursion-mental-model"],
   },
   {
     moduleId: M00_ID,
@@ -226,6 +242,7 @@ export const m00Skills: NewSkill[] = [
       "BFS = queue, niveau par niveau. DFS = stack ou récursion, branche par branche. Implem itératif ET récursif des deux. Quand choisir l'un ou l'autre.",
     displayOrder: 17,
     weight: 3,
+    prereqSkillSlugs: ["trees-bst", "stacks", "queues"],
   },
   {
     moduleId: M00_ID,
@@ -235,6 +252,7 @@ export const m00Skills: NewSkill[] = [
       "Différence clé : visited set (sinon boucle infinie). Représentations : adjacency list vs matrix. Détection de cycle. BFS = shortest path en nombre d'arêtes.",
     displayOrder: 18,
     weight: 3,
+    prereqSkillSlugs: ["bfs-dfs-trees", "hashmaps"],
   },
 ];
 

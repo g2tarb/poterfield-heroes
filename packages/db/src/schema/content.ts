@@ -102,6 +102,11 @@ export const skills = pgTable(
       >()
       .notNull()
       .default(sql`'[]'::jsonb`),
+    // Slugs des skills prérequis (peuvent venir d'autres modules pour les dépendances cross-modules)
+    prereqSkillSlugs: jsonb("prereq_skill_slugs")
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
