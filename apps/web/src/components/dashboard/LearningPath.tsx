@@ -84,11 +84,34 @@ function NodeCircle({ mod }: { mod: Module }) {
 
   const content = (
     <div className={`group relative inline-block ${isLocked ? "opacity-55" : ""}`}>
-      {/* Badge "GO" sur module actif */}
+      {/* Orbite de code autour du module actif */}
       {isActive && (
-        <span className="ph-stamp ph-stamp-active absolute -top-3 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap">
-          ⚡ GO
-        </span>
+        <svg
+          aria-hidden
+          viewBox="0 0 160 160"
+          className="ph-orbit-spin pointer-events-none absolute inset-0 -m-6 z-0"
+        >
+          <defs>
+            <path
+              id={`orbit-${mod.id}`}
+              d="M 80,80 m -72,0 a 72,72 0 1,1 144,0 a 72,72 0 1,1 -144,0"
+              fill="none"
+            />
+          </defs>
+          <text
+            className="fill-[var(--color-accent)]"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "8.5px",
+              letterSpacing: "0.06em",
+              fontWeight: 700,
+            }}
+          >
+            <textPath href={`#orbit-${mod.id}`} startOffset="0">
+              ⚡ active · const skill = next() · await mastery() · if (done) break · // M{String(mod.moduleNumber).padStart(2, "0")} · console.log("⚙") · return level + 1 ·
+            </textPath>
+          </text>
+        </svg>
       )}
 
       {/* Cercle station */}

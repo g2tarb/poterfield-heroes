@@ -135,7 +135,7 @@ import { M22_ID, m22Module, m22Skills, m22SkillAxisRules, m22Videos, m22Exercise
 import { M23_ID, m23Module, m23Skills, m23SkillAxisRules, m23Videos, m23Exercises } from "./modules/m23";
 import { M24_ID, m24Module, m24Skills, m24SkillAxisRules, m24Videos, m24Exercises } from "./modules/m24";
 import { M25_ID, m25Module, m25Skills, m25SkillAxisRules, m25Videos, m25Exercises } from "./modules/m25";
-import { M26_ID, m26Module, m26Skills, m26SkillAxisRules, m26Videos, m26Exercises } from "./modules/m26-algo";
+import { M00_ID, m00Module, m00Skills, m00SkillAxisRules, m00Videos, m00Exercises } from "./modules/m00-algo";
 
 const databaseUrl = process.env["DATABASE_URL"];
 if (!databaseUrl) {
@@ -401,7 +401,9 @@ async function main() {
   await seedModule(M23_ID, m23Module, m23Skills, m23SkillAxisRules, m23Videos, m23Exercises);
   await seedModule(M24_ID, m24Module, m24Skills, m24SkillAxisRules, m24Videos, m24Exercises);
   await seedModule(M25_ID, m25Module, m25Skills, m25SkillAxisRules, m25Videos, m25Exercises);
-  await seedModule(M26_ID, m26Module, m26Skills, m26SkillAxisRules, m26Videos, m26Exercises);
+  // Module transversal M00 (algorithmie) — seedé en dernier pour pas casser
+  // l'ordre logique des dépendances, mais affiché en TÊTE côté frontend.
+  await seedModule(M00_ID, m00Module, m00Skills, m00SkillAxisRules, m00Videos, m00Exercises);
   await seedUserState();
   await seedPublicProfile();
   console.log("\nDone.");

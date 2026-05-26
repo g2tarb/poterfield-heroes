@@ -6,9 +6,11 @@ import type {
 } from "../../schema/content";
 
 /**
- * M26 — Algorithmie & Structures de Données (MODULE TRANSVERSAL).
+ * M00 — Algorithmie & Structures de Données (MODULE TRANSVERSAL).
  *
  * Particularités :
+ * - moduleNumber: 0 → préfixe symbolique "fondation parallèle", placé EN TÊTE,
+ *   avant M01. Anti-procrastination : tu ne le repousses pas à plus tard.
  * - phase: 9 → convention "transversal", hors zigzag chaîné.
  * - prereqModuleId: null → accessible dès J1, en parallèle des autres modules.
  * - 18 skills cette livraison (bases solides ~250h). Le reste (DP avancé,
@@ -19,11 +21,11 @@ import type {
  * La sandbox C arrive plus tard (Docker éphémère + gcc). En attendant, les
  * exos C de la prep 42 se font localement avec ton gcc.
  */
-export const M26_ID = "m26-algo-structures-donnees";
+export const M00_ID = "m00-algo-structures-donnees";
 
-export const m26Module: NewModule = {
-  id: M26_ID,
-  moduleNumber: 26,
+export const m00Module: NewModule = {
+  id: M00_ID,
+  moduleNumber: 0,
   phase: 9,
   title: "Algorithmie & Structures de Données",
   subtitle:
@@ -71,9 +73,9 @@ L'objectif **n'est pas** de devenir un Codeforces grandmaster. C'est de :
   unlockSrsMatureRatio: 80,
 };
 
-export const m26Skills: NewSkill[] = [
+export const m00Skills: NewSkill[] = [
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "big-o-intuition",
     label: "Sentir la complexité avant de la calculer",
     description:
@@ -82,7 +84,7 @@ export const m26Skills: NewSkill[] = [
     weight: 2,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "big-o-notation",
     label: "Notation Big-O formelle et hiérarchie",
     description:
@@ -91,7 +93,7 @@ export const m26Skills: NewSkill[] = [
     weight: 3,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "analyze-complexity",
     label: "Analyser la complexité d'un code donné",
     description:
@@ -100,7 +102,7 @@ export const m26Skills: NewSkill[] = [
     weight: 3,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "recursion-mental-model",
     label: "Modèle mental de la récursion",
     description:
@@ -109,7 +111,7 @@ export const m26Skills: NewSkill[] = [
     weight: 3,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "recursion-patterns",
     label: "Patterns récursifs classiques",
     description:
@@ -118,7 +120,7 @@ export const m26Skills: NewSkill[] = [
     weight: 2,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "memoization-basics",
     label: "Mémoïsation : tuer la récursion exponentielle",
     description:
@@ -127,7 +129,7 @@ export const m26Skills: NewSkill[] = [
     weight: 2,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "arrays-internals",
     label: "Tableaux dynamiques : sous le capot",
     description:
@@ -136,7 +138,7 @@ export const m26Skills: NewSkill[] = [
     weight: 2,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "linked-lists",
     label: "Linked lists : simple, double, circulaire",
     description:
@@ -145,7 +147,7 @@ export const m26Skills: NewSkill[] = [
     weight: 2,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "stacks",
     label: "Stack (LIFO) — implem + applications",
     description:
@@ -154,7 +156,7 @@ export const m26Skills: NewSkill[] = [
     weight: 2,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "queues",
     label: "Queue (FIFO) — simple, double-ended, priorité",
     description:
@@ -163,7 +165,7 @@ export const m26Skills: NewSkill[] = [
     weight: 2,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "hashmaps",
     label: "Hashmaps — hash, collisions, load factor",
     description:
@@ -172,7 +174,7 @@ export const m26Skills: NewSkill[] = [
     weight: 3,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "binary-search",
     label: "Binary search — l'algo le plus important du quotidien",
     description:
@@ -181,7 +183,7 @@ export const m26Skills: NewSkill[] = [
     weight: 3,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "sorting-elementary",
     label: "Tris élémentaires : bubble, insertion, selection",
     description:
@@ -190,7 +192,7 @@ export const m26Skills: NewSkill[] = [
     weight: 2,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "sorting-merge",
     label: "Merge sort — divide & conquer",
     description:
@@ -199,7 +201,7 @@ export const m26Skills: NewSkill[] = [
     weight: 3,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "sorting-quick",
     label: "Quicksort — partition et randomisation",
     description:
@@ -208,7 +210,7 @@ export const m26Skills: NewSkill[] = [
     weight: 3,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "trees-bst",
     label: "Arbres binaires + BST",
     description:
@@ -217,7 +219,7 @@ export const m26Skills: NewSkill[] = [
     weight: 3,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "bfs-dfs-trees",
     label: "BFS et DFS sur arbres",
     description:
@@ -226,7 +228,7 @@ export const m26Skills: NewSkill[] = [
     weight: 3,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     slug: "bfs-dfs-graphs",
     label: "BFS et DFS sur graphes",
     description:
@@ -237,11 +239,11 @@ export const m26Skills: NewSkill[] = [
 ];
 
 // Toutes les skills algo pointent à 100% vers le mastery axis "algorithms"
-export const m26SkillAxisRules: Array<{
+export const m00SkillAxisRules: Array<{
   skillSlug: string;
   axisId: string;
   contribution: number;
-}> = m26Skills.map((s) => ({
+}> = m00Skills.map((s) => ({
   skillSlug: s.slug,
   axisId: "algorithms",
   contribution: 100,
@@ -253,9 +255,9 @@ export const m26SkillAxisRules: Array<{
 // Si une vidéo ne charge pas, c'est qu'elle a été dépubliée — remplace
 // par une autre du même créateur ou laisse youtubeId: null avec externalUrl.
 // =============================================================
-export const m26Videos: NewVideo[] = [
+export const m00Videos: NewVideo[] = [
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     isPrimary: 1,
     title: "Data Structures and Algorithms in Python - Full Course",
     creator: "freeCodeCamp.org",
@@ -282,7 +284,7 @@ export const m26Videos: NewVideo[] = [
     displayOrder: 1,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     isPrimary: 0,
     title: "Big-O Notation in 5 Minutes",
     creator: "Michael Sambol",
@@ -295,7 +297,7 @@ export const m26Videos: NewVideo[] = [
     displayOrder: 2,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     isPrimary: 0,
     title: "Algorithms and Data Structures Tutorial - Full Course",
     creator: "freeCodeCamp.org / Pasan Premaratne, Jay McGavren",
@@ -316,7 +318,7 @@ export const m26Videos: NewVideo[] = [
     displayOrder: 3,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     isPrimary: 0,
     title: "Recursion in Programming - Full Course",
     creator: "freeCodeCamp.org / Mike Dane",
@@ -333,7 +335,7 @@ export const m26Videos: NewVideo[] = [
     displayOrder: 4,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     isPrimary: 0,
     title: "La récursivité expliquée simplement",
     creator: "Une Bière et Du Code",
@@ -352,9 +354,9 @@ export const m26Videos: NewVideo[] = [
 // =============================================================
 // EXERCISES — quiz + exos code
 // =============================================================
-export const m26Exercises: NewExercise[] = [
+export const m00Exercises: NewExercise[] = [
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     kind: "quiz_activation",
     sandbox: "browser",
     language: null,
@@ -411,7 +413,7 @@ export const m26Exercises: NewExercise[] = [
     displayOrder: 1,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     kind: "quiz_verification",
     sandbox: "browser",
     language: null,
@@ -524,7 +526,7 @@ export const m26Exercises: NewExercise[] = [
     displayOrder: 2,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     kind: "code_exercise",
     sandbox: "browser",
     language: "javascript",
@@ -584,7 +586,7 @@ console.log(binarySearch([42], 42));            // 0
     displayOrder: 3,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     kind: "code_exercise",
     sandbox: "browser",
     language: "javascript",
@@ -667,7 +669,7 @@ function fibIter(n) {
     displayOrder: 4,
   },
   {
-    moduleId: M26_ID,
+    moduleId: M00_ID,
     kind: "project_validation",
     sandbox: "external",
     language: "markdown",

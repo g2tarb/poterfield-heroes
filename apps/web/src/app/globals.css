@@ -625,6 +625,23 @@ body {
   animation: ph-confetti-msg 1800ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
+/* Orbite de code autour du module actif (LearningPath) */
+@keyframes ph-orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.ph-orbit-spin {
+  animation: ph-orbit-spin 22s linear infinite;
+  transform-origin: center;
+  filter: drop-shadow(
+    0 0 4px color-mix(in oklch, var(--color-accent), transparent 60%)
+  );
+}
+
 /* Streak flame pulse (utilisé quand série maintenue) */
 @keyframes ph-streak-pulse {
   0%, 100% {
