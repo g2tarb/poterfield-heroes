@@ -151,6 +151,66 @@ function NodeCircle({ mod }: { mod: Module }) {
   );
 }
 
+function TransversalCard({ mod }: { mod: Module }) {
+  const isLocked = mod.status === "locked";
+  const isActive = mod.status === "active";
+  const isDone = mod.status === "completed";
+
+  const borderClass = isDone
+    ? "border-l-[var(--color-success)]"
+    : isActive
+      ? "border-l-[var(--color-success)]"
+      : "border-l-[var(--color-border-strong)]";
+
+  const content = (
+    <article
+      className={`ph-panel ph-rivets relative overflow-hidden border-l-4 ${borderClass} ${isActive ? "ph-pulse-glow" : ""} ${isLocked ? "opacity-55" : "transition-transform duration-300 lg:hover:-translate-y-0.5"}`}
+    >
+      <span className="ph-rivet-tl" />
+      <span className="ph-rivet-tr" />
+
+      <header className="ph-station-header flex items-center justify-between px-4 py-2">
+        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-success)]">
+          🎯 M{String(mod.moduleNumber).padStart(2, "0")} · transversal
+        </span>
+        <span className="ph-ref tabular-nums">{mod.estimatedHours}h cumul</span>
+      </header>
+
+      <div className="relative px-5 py-4">
+        <h3 className="text-lg font-bold uppercase leading-tight tracking-wide sm:text-xl">
+          {mod.title}
+        </h3>
+        {mod.subtitle && (
+          <p className="mt-2 text-sm leading-relaxed text-[var(--color-fg-secondary)]">
+            {mod.subtitle}
+          </p>
+        )}
+
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
+            En parallèle · 1 skill/sem min
+          </span>
+          {!isLocked && (
+            <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[var(--color-success)]">
+              {isDone ? "✓ Validé" : "▶ Accès libre"}
+            </span>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+
+  if (isLocked) return content;
+  return (
+    <Link
+      href={`/modules/${mod.id}`}
+      className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-success)]"
+    >
+      {content}
+    </Link>
+  );
+}
+
 function PhaseSeparator({ phase }: { phase: number }) {
   return (
     <div className="relative my-4 flex items-center gap-3">
@@ -170,7 +230,14 @@ function PhaseSeparator({ phase }: { phase: number }) {
 }
 
 export function LearningPath({ modules }: { modules: Module[] }) {
-  const sorted = [...modules].sort((a, b) => a.moduleNumber - b.moduleNumber);
+  // Séparation : modules transversaux (phase ≥ 9, hors chaîne) vs path linéaire
+  const transversal = modules
+    .filter((m) => m.phase >= 9)
+    .sort((a, b) => a.moduleNumber - b.moduleNumber);
+  const path = modules
+    .filter((m) => m.phase < 9)
+    .sort((a, b) => a.moduleNumber - b.moduleNumber);
+
   const activeRef = useRef<HTMLLIElement | null>(null);
   const { setHovered } = useFocusedModule();
 
@@ -183,14 +250,14 @@ export function LearningPath({ modules }: { modules: Module[] }) {
       });
     }, 700);
     return () => clearTimeout(t);
-  }, [sorted.length]);
+  }, [path.length]);
 
   const items: Array<
     | { kind: "phase"; phase: number; key: string }
     | { kind: "module"; mod: Module; index: number; key: string }
   > = [];
   let lastPhase = -1;
-  sorted.forEach((mod, idx) => {
+  path.forEach((mod, idx) => {
     if (mod.phase !== lastPhase) {
       items.push({ kind: "phase", phase: mod.phase, key: `p-${mod.phase}` });
       lastPhase = mod.phase;
@@ -200,13 +267,32 @@ export function LearningPath({ modules }: { modules: Module[] }) {
 
   return (
     <div className="relative">
+      {/* Section TRANSVERSAUX (modules hors chaîne, accès libre) */}
+      {transversal.length > 0 && (
+        <section className="mb-8">
+          <header className="mb-3 flex items-center justify-between">
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-success)]">
+              🎯 Transversal · accès libre
+            </p>
+            <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
+              En parallèle de la chaîne
+            </p>
+          </header>
+          <div className="grid grid-cols-1 gap-3">
+            {transversal.map((mod) => (
+              <TransversalCard key={mod.id} mod={mod} />
+            ))}
+          </div>
+        </section>
+      )}
+
       <header className="ph-panel mb-6 flex items-center justify-between px-4 py-3">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-fg-muted)]">
             Chaîne d&apos;apprentissage
           </p>
           <p className="mt-0.5 font-mono text-xs text-[var(--color-fg-secondary)]">
-            25 stations · 8 sections
+            {path.length} stations · 8 sections
           </p>
         </div>
         <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">

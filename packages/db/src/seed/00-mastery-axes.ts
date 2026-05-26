@@ -85,4 +85,12 @@ export const masteryAxesSeed: NewMasteryAxis[] = [
     colorHex: "#FDE68A",
     displayOrder: 12,
   },
+  {
+    id: "algorithms",
+    label: "Algorithmes & structures",
+    description:
+      "Complexité Big-O, structures (array/list/stack/queue/hash/tree/graph), tris, recherche, recursion, DP, BFS/DFS, prep entretiens et 42.",
+    colorHex: "#10B981",
+    displayOrder: 13,
+  },
 ];

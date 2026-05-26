@@ -52,6 +52,7 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
 
       // Déverrouillage en cascade : si le module précédent est completed
       // (ou si c'est M01), un module sans progress est rendu "active".
+      // EXCEPTION : modules transversaux (phase ≥ 9) — toujours actifs, hors cascade.
       let firstUnstartedFound = false;
       return rows.map((r) => {
         if (r.status === "completed") {
@@ -63,6 +64,18 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
             subtitle: r.subtitle,
             estimatedHours: r.estimatedHours,
             status: "completed" as const,
+          };
+        }
+        // Module transversal : toujours actif, n'affecte pas la cascade
+        if (r.phase >= 9) {
+          return {
+            id: r.id,
+            moduleNumber: r.moduleNumber,
+            phase: r.phase,
+            title: r.title,
+            subtitle: r.subtitle,
+            estimatedHours: r.estimatedHours,
+            status: "active" as const,
           };
         }
         if (r.status === "active") {
@@ -111,10 +124,12 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
       if (!mod) throw new NotFoundError("Module");
 
       // Cascade pour le status : on regarde tous les modules + leurs progress
+      // EXCEPTION : modules transversaux (phase ≥ 9) — toujours "active" hors cascade
       const allRows = await app.db
         .select({
           id: modules.id,
           moduleNumber: modules.moduleNumber,
+          phase: modules.phase,
           status: moduleProgress.status,
         })
         .from(modules)
@@ -127,6 +142,9 @@ const modulesRoutes: FastifyPluginAsync = async (app) => {
         let s: "locked" | "active" | "completed";
         if (r.status === "completed") {
           s = "completed";
+        } else if (r.phase >= 9) {
+          // Transversal : toujours actif, n'affecte pas la cascade
+          s = "active";
         } else if (r.status === "active") {
           firstUnstartedFound = true;
           s = "active";

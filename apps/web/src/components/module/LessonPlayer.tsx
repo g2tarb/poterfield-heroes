@@ -458,8 +458,10 @@ function StepSkill({
   const [mobileTab, setMobileTab] = useState<"read" | "code">("read");
 
   const codingPhases = moduleNumber >= 8; // M8+ = JS, donc sandbox utile
+  // M24-M25 Python natif. M26 (algo transversal) → JS par défaut + switch autorisé.
+  const allowSwitch = moduleNumber === 26;
   const language: "javascript" | "python" =
-    moduleNumber >= 23 ? "python" : "javascript";
+    moduleNumber === 24 || moduleNumber === 25 ? "python" : "javascript";
 
   const seedCode =
     language === "python"
@@ -536,7 +538,7 @@ function StepSkill({
         <LazySandbox
           initialCode={seedCode}
           language={language}
-          allowLanguageSwitch={false}
+          allowLanguageSwitch={allowSwitch}
         />
       </div>
     </div>
