@@ -7,6 +7,8 @@ import { burstSuccess, burstXp } from "@/lib/feedback";
 import { ExerciseRunner } from "./ExerciseRunner";
 import { LazySandbox } from "@/components/sandbox/LazySandbox";
 import { Markdown } from "@/components/coach/Markdown";
+import { YoutubePlayer, type YoutubePlayerHandle } from "./YoutubePlayer";
+import { VideoNotesPanel } from "./VideoNotesPanel";
 
 type Video = {
   id: string;
@@ -199,7 +201,9 @@ export function LessonPlayer({ data }: { data: ModuleData }) {
         style={{ animationDelay: "0ms" }}
       >
         {current.kind === "intro" && <StepIntro module={data.module} />}
-        {current.kind === "video" && <StepVideo video={current.video} />}
+        {current.kind === "video" && (
+          <StepVideo video={current.video} moduleId={data.module.id} />
+        )}
         {current.kind === "skill" && (
           <StepSkill
             skill={current.skill}
@@ -418,9 +422,17 @@ function formatDuration(seconds: number | null): string | null {
   return h > 0 ? `${h}h${String(m).padStart(2, "0")}` : `${m}min`;
 }
 
-function StepVideo({ video }: { video: Video }) {
+function StepVideo({
+  video,
+  moduleId,
+}: {
+  video: Video;
+  moduleId: string;
+}) {
+  const playerRef = useRef<YoutubePlayerHandle | null>(null);
+
   return (
-    <article className="space-y-4">
+    <article className="space-y-4 pb-32 lg:pb-20">
       <header>
         <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-fg-muted)]">
           Vidéo principale
@@ -435,15 +447,11 @@ function StepVideo({ video }: { video: Video }) {
       </header>
 
       {video.youtubeId ? (
-        <div className="aspect-video w-full overflow-hidden rounded-xl border border-[var(--color-border-strong)] bg-black shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
-          <iframe
-            src={`https://www.youtube.com/embed/${video.youtubeId}`}
-            title={video.title}
-            allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
-            allowFullScreen
-            className="h-full w-full"
-          />
-        </div>
+        <YoutubePlayer
+          ref={playerRef}
+          videoId={video.youtubeId}
+          title={video.title}
+        />
       ) : (
         <p className="text-sm text-[var(--color-fg-muted)]">
           Lien vidéo manquant.
@@ -465,6 +473,16 @@ function StepVideo({ video }: { video: Video }) {
         >
           Ouvrir sur YouTube ↗
         </a>
+      )}
+
+      {/* Panel notes vidéo ancré en bas — capture timestamp + seek back */}
+      {video.youtubeId && (
+        <VideoNotesPanel
+          moduleId={moduleId}
+          videoYoutubeId={video.youtubeId}
+          videoTitle={video.title}
+          playerRef={playerRef}
+        />
       )}
     </article>
   );

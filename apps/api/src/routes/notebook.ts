@@ -20,6 +20,7 @@ const notebookRoutes: FastifyPluginAsync = async (app) => {
         querystring: z.object({
           moduleId: z.string().optional(),
           source: sourceEnum.optional(),
+          videoYoutubeId: z.string().optional(),
           limit: z.coerce.number().int().min(1).max(200).default(100),
         }),
       },
@@ -28,6 +29,8 @@ const notebookRoutes: FastifyPluginAsync = async (app) => {
       const where = [];
       if (query.moduleId) where.push(eq(notebookEntries.moduleId, query.moduleId));
       if (query.source) where.push(eq(notebookEntries.source, query.source));
+      if (query.videoYoutubeId)
+        where.push(eq(notebookEntries.videoYoutubeId, query.videoYoutubeId));
 
       const rows = await app.db
         .select()
@@ -70,6 +73,13 @@ const notebookRoutes: FastifyPluginAsync = async (app) => {
           title: z.string().min(1).max(500),
           contentMarkdown: z.string().min(1),
           tags: z.array(z.string()).optional(),
+          videoYoutubeId: z.string().min(1).max(32).nullable().optional(),
+          videoTimestampSeconds: z
+            .number()
+            .int()
+            .min(0)
+            .nullable()
+            .optional(),
         }),
       },
     },
@@ -83,6 +93,8 @@ const notebookRoutes: FastifyPluginAsync = async (app) => {
           title: body.title,
           contentMarkdown: body.contentMarkdown,
           tags: body.tags ?? [],
+          videoYoutubeId: body.videoYoutubeId ?? null,
+          videoTimestampSeconds: body.videoTimestampSeconds ?? null,
         })
         .returning();
 

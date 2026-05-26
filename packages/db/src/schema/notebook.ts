@@ -30,6 +30,9 @@ export const notebookEntries = pgTable(
     contentMarkdown: text("content_markdown").notNull(),
     tags: jsonb("tags").$type<string[]>().notNull().default([]),
     starred: integer("starred").notNull().default(0), // 0/1 = épinglé
+    // Ancrage vidéo (notes prises pendant la lecture YouTube — Sprint E)
+    videoYoutubeId: varchar("video_youtube_id", { length: 32 }),
+    videoTimestampSeconds: integer("video_timestamp_seconds"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -41,6 +44,7 @@ export const notebookEntries = pgTable(
     moduleIdx: index("idx_notebook_module").on(table.moduleId),
     sourceIdx: index("idx_notebook_source").on(table.source),
     starredIdx: index("idx_notebook_starred").on(table.starred),
+    videoIdx: index("idx_notebook_video").on(table.videoYoutubeId),
   }),
 );
 
