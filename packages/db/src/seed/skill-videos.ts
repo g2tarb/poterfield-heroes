@@ -136,6 +136,7 @@ export const skillVideosByModule: Record<
       { youtubeId: "L1pFhn1Uxx4", title: "Les modèles OSI & TCP/IP", lang: "fr" },
     ],
     "request-journey": [
+      { youtubeId: "RHljpE7pZh8", title: "Le Web expliqué avec des emojis", channel: "Cookie connecté", lang: "fr" },
       { youtubeId: "abrLW6QnWF8", title: "Le parcours d'une requête HTTP (Comprendre Internet, ép. 8)", lang: "fr" },
       { youtubeId: "AlkDbnbv7dk", title: "What happens when you type a URL into your browser?", channel: "ByteByteGo", lang: "en" },
       { youtubeId: "dh406O2v_1c", title: "What happens when you type google.com (Detailed)", channel: "Hussein Nasser", lang: "en" },
@@ -398,6 +399,7 @@ export const skillVideosByModule: Record<
       { youtubeId: "KSg2WJ6QK4g", title: "Cours complet HTML/CSS — Structure d'une page HTML", channel: "Pierre Giraud", lang: "fr" },
     ],
     semantic: [
+      { youtubeId: "Yg1HGBD_d48", title: "Apprendre les 20% du HTML qui vont te faire avoir 80% de résultats (2026)", channel: "Prakticode", lang: "fr" },
       { youtubeId: "RFdsBUppiE8", title: "Les bases du HTML : Les balises sémantiques", lang: "fr" },
       { youtubeId: "0uQv6HpAcpk", title: "Comprendre les balises sémantiques | HTML", lang: "fr" },
     ],
@@ -495,6 +497,7 @@ export const skillVideosByModule: Record<
       { youtubeId: "DmFkrYbnFwY", title: "Découverte du CSS : Float, Flex ou Grid ?", channel: "Grafikart", lang: "fr" },
     ],
     responsive: [
+      { youtubeId: "EFBufG7TKRE", title: "Créer un Site Web Moderne en HTML & CSS : Guide Complet pour Débutants (2026)", channel: "Prakticode", lang: "fr" },
       { youtubeId: "1TmxQpcIbUs", title: "Les media queries en 6 minutes (+1 exercice)", lang: "fr" },
       { youtubeId: "_cueUCN9XtA", title: "Tutoriel CSS : Responsive, Mobile First", channel: "Grafikart", lang: "fr" },
       { youtubeId: "wu1Sk8iOPnE", title: "Découverte du CSS (18/31) : Media query et le responsive", channel: "Grafikart", lang: "fr" },
@@ -566,6 +569,7 @@ export const skillVideosByModule: Record<
       { youtubeId: "ab8RePo5ZYU", title: "Why you don't need BEM with utility-first CSS", lang: "en" },
     ],
     "tailwind-classes": [
+      { youtubeId: "EaaGZ7M6muE", title: "Gagne du temps avec cette librairie TailwindCSS (DaisyUI)", channel: "Prakticode", lang: "fr" },
       { youtubeId: "_YfBHwGH4j8", title: "Tailwind CSS v4 je t'explique", lang: "fr" },
       { youtubeId: "P1x9b1_0I2U", title: "Tailwind CSS en 1h : Maitriser ce puissant framework CSS", lang: "fr" },
       { youtubeId: "RMe5LYEnfy8", title: "Apprendre Tailwind CSS v4 en 2026 : la formation complete", lang: "fr" },
@@ -627,6 +631,7 @@ export const skillVideosByModule: Record<
       { youtubeId: "kLdQAsrcyvk", title: "Apprendre le JavaScript : Les boucles", channel: "Grafikart.fr", lang: "fr" },
     ],
     functions: [
+      { youtubeId: "F-AVXYRMfr4", title: "Apprendre les 20% du Javascript qui vont te faire avoir 80% de résultats (2024)", channel: "Prakticode", lang: "fr" },
       { youtubeId: "EvHAiskwHvE", title: "Apprendre le JavaScript : Les fonctions", channel: "Grafikart.fr", lang: "fr" },
       { youtubeId: "UF2a9holPpg", title: "JavaScript les fonctions flèchées | arrow function", channel: "Dev NB", lang: "fr" },
       { youtubeId: "wVuJTS8aQyA", title: "Apprendre le JavaScript : Pratiquons les fonctions", channel: "Grafikart.fr", lang: "fr" },
@@ -928,6 +933,7 @@ export const skillVideosByModule: Record<
       { youtubeId: "IkoGmbNJolo", title: "JavaScript Memory Leaks and How To Fix Them", channel: "Software Developer Diaries", lang: "en" },
     ],
     functional: [
+      { youtubeId: "nrGpYTQW_O0", title: "🇫🇷 LES BASES DES FONCTIONS GENERATORS EN JAVASCRIPT AVEC @FRAXKEN (Thomas Gentilhomme)", channel: "tonygo_", lang: "fr" },
       { youtubeId: "z9ZTQZm2O0Q", title: "Programmation fonctionnelle avec JavaScript - \"A la ferme\"", channel: "Schraf : Maths-info", lang: "fr" },
       { youtubeId: "W-b_XK48vGE", title: "LES FONCTIONS PURES EN JAVASCRIPT", channel: "Captain Dev", lang: "fr" },
       { youtubeId: "BMUiFMZr7vk", title: "Higher-order functions - Part 1 of Functional Programming in JavaScript", channel: "Fun Fun Function", lang: "en" },
@@ -1022,6 +1028,7 @@ export const skillVideosByModule: Record<
   // -----------------------------------------------------------
   "m14-react-composants-hooks": {
     "react-concept": [
+      { youtubeId: "534gSzAfvbg", title: "Apprendre les 20% de React qui vont te faire avoir 80% de résultats (2026)", channel: "Prakticode", lang: "fr" },
       { youtubeId: "WKcU9sBA38E", title: "React JS Tutoriel français : C'est quoi, \"React\" ?", channel: "Codeur Senior", lang: "fr" },
       { youtubeId: "NT0s0aOHu0Q", title: "Apprendre React : Introduction", channel: "Grafikart.fr", lang: "fr" },
       { youtubeId: "Tn6-PIqc4UM", title: "React in 100 Seconds", channel: "Fireship", lang: "en" },
@@ -1122,6 +1129,7 @@ export const skillVideosByModule: Record<
       { youtubeId: "_EuPZrr3faU", title: "TanStack React Query v5 - Full Guide (Setup, Mutations, Infinite Loading, Optimistic Updates)", channel: "Coding in Flow", lang: "en" },
     ],
     zustand: [
+      { youtubeId: "Dj70lhyf50g", title: "Apprendre les 20% de Zustand (React) pour 80% de résultats", channel: "Prakticode", lang: "fr" },
       { youtubeId: "YMXN-t4jXbU", title: "Zustand : La MEILLEUR librairie de state Management en React", channel: "Melvynx", lang: "fr" },
       { youtubeId: "JRGMte2Zq0k", title: "TUTO/COURS sur Zustand avec React", channel: "Melvynx", lang: "fr" },
       { youtubeId: "_ngCLZ5Iz-0", title: "Zustand - Complete Tutorial", channel: "Cosden Solutions", lang: "en" },
@@ -1532,6 +1540,7 @@ export const skillVideosByModule: Record<
       { youtubeId: "s-4k5TcGKHg", title: "Refresh Token Rotation and Reuse Detection in Node.js JWT Authentication", channel: "Dave Gray", lang: "en" },
     ],
     "oauth-oidc": [
+      { youtubeId: "oX8T4imJESg", title: "SSO : comprendre l'essentiel en 5 minutes", channel: "Cookie connecté", lang: "fr" },
       { youtubeId: "dnqccNyklPA", title: "Qu'est-ce que OAuth2 expliqué simplement ?", channel: "Guillaume Lancrenon", lang: "fr" },
       { youtubeId: "YdShQveywpo", title: "OAUTH 2.1 expliqué simplement (même si tu n'es pas dev) ! (Julien Topçu)", channel: "Devoxx France", lang: "fr" },
       { youtubeId: "y9gtJYETCe8", title: "OAuth : le PROTOCOLE d'AUTORISATION INDISPENSABLE", channel: "inpulse tv", lang: "fr" },
