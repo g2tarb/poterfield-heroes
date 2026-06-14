@@ -1,510 +1,194 @@
 -- ============================================================
--- Skill videos curation — M01 à M10 (Phase 1 & 2)
--- ============================================================
--- Idempotent : UPDATE des skills existants (déjà seedés) avec
--- 1 à 3 vidéos YouTube pédagogiques par skill (FR + EN quand
--- possible).
---
--- Application en prod (Coolify / Hostinger) :
---   docker exec -i <postgres> psql -U $POSTGRES_USER -d $POSTGRES_DB < 04-skill-videos-data.sql
---
+-- Skill videos — M01 à M10
+-- GÉNÉRÉ depuis packages/db/src/seed/skill-videos.ts (source de vérité).
+-- Ne pas éditer à la main : régénérer via le seed.
 -- Tous les youtubeId sont des IDs YouTube réels à 11 caractères.
--- IDs récupérés depuis :
---  - Les vidéos déjà validées dans packages/db/src/seed/modules/m0X.ts
---  - Recherches WebSearch ciblées (chaînes pédagogiques)
 -- ============================================================
 
 BEGIN;
 
--- ============================================================
--- M01 — Comment fonctionne le web
--- module_id = 'm01-comment-fonctionne-le-web'
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "vIZ6bY48kWk", "title": "Internet vs Web : Comprendre la différence", "channel": "FR", "lang": "fr"},
-  {"youtubeId": "zN8YNNHcaZc", "title": "How does the internet work? (Full Course)", "channel": "freeCodeCamp / Ian Frost", "lang": "en"}
-]'::jsonb WHERE slug = 'internet-vs-web' AND module_id = 'm01-comment-fonctionne-le-web';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "toMtdE3Usyo", "title": "Connaître la relation client/serveur", "channel": "video2brain", "lang": "fr"},
-  {"youtubeId": "0w6GXuVHz1Y", "title": "Client-Server Architecture Explained", "channel": "ByteByteGo / equivalent", "lang": "en"}
-]'::jsonb WHERE slug = 'client-server-model' AND module_id = 'm01-comment-fonctionne-le-web';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "26jazyc7VNk", "title": "Comprendre les modèles OSI et TCP/IP", "channel": "FR", "lang": "fr"},
-  {"youtubeId": "P_hVprfTgls", "title": "COMPRENDRE ENFIN le modèle OSI", "channel": "FR", "lang": "fr"},
-  {"youtubeId": "L1pFhn1Uxx4", "title": "Les modèles OSI & TCP/IP", "channel": "FR", "lang": "fr"}
-]'::jsonb WHERE slug = 'tcp-ip-layers' AND module_id = 'm01-comment-fonctionne-le-web';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "AlkDbnbv7dk", "title": "What happens when you type a URL into your browser?", "channel": "ByteByteGo", "lang": "en"},
-  {"youtubeId": "dh406O2v_1c", "title": "What happens when you type google.com (Detailed Analysis)", "channel": "Hussein Nasser", "lang": "en"}
-]'::jsonb WHERE slug = 'request-journey' AND module_id = 'm01-comment-fonctionne-le-web';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "zN8YNNHcaZc", "title": "How does the internet work? (Full Course)", "channel": "freeCodeCamp", "lang": "en"}
-]'::jsonb WHERE slug = 'ip-mac-port' AND module_id = 'm01-comment-fonctionne-le-web';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "qzWdzAvfBoo", "title": "Comprendre le DNS en 5 minutes", "channel": "FR", "lang": "fr"},
-  {"youtubeId": "tyDxzzdKnsU", "title": "Le DNS pour les débutants", "channel": "FR", "lang": "fr"}
-]'::jsonb WHERE slug = 'dns-resolution' AND module_id = 'm01-comment-fonctionne-le-web';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "AlkDbnbv7dk", "title": "What happens when you type a URL into your browser?", "channel": "ByteByteGo", "lang": "en"}
-]'::jsonb WHERE slug = 'http-versions' AND module_id = 'm01-comment-fonctionne-le-web';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "dh406O2v_1c", "title": "What happens when you type google.com (Detailed Analysis)", "channel": "Hussein Nasser", "lang": "en"}
-]'::jsonb WHERE slug = 'http-anatomy' AND module_id = 'm01-comment-fonctionne-le-web';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "k_ScPsb3WSk", "title": "SSL/TLS pour les nuls", "channel": "Julien Aubert", "lang": "fr"},
-  {"youtubeId": "WIMKeyJ60Rw", "title": "Comprendre HTTPS et le chiffrement SSL TLS en animation 3D", "channel": "FR", "lang": "fr"}
-]'::jsonb WHERE slug = 'https-tls' AND module_id = 'm01-comment-fonctionne-le-web';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "y4MpceWoeCY", "title": "Chrome Devtools : Onglet Network", "channel": "FR", "lang": "fr"}
-]'::jsonb WHERE slug = 'devtools-network' AND module_id = 'm01-comment-fonctionne-le-web';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "zN8YNNHcaZc", "title": "How does the internet work? (Full Course)", "channel": "freeCodeCamp", "lang": "en"}
-]'::jsonb WHERE slug = 'network-hardware' AND module_id = 'm01-comment-fonctionne-le-web';
-
--- domain-vs-hosting : pas de vidéo curée fiable -> laisser le fallback "chercher sur YouTube"
--- (le composant SkillVideos affiche une recherche YouTube par défaut)
-
--- ============================================================
--- M02 — Terminal & Shell (Bash)
--- module_id = 'm02-terminal-shell'
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "Sx9zG7wa4FA", "title": "The Complete Bash Scripting Course", "channel": "Dave Eddy / ysap.sh", "lang": "en"}
-]'::jsonb WHERE slug = 'navigation' AND module_id = 'm02-terminal-shell';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "Sx9zG7wa4FA", "title": "The Complete Bash Scripting Course", "channel": "Dave Eddy / ysap.sh", "lang": "en"}
-]'::jsonb WHERE slug = 'files' AND module_id = 'm02-terminal-shell';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "yCTnihfbPCo", "title": "Intermediate Bash Commands (grep, sed, awk, tar, less, gzip)", "channel": "Bash Course", "lang": "en"}
-]'::jsonb WHERE slug = 'text' AND module_id = 'm02-terminal-shell';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "Z3_4RmYTO7s", "title": "Linux File Permissions Explained (chmod, chown, umask, SUID)", "channel": "TechWorld with Nana", "lang": "en"}
-]'::jsonb WHERE slug = 'permissions' AND module_id = 'm02-terminal-shell';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "Sx9zG7wa4FA", "title": "The Complete Bash Scripting Course", "channel": "Dave Eddy / ysap.sh", "lang": "en"}
-]'::jsonb WHERE slug = 'pipes-redirect' AND module_id = 'm02-terminal-shell';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "Sx9zG7wa4FA", "title": "The Complete Bash Scripting Course", "channel": "Dave Eddy / ysap.sh", "lang": "en"}
-]'::jsonb WHERE slug = 'env' AND module_id = 'm02-terminal-shell';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "K5sxW4PR_b4", "title": "BASH : Des scripts solides", "channel": "FR", "lang": "fr"},
-  {"youtubeId": "Sx9zG7wa4FA", "title": "The Complete Bash Scripting Course", "channel": "Dave Eddy / ysap.sh", "lang": "en"}
-]'::jsonb WHERE slug = 'scripting' AND module_id = 'm02-terminal-shell';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "Sx9zG7wa4FA", "title": "The Complete Bash Scripting Course", "channel": "Dave Eddy / ysap.sh", "lang": "en"}
-]'::jsonb WHERE slug = 'args' AND module_id = 'm02-terminal-shell';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "Sx9zG7wa4FA", "title": "The Complete Bash Scripting Course", "channel": "Dave Eddy / ysap.sh", "lang": "en"}
-]'::jsonb WHERE slug = 'exit-codes' AND module_id = 'm02-terminal-shell';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "oPEnvuj9QrI", "title": "Linux Crash Course - awk", "channel": "Learn Linux TV", "lang": "en"},
-  {"youtubeId": "nXLnx8ncZyE", "title": "Linux Crash Course - The sed Command", "channel": "Learn Linux TV", "lang": "en"}
-]'::jsonb WHERE slug = 'text-tools' AND module_id = 'm02-terminal-shell';
-
--- processes : pas de curated -> fallback
--- ssh
-UPDATE skills SET videos = '[
-  {"youtubeId": "Zzqtj0sRB1k", "title": "Easy SSH Key Setup for GitHub on Ubuntu", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'ssh' AND module_id = 'm02-terminal-shell';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "QZJ1drMQz1A", "title": "Linux/Mac Tutorial: Cron Jobs - Schedule with crontab", "channel": "Corey Schafer", "lang": "en"},
-  {"youtubeId": "7cbP7fzn0D8", "title": "Linux Crash Course - Scheduling Tasks with Cron", "channel": "Learn Linux TV", "lang": "en"}
-]'::jsonb WHERE slug = 'cron' AND module_id = 'm02-terminal-shell';
-
--- shortcuts : fallback
-
--- ============================================================
--- M03 — Git & GitHub
--- module_id = 'm03-git-github'
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "rP3T0Ee6pLU", "title": "Comprendre Git (1/18) : Qu''est ce que git ?", "channel": "Grafikart", "lang": "fr"}
-]'::jsonb WHERE slug = 'git-vs-github' AND module_id = 'm03-git-github';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "chhVBZfRFgI", "title": "Comprendre Git (5/18) : Premiers commits", "channel": "Grafikart", "lang": "fr"},
-  {"youtubeId": "Uszj_k0DGsg", "title": "Git for Professionals – Free Version Control Course", "channel": "freeCodeCamp / Tobias Günther", "lang": "en"}
-]'::jsonb WHERE slug = 'three-zones' AND module_id = 'm03-git-github';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "chhVBZfRFgI", "title": "Comprendre Git (5/18) : Premiers commits", "channel": "Grafikart", "lang": "fr"},
-  {"youtubeId": "Uszj_k0DGsg", "title": "Git for Professionals – Free Version Control Course", "channel": "freeCodeCamp", "lang": "en"}
-]'::jsonb WHERE slug = 'basic-cycle' AND module_id = 'm03-git-github';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "JlfCRlFHmd8", "title": "Conventional Commits - Git Tutorial part 15", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'commit-messages' AND module_id = 'm03-git-github';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "ZQAQ4HcskAY", "title": "Comprendre Git (12/18) : Git Flow", "channel": "Grafikart", "lang": "fr"},
-  {"youtubeId": "Uszj_k0DGsg", "title": "Git for Professionals", "channel": "freeCodeCamp", "lang": "en"}
-]'::jsonb WHERE slug = 'branches' AND module_id = 'm03-git-github';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "cjSjlHUmaBU", "title": "Git Merge vs Rebase Explained Visually", "channel": "EN", "lang": "en"},
-  {"youtubeId": "Uszj_k0DGsg", "title": "Git for Professionals", "channel": "freeCodeCamp", "lang": "en"}
-]'::jsonb WHERE slug = 'merge-vs-rebase' AND module_id = 'm03-git-github';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "cjSjlHUmaBU", "title": "Git Merge vs Rebase Explained Visually", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'conflicts' AND module_id = 'm03-git-github';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "Uszj_k0DGsg", "title": "Git for Professionals", "channel": "freeCodeCamp / Tobias Günther", "lang": "en"}
-]'::jsonb WHERE slug = 'remotes' AND module_id = 'm03-git-github';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "nCKdihvneS0", "title": "What is a pull request & how to create one", "channel": "EN", "lang": "en"},
-  {"youtubeId": "a_FLqX3vGR4", "title": "GitHub Forks and Pull Requests | Step by Step", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'pull-requests' AND module_id = 'm03-git-github';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "BHfI9BMiK3E", "title": "Git Tutorial : undo (amend, cherry-pick, reset, reflog, revert)", "channel": "EN", "lang": "en"},
-  {"youtubeId": "Uszj_k0DGsg", "title": "Git for Professionals", "channel": "freeCodeCamp", "lang": "en"}
-]'::jsonb WHERE slug = 'undo' AND module_id = 'm03-git-github';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "BHfI9BMiK3E", "title": "Git Tutorial : undo (amend, cherry-pick, reset, reflog, revert)", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'reflog' AND module_id = 'm03-git-github';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "Uszj_k0DGsg", "title": "Git for Professionals (rebase interactif)", "channel": "freeCodeCamp", "lang": "en"}
-]'::jsonb WHERE slug = 'rewrite-history' AND module_id = 'm03-git-github';
-
--- stash-cherry : fallback
--- ssh-keys
-UPDATE skills SET videos = '[
-  {"youtubeId": "Zzqtj0sRB1k", "title": "Easy SSH Key Setup for GitHub on Ubuntu", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'ssh-keys' AND module_id = 'm03-git-github';
-
--- gitignore : fallback (intégré dans le cours pro)
-UPDATE skills SET videos = '[
-  {"youtubeId": "Uszj_k0DGsg", "title": "Git for Professionals", "channel": "freeCodeCamp", "lang": "en"}
-]'::jsonb WHERE slug = 'gitignore' AND module_id = 'm03-git-github';
-
--- remove-secrets : fallback
-
--- ============================================================
--- M04 — Env dev (VS Code, Node, pnpm, nvm)
--- module_id = 'm04-env-dev'
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "ifTF3ags0XI", "title": "25 VS Code Productivity Tips and Speed Hacks", "channel": "Fireship", "lang": "en"}
-]'::jsonb WHERE slug = 'vscode-config' AND module_id = 'm04-env-dev';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "ifTF3ags0XI", "title": "25 VS Code Productivity Tips and Speed Hacks", "channel": "Fireship", "lang": "en"},
-  {"youtubeId": "u21W_tfPVrY", "title": "VS Code Top-Ten Pro Tips", "channel": "Fireship", "lang": "en"}
-]'::jsonb WHERE slug = 'shortcuts' AND module_id = 'm04-env-dev';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "80rrqS2QuBY", "title": "Top 10 VS Code Extensions You Need RIGHT NOW", "channel": "Fireship", "lang": "en"}
-]'::jsonb WHERE slug = 'extensions' AND module_id = 'm04-env-dev';
-
--- debugger : fallback
--- snippets : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "E_a6JwCRCaU", "title": "Node Version Manager (NVM) Tutorial", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'node-vs-npm' AND module_id = 'm04-env-dev';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "E_a6JwCRCaU", "title": "Node Version Manager (NVM) Tutorial", "channel": "EN", "lang": "en"},
-  {"youtubeId": "tjp-oNksxF4", "title": "Switch Node.js Versions Like a Pro | NVM Tutorial", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'nvm-fnm' AND module_id = 'm04-env-dev';
-
--- pkg-json : fallback (couvert dans tutoriels nvm)
--- semver
-UPDATE skills SET videos = '[
-  {"youtubeId": "u-GU7EkZksA", "title": "Semantic Versioning & Conventional Commits Explained", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'semver' AND module_id = 'm04-env-dev';
-
--- lockfile, global-vs-local, scripts, dotfiles : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "IRdPRIPd9FM", "title": "Prettier & ESLint in VS Code: The Ultimate Guide", "channel": "EN", "lang": "en"},
-  {"youtubeId": "lGCHjQl6XLw", "title": "VSCode + ESLint + Prettier. Comment bien configurer le tout", "channel": "FR", "lang": "fr"}
-]'::jsonb WHERE slug = 'format-lint' AND module_id = 'm04-env-dev';
-
--- ============================================================
--- M05 — HTML5 (sémantique, formulaires, accessibilité)
--- module_id = 'm05-html5'
--- ============================================================
-
--- structure : fallback (cours Pierre Giraud externe)
-UPDATE skills SET videos = '[
-  {"youtubeId": "RFdsBUppiE8", "title": "Les bases du HTML : Les balises sémantiques", "channel": "FR", "lang": "fr"},
-  {"youtubeId": "0uQv6HpAcpk", "title": "Comprendre les balises sémantiques | HTML", "channel": "FR", "lang": "fr"}
-]'::jsonb WHERE slug = 'semantic' AND module_id = 'm05-html5';
-
--- headings, block-inline : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EQrUGEvnCzY", "title": "10 Form Validation Tips Every Web Developer SHOULD KNOW", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'forms' AND module_id = 'm05-html5';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EQrUGEvnCzY", "title": "10 Form Validation Tips Every Web Developer SHOULD KNOW", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'input-types' AND module_id = 'm05-html5';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EQrUGEvnCzY", "title": "10 Form Validation Tips Every Web Developer SHOULD KNOW", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'validation' AND module_id = 'm05-html5';
-
--- media, tables, inline-content, meta-seo : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "e2nkq3h1P68", "title": "Learn Accessibility – Full a11y Tutorial", "channel": "Kevin Powell / freeCodeCamp", "lang": "en"}
-]'::jsonb WHERE slug = 'a11y' AND module_id = 'm05-html5';
-
--- validation-w3c, dom-tree (M05) : fallback
-
--- ============================================================
--- M06 — CSS3 fondamentaux + responsive
--- module_id = 'm06-css3-fondamentaux'
--- ============================================================
-
--- selectors : fallback Pierre Giraud
-UPDATE skills SET videos = '[
-  {"youtubeId": "c0kfcP_nD9E", "title": "CSS Specificity explained", "channel": "Kevin Powell", "lang": "en"},
-  {"youtubeId": "jhjVKZB9yc0", "title": "These CSS features give us more control on the cascade and specificity", "channel": "Kevin Powell", "lang": "en"}
-]'::jsonb WHERE slug = 'cascade' AND module_id = 'm06-css3-fondamentaux';
-
--- inheritance : fallback
--- box-model, units, display, position : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "86nTToBm2uQ", "title": "Stop fighting with CSS positioning", "channel": "Kevin Powell", "lang": "en"}
-]'::jsonb WHERE slug = 'position' AND module_id = 'm06-css3-fondamentaux';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "ixG2m6Nuxh0", "title": "Apprendre CSS Flexbox en 15 Minutes", "channel": "FR", "lang": "fr"},
-  {"youtubeId": "Pl7LbpGr2uU", "title": "Apprendre les Flexbox CSS en 20 minutes", "channel": "FR", "lang": "fr"}
-]'::jsonb WHERE slug = 'flexbox' AND module_id = 'm06-css3-fondamentaux';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "rg7Fvvl3taU", "title": "Learn CSS Grid the easy way", "channel": "Kevin Powell", "lang": "en"}
-]'::jsonb WHERE slug = 'grid' AND module_id = 'm06-css3-fondamentaux';
-
--- flex-vs-grid : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "9vZ7n5ylat0", "title": "CSS Media Queries for Beginners (Mobile First)", "channel": "EN", "lang": "en"},
-  {"youtubeId": "aook54SsfhY", "title": "Learn CSS Media Queries by Building 3 Projects", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'responsive' AND module_id = 'm06-css3-fondamentaux';
-
--- responsive-images, typography, colors : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "i8bOsdnt0fI", "title": "Introduction to CSS variables (CSS custom properties) [full tutorial]", "channel": "EN", "lang": "en"},
-  {"youtubeId": "W8LlgS9YCP4", "title": "How to use CSS variables like a pro", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'css-vars' AND module_id = 'm06-css3-fondamentaux';
-
--- devtools-css : fallback
-
--- ============================================================
--- M07 — CSS avancé : animations, Tailwind
--- module_id = 'm07-css-avance-tailwind'
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "hleg4zmjQ-o", "title": "MASTER CSS Transitions in 2024", "channel": "Online Tutorials", "lang": "en"}
-]'::jsonb WHERE slug = 'transitions' AND module_id = 'm07-css-avance-tailwind';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "hleg4zmjQ-o", "title": "MASTER CSS Transitions in 2024", "channel": "Online Tutorials", "lang": "en"},
-  {"youtubeId": "y8-F5-2EIcg", "title": "10 CSS animation tips and tricks", "channel": "Kevin Powell", "lang": "en"}
-]'::jsonb WHERE slug = 'keyframes' AND module_id = 'm07-css-avance-tailwind';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "hleg4zmjQ-o", "title": "MASTER CSS Transitions in 2024", "channel": "Online Tutorials", "lang": "en"}
-]'::jsonb WHERE slug = 'transforms' AND module_id = 'm07-css-avance-tailwind';
-
--- perf-animations, reduced-motion, modern-animations : fallback
--- bem : fallback
--- utility-first
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "P1x9b1_0I2U", "title": "Tailwind CSS en 1h : Maîtriser ce puissant framework", "channel": "FR", "lang": "fr"},
-  {"youtubeId": "9I3JQ1q4IMk", "title": "Tailwind CSS for Beginners | Full Course", "channel": "Net Ninja", "lang": "en"}
-]'::jsonb WHERE slug = 'utility-first' AND module_id = 'm07-css-avance-tailwind';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "P1x9b1_0I2U", "title": "Tailwind CSS en 1h : Maîtriser ce puissant framework", "channel": "FR", "lang": "fr"},
-  {"youtubeId": "9I3JQ1q4IMk", "title": "Tailwind CSS for Beginners | Full Course", "channel": "Net Ninja", "lang": "en"},
-  {"youtubeId": "lCxcTsOHrjo", "title": "Tailwind CSS Full Course for Beginners (3 hours)", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'tailwind-classes' AND module_id = 'm07-css-avance-tailwind';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "9I3JQ1q4IMk", "title": "Tailwind CSS for Beginners | Full Course", "channel": "Net Ninja", "lang": "en"}
-]'::jsonb WHERE slug = 'tailwind-states' AND module_id = 'm07-css-avance-tailwind';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "9I3JQ1q4IMk", "title": "Tailwind CSS for Beginners | Full Course", "channel": "Net Ninja", "lang": "en"}
-]'::jsonb WHERE slug = 'tailwind-config' AND module_id = 'm07-css-avance-tailwind';
-
--- shadcn, design-system, css-perf-prod : fallback
-
--- ============================================================
--- M08 — JavaScript fondamental
--- module_id = 'm08-javascript-fondamental'
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EerdGm-ehJQ", "title": "JavaScript Tutorial Full Course – Beginner to Pro", "channel": "SuperSimpleDev", "lang": "en"},
-  {"youtubeId": "PkZNo7MFNFg", "title": "Learn JavaScript - Full Course for Beginners", "channel": "freeCodeCamp", "lang": "en"}
-]'::jsonb WHERE slug = 'types-primitifs' AND module_id = 'm08-javascript-fondamental';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EerdGm-ehJQ", "title": "JavaScript Tutorial Full Course", "channel": "SuperSimpleDev", "lang": "en"}
-]'::jsonb WHERE slug = 'null-undefined' AND module_id = 'm08-javascript-fondamental';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "RXMYIog5xmU", "title": "JavaScript == vs === Explained: Primitives, Objects, and Coercion", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'coercion' AND module_id = 'm08-javascript-fondamental';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EerdGm-ehJQ", "title": "JavaScript Tutorial Full Course", "channel": "SuperSimpleDev", "lang": "en"}
-]'::jsonb WHERE slug = 'operators' AND module_id = 'm08-javascript-fondamental';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EerdGm-ehJQ", "title": "JavaScript Tutorial Full Course", "channel": "SuperSimpleDev", "lang": "en"}
-]'::jsonb WHERE slug = 'control-flow' AND module_id = 'm08-javascript-fondamental';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EerdGm-ehJQ", "title": "JavaScript Tutorial Full Course", "channel": "SuperSimpleDev", "lang": "en"}
-]'::jsonb WHERE slug = 'loops' AND module_id = 'm08-javascript-fondamental';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EerdGm-ehJQ", "title": "JavaScript Tutorial Full Course", "channel": "SuperSimpleDev", "lang": "en"}
-]'::jsonb WHERE slug = 'functions' AND module_id = 'm08-javascript-fondamental';
-
--- value-vs-reference, strings, numbers : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "LYvQWwsKiME", "title": "Scope et closures en JS (et... hoisting ?)", "channel": "FR", "lang": "fr"},
-  {"youtubeId": "Nt-qa_LlUH0", "title": "The Ultimate Guide to Execution Contexts, Hoisting, Scopes", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'scope' AND module_id = 'm08-javascript-fondamental';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "ZUk6RppaEYE", "title": "What''s the Difference Between var, let and const? | JS Pro Tips #2", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'var-let-const' AND module_id = 'm08-javascript-fondamental';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "LYvQWwsKiME", "title": "Scope et closures en JS (et... hoisting ?)", "channel": "FR", "lang": "fr"},
-  {"youtubeId": "Nt-qa_LlUH0", "title": "Execution Contexts, Hoisting, Scopes", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'hoisting' AND module_id = 'm08-javascript-fondamental';
-
--- truthy-falsy : fallback
-
--- ============================================================
--- M09 — JavaScript & le DOM
--- module_id = 'm09-javascript-dom'
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EerdGm-ehJQ", "title": "JavaScript Tutorial Full Course (DOM sections)", "channel": "SuperSimpleDev", "lang": "en"}
-]'::jsonb WHERE slug = 'dom-tree' AND module_id = 'm09-javascript-dom';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "i_KXcwr7PYc", "title": "How to Access HTML Elements Using JavaScript", "channel": "EN", "lang": "en"},
-  {"youtubeId": "EerdGm-ehJQ", "title": "JavaScript Tutorial Full Course", "channel": "SuperSimpleDev", "lang": "en"}
-]'::jsonb WHERE slug = 'selectors-js' AND module_id = 'm09-javascript-dom';
-
--- content-modification, attributes, classlist, tree-nav, create-insert-remove : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EerdGm-ehJQ", "title": "JavaScript Tutorial Full Course (DOM sections)", "channel": "SuperSimpleDev", "lang": "en"}
-]'::jsonb WHERE slug = 'events' AND module_id = 'm09-javascript-dom';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "NXXTLu2UnLE", "title": "JavaScript Event Propagation - Bubbling and Capturing Explained", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'event-object' AND module_id = 'm09-javascript-dom';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "NXXTLu2UnLE", "title": "JavaScript Event Propagation - Bubbling and Capturing Explained", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'bubbling' AND module_id = 'm09-javascript-dom';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "NXXTLu2UnLE", "title": "Event Propagation : Bubbling and Capturing Explained", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'delegation' AND module_id = 'm09-javascript-dom';
-
--- forms : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "zmFDvFwj6-8", "title": "JavaScript LocalStorage and Session Storage API Tutorial", "channel": "EN", "lang": "en"},
-  {"youtubeId": "CsoknB_0TW8", "title": "The Ins and Outs of localStorage and sessionStorage", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'storage' AND module_id = 'm09-javascript-dom';
-
--- script-loading : fallback
-
--- ============================================================
--- M10 — JavaScript moderne (ES6+) & méthodes tableaux
--- module_id = 'm10-javascript-moderne-es6'
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EerdGm-ehJQ", "title": "JavaScript Tutorial Full Course (Arrays + Advanced Functions)", "channel": "SuperSimpleDev", "lang": "en"}
-]'::jsonb WHERE slug = 'arrow-functions' AND module_id = 'm10-javascript-moderne-es6';
-
--- template-literals, defaults-rest : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "9BaqW4mlCXk", "title": "Destructuring and REST/SPREAD operator. Modern JavaScript ES6", "channel": "EN", "lang": "en"},
-  {"youtubeId": "SFplA5KrAmQ", "title": "JavaScript Destructuring, Spread & Rest Operators Explained", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'spread' AND module_id = 'm10-javascript-moderne-es6';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "0EgAQUjRTdU", "title": "Learn JavaScript Destructuring in 20 minutes (For Beginners)", "channel": "EN", "lang": "en"},
-  {"youtubeId": "9BaqW4mlCXk", "title": "Destructuring and REST/SPREAD operator", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'destructuring-obj' AND module_id = 'm10-javascript-moderne-es6';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "0EgAQUjRTdU", "title": "Learn JavaScript Destructuring in 20 minutes", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'destructuring-arr' AND module_id = 'm10-javascript-moderne-es6';
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "EerdGm-ehJQ", "title": "JavaScript Tutorial Full Course (Arrays)", "channel": "SuperSimpleDev", "lang": "en"}
-]'::jsonb WHERE slug = 'map-filter-reduce' AND module_id = 'm10-javascript-moderne-es6';
-
--- find-some-every, flat-flatmap, mutating-vs-not, object-methods : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "_xL2dmzdCz8", "title": "ES6 Tutorial #10 Modules (import & export)", "channel": "EN", "lang": "en"},
-  {"youtubeId": "42E7iLumsE8", "title": "JavaScript ES6 : Apprendre import et export", "channel": "FR", "lang": "fr"}
-]'::jsonb WHERE slug = 'modules-es' AND module_id = 'm10-javascript-moderne-es6';
-
--- cjs-vs-esm : fallback
-
-UPDATE skills SET videos = '[
-  {"youtubeId": "DqUPa0D2N78", "title": "Learn JavaScript INHERITANCE in 7 minutes", "channel": "Bro Code", "lang": "en"},
-  {"youtubeId": "MsbNJPsjD-w", "title": "JavaScript ES6 - Classes", "channel": "EN", "lang": "en"}
-]'::jsonb WHERE slug = 'classes-es6' AND module_id = 'm10-javascript-moderne-es6';
-
--- modern-operators, map-set : fallback
+-- m00-algo-structures-donnees
+UPDATE skills SET videos = '[{"youtubeId":"P7gV2HuunVk","title":"Big O expliqué en 1 minute – Comprendre la complexité sans prise de tête","lang":"fr"},{"youtubeId":"uqYY0nInx-8","title":"Complexité temporelle - Partie 1 : intuition (ALGO1)","lang":"fr"},{"youtubeId":"gI4lX1EtGJw","title":"Notion de complexité temporelle pour un algorithme - Quelques exemples simples","lang":"fr"},{"youtubeId":"XMUe3zFhM5c","title":"Learn Big O notation in 6 minutes","channel":"Bro Code","lang":"en"}]'::jsonb WHERE slug = 'big-o-intuition' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"QaNwlm8AzMA","title":"Algorithmique #02 : Comparaison de l''efficacité des algorithmes (Notation Big O et exemples)","lang":"fr"},{"youtubeId":"IHdf13wRhO0","title":"Complexité d''un algorithme : O(1), O(log n), O(n), O(n log n), O(2^n), O(n!)","lang":"fr"},{"youtubeId":"__vX2sjlpXU","title":"Big-O Notation in 5 Minutes","channel":"Michael Sambol","lang":"en"},{"youtubeId":"A03oI0znAoc","title":"1.8.1 Asymptotic Notations Big Oh - Omega - Theta","channel":"Abdul Bari","lang":"en"}]'::jsonb WHERE slug = 'big-o-notation' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"9Oi0tQchkHg","title":"L''essentiel : estimation de la complexité sur un exemple","lang":"fr"},{"youtubeId":"clZ4q5zPBlE","title":"Méthode de calcul de la complexité d''un algorithme","channel":"Rachid Guerraoui","lang":"fr"},{"youtubeId":"hNgPd6cQsSM","title":"Complexité temporelle - Partie 4 : Exemples (ALGO1)","lang":"fr"}]'::jsonb WHERE slug = 'analyze-complexity' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"6snxXOscP_A","title":"Récursivité - Introduction - NSI Terminale / PostBac","lang":"fr"},{"youtubeId":"HMKsnbWWNIc","title":"Algorithmique (13/14) - La récursivité (fonctions récursives)","lang":"fr"},{"youtubeId":"B0NtAFf4bvU","title":"Introduction to Recursion (Data Structures & Algorithms #6)","channel":"CS Dojo","lang":"en"}]'::jsonb WHERE slug = 'recursion-mental-model' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"5KoTcO7LjhE","title":"Algorithme récursif : Les tours de Hanoï","lang":"fr"},{"youtubeId":"YMECEWjAxTo","title":"Récursivité - Épisode 3 - Les tours de Hanoï (Python)","lang":"fr"},{"youtubeId":"IJDJ0kBx2LM","title":"Recursion in Programming - Full Course","channel":"freeCodeCamp.org","lang":"en"}]'::jsonb WHERE slug = 'recursion-patterns' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"spiTIpmXLEc","title":"What is Dynamic Programming, Memoization and Tabulation? | Fibonacci","lang":"en"},{"youtubeId":"Qk0zUZW-U_M","title":"Recursion, the Fibonacci Sequence and Memoization (Python Tutorial)","channel":"Socratica","lang":"en"}]'::jsonb WHERE slug = 'memoization-basics' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"d-BR1CxFJVU","title":"Structure de Données Tableau/Array Expliqué | Tutoriel Débutants","lang":"fr"},{"youtubeId":"xT70mHdAM74","title":"Design a Dynamic Array (Resizable Array)","channel":"NeetCode","lang":"en"},{"youtubeId":"MTl8djZFWE0","title":"What is Amortized Time Complexity? - Dynamic Array","lang":"en"}]'::jsonb WHERE slug = 'arrays-internals' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"BVJYOioKZr0","title":"[Algorithme] - 153. Les listes chaînées [Python]","lang":"fr"},{"youtubeId":"5qZ2GwSgqm4","title":"Singly Linked List - Data Structures and Algorithms for Beginners","channel":"NeetCode","lang":"en"},{"youtubeId":"58YbpRDc4yw","title":"Linked List Tutorial - Singly + Doubly + Circular (Theory + Code)","lang":"en"}]'::jsonb WHERE slug = 'linked-lists' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"ZNs0TNMRpJo","title":"Structure de donnée de Pile LIFO (en Python)","lang":"fr"},{"youtubeId":"0r-pSf3PwVQ","title":"Les structures de données : PILE, FILE et LISTE - NSI Terminale","lang":"fr"}]'::jsonb WHERE slug = 'stacks' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"2ryGsa7IP2s","title":"Comprendre la structure de données File d''attente (Queue)","lang":"fr"},{"youtubeId":"nqXaPZi99JI","title":"Learn Queue data structures in 10 minutes","channel":"Bro Code","lang":"en"}]'::jsonb WHERE slug = 'queues' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"ZnikXPYMWKw","title":"Comprendre les Tables de Hashage - Structure de données - Algorithme","lang":"fr"},{"youtubeId":"kY5ul5fEIG4","title":"Introduction aux tables de hachage","lang":"fr"},{"youtubeId":"tKodEscMkSQ","title":"The Load Factor and Hash Table Resizing","lang":"en"}]'::jsonb WHERE slug = 'hashmaps' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"EbPJjKYqXr8","title":"La recherche dichotomique - NSI Terminale","lang":"fr"},{"youtubeId":"B7xcusKbsEQ","title":"Recherche dichotomique dans un tableau - Algorithme & programme Python","lang":"fr"},{"youtubeId":"v9IWor4n0Ys","title":"Introduction to Binary Search","channel":"Abdul Bari","lang":"en"}]'::jsonb WHERE slug = 'binary-search' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"ra79TDfotno","title":"Algorithmes de tri (tri à bulles, sélection, insertion)","lang":"fr"},{"youtubeId":"QxrHEcvk5Q0","title":"Le tri par sélection - Explication facile - NSI Terminale","lang":"fr"},{"youtubeId":"E3Xr4nErXH8","title":"Tri à bulles / Tri sélection / Tri insertion","lang":"fr"}]'::jsonb WHERE slug = 'sorting-elementary' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"ADcIf8iBdng","title":"Algorithme Tri Fusion (Merge Sort) expliqué","lang":"fr"},{"youtubeId":"6xdXQ_8Poxs","title":"Diviser pour régner : tri fusion (Vidéo 2)","lang":"fr"},{"youtubeId":"mB5HXBb_HY8","title":"2.7.2 Merge Sort Algorithm","channel":"Abdul Bari","lang":"en"}]'::jsonb WHERE slug = 'sorting-merge' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"YNCKVNPI8Qs","title":"Algorithme Tri Rapide (Quick Sort) expliqué","lang":"fr"},{"youtubeId":"Cubuk-9gzvk","title":"Quicksort (tri rapide)","lang":"fr"},{"youtubeId":"7h1s2SojIRw","title":"2.8.1 QuickSort Algorithm","channel":"Abdul Bari","lang":"en"}]'::jsonb WHERE slug = 'sorting-quick' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"e6m__g6Be9A","title":"Construire et parcourir un arbre binaire de recherche (ABR) - préfixe, postfixe, infixe, en largeur","lang":"fr"},{"youtubeId":"z1K6YMJmr6s","title":"Parcourir un arbre binaire","lang":"fr"},{"youtubeId":"wcIRPqTR3Kc","title":"Binary Search Trees (BSTs) - Insert and Remove Explained","channel":"NeetCode","lang":"en"}]'::jsonb WHERE slug = 'trees-bst' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"Cz91zP1r_hs","title":"Les parcours d''arbre itératifs","lang":"fr"},{"youtubeId":"9gQvDVsvGVo","title":"Algorithmes de parcours d''arbre (BFS, DFS, preorder, postorder, inorder)","lang":"fr"}]'::jsonb WHERE slug = 'bfs-dfs-trees' AND module_id = 'm00-algo-structures-donnees';
+UPDATE skills SET videos = '[{"youtubeId":"472-NbPTe2k","title":"Algorithme sur les graphes : Parcours en largeur et en profondeur","lang":"fr"},{"youtubeId":"qaWy47SfO9s","title":"Breadth First Search (BFS) et Depth First Search (DFS) pour les graphes","lang":"fr"},{"youtubeId":"nfRsSozzAKY","title":"Parcours en PROFONDEUR (DFS) d''un graphe (version détaillée)","lang":"fr"}]'::jsonb WHERE slug = 'bfs-dfs-graphs' AND module_id = 'm00-algo-structures-donnees';
+
+-- m01-comment-fonctionne-le-web
+UPDATE skills SET videos = '[{"youtubeId":"vIZ6bY48kWk","title":"Internet vs Web : Comprendre la différence","lang":"fr"},{"youtubeId":"zN8YNNHcaZc","title":"How does the internet work? (Full Course)","channel":"freeCodeCamp / Ian Frost","lang":"en"}]'::jsonb WHERE slug = 'internet-vs-web' AND module_id = 'm01-comment-fonctionne-le-web';
+UPDATE skills SET videos = '[{"youtubeId":"toMtdE3Usyo","title":"Connaître la relation client/serveur","channel":"video2brain","lang":"fr"},{"youtubeId":"sz3gXm5v_G0","title":"Le protocole HTTP — Dialogue client / serveur web","lang":"fr"},{"youtubeId":"0w6GXuVHz1Y","title":"Client-Server Architecture Explained","lang":"en"}]'::jsonb WHERE slug = 'client-server-model' AND module_id = 'm01-comment-fonctionne-le-web';
+UPDATE skills SET videos = '[{"youtubeId":"HuxCOWxQudU","title":"Les fondamentaux du réseau (Partie 1)","lang":"fr"},{"youtubeId":"26jazyc7VNk","title":"Comprendre les modèles OSI et TCP/IP","lang":"fr"},{"youtubeId":"P_hVprfTgls","title":"COMPRENDRE ENFIN le modèle OSI","lang":"fr"},{"youtubeId":"L1pFhn1Uxx4","title":"Les modèles OSI & TCP/IP","lang":"fr"}]'::jsonb WHERE slug = 'tcp-ip-layers' AND module_id = 'm01-comment-fonctionne-le-web';
+UPDATE skills SET videos = '[{"youtubeId":"abrLW6QnWF8","title":"Le parcours d''une requête HTTP (Comprendre Internet, ép. 8)","lang":"fr"},{"youtubeId":"AlkDbnbv7dk","title":"What happens when you type a URL into your browser?","channel":"ByteByteGo","lang":"en"},{"youtubeId":"dh406O2v_1c","title":"What happens when you type google.com (Detailed)","channel":"Hussein Nasser","lang":"en"}]'::jsonb WHERE slug = 'request-journey' AND module_id = 'm01-comment-fonctionne-le-web';
+UPDATE skills SET videos = '[{"youtubeId":"BzPgtMSvZFE","title":"Les adresses IP (Comprendre comment marche Internet, ép. 4)","lang":"fr"},{"youtubeId":"k0wLoHYC8IQ","title":"Les bases des réseaux IP expliquées","lang":"fr"},{"youtubeId":"zN8YNNHcaZc","title":"How does the internet work?","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'ip-mac-port' AND module_id = 'm01-comment-fonctionne-le-web';
+UPDATE skills SET videos = '[{"youtubeId":"qzWdzAvfBoo","title":"Comprendre le DNS en 5 minutes","lang":"fr"},{"youtubeId":"46m72I4s-zo","title":"Les noms de domaines / Les serveurs DNS (Comprendre Internet, ép. 16)","lang":"fr"},{"youtubeId":"BvrUi26ShzI","title":"Comprendre les serveurs DNS en 3 minutes","lang":"fr"},{"youtubeId":"tyDxzzdKnsU","title":"Le DNS pour les débutants","lang":"fr"}]'::jsonb WHERE slug = 'dns-resolution' AND module_id = 'm01-comment-fonctionne-le-web';
+UPDATE skills SET videos = '[{"youtubeId":"tzndixsy51k","title":"Quelles sont les différences entre HTTP 1, 2 & 3 ?","lang":"fr"},{"youtubeId":"AlkDbnbv7dk","title":"What happens when you type a URL","channel":"ByteByteGo","lang":"en"}]'::jsonb WHERE slug = 'http-versions' AND module_id = 'm01-comment-fonctionne-le-web';
+UPDATE skills SET videos = '[{"youtubeId":"qcSGJkaA93M","title":"Qu''est-ce qu''il y a dans une requête HTTP ?","lang":"fr"},{"youtubeId":"q4gFgV_UJ94","title":"Le protocole HTTP","lang":"fr"},{"youtubeId":"dh406O2v_1c","title":"Detailed Analysis: type google.com","channel":"Hussein Nasser","lang":"en"}]'::jsonb WHERE slug = 'http-anatomy' AND module_id = 'm01-comment-fonctionne-le-web';
+UPDATE skills SET videos = '[{"youtubeId":"k_ScPsb3WSk","title":"SSL/TLS pour les nuls","channel":"Julien Aubert","lang":"fr"},{"youtubeId":"WIMKeyJ60Rw","title":"Comprendre HTTPS et le chiffrement SSL TLS en animation 3D","lang":"fr"},{"youtubeId":"7W7WPMX7arI","title":"Comprendre le chiffrement SSL/TLS avec des emojis (et le HTTPS)","lang":"fr"},{"youtubeId":"-dHbXLR-Mao","title":"Qu''est-ce qu''un certificat SSL/TLS ? (Cryptographie, PKI, OpenSSL)","lang":"fr"}]'::jsonb WHERE slug = 'https-tls' AND module_id = 'm01-comment-fonctionne-le-web';
+UPDATE skills SET videos = '[{"youtubeId":"y4MpceWoeCY","title":"Chrome Devtools : Onglet Network","lang":"fr"},{"youtubeId":"K_gZPUVY4tE","title":"Échanges requête / réponse HTTP via l''inspecteur (F12) du navigateur","lang":"fr"},{"youtubeId":"6QfJWYonU8I","title":"Afficher les requêtes HTTP sur Google Chrome","lang":"fr"}]'::jsonb WHERE slug = 'devtools-network' AND module_id = 'm01-comment-fonctionne-le-web';
+UPDATE skills SET videos = '[{"youtubeId":"rHHVzhUmLqQ","title":"Comprends enfin la différence entre routeur et switch !","lang":"fr"},{"youtubeId":"iQbS-eNQXzY","title":"Qu''est-ce qu''un routeur ?","lang":"fr"},{"youtubeId":"zN8YNNHcaZc","title":"How does the internet work?","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'network-hardware' AND module_id = 'm01-comment-fonctionne-le-web';
+UPDATE skills SET videos = '[{"youtubeId":"j9IXwmA91iw","title":"Qu''est-ce qu''un nom de domaine, un hébergement et un hébergeur ?","lang":"fr"},{"youtubeId":"qYuWKwGlk_0","title":"La différence entre un nom de domaine et un hébergeur","lang":"fr"}]'::jsonb WHERE slug = 'domain-vs-hosting' AND module_id = 'm01-comment-fonctionne-le-web';
+
+-- m02-terminal-shell
+UPDATE skills SET videos = '[{"youtubeId":"owHgnaq1mjk","title":"Commandes Linux — Navigation dans le système (pwd, ls, cd, man)","lang":"fr"},{"youtubeId":"vX92aS1xsaE","title":"Commandes Linux de base — Chapitre 1 : La navigation","lang":"fr"},{"youtubeId":"Sx9zG7wa4FA","title":"The Complete Bash Scripting Course","channel":"Dave Eddy / ysap.sh","lang":"en"}]'::jsonb WHERE slug = 'navigation' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"8zSn9Rngn_0","title":"Linux : gestion des fichiers (touch, cp, mv, rm…)","lang":"fr"},{"youtubeId":"z07UZMTHsB4","title":"Linux : gestion des répertoires (mkdir, cd, rmdir)","lang":"fr"},{"youtubeId":"Sx9zG7wa4FA","title":"The Complete Bash Scripting Course","channel":"Dave Eddy / ysap.sh","lang":"en"}]'::jsonb WHERE slug = 'files' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"HVLTQCCxlME","title":"Linux : filtrer des données dans des fichiers avec grep","lang":"fr"},{"youtubeId":"ZwYfiQp1i8Y","title":"Afficher les premières (head) et dernières (tail) lignes d''un fichier","lang":"fr"},{"youtubeId":"yCTnihfbPCo","title":"Intermediate Bash Commands (grep, sed, awk, tar, less, gzip)","lang":"en"}]'::jsonb WHERE slug = 'text' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"WQCqDXD8FUw","title":"Linux : les droits sur les fichiers (chmod, chown, chgrp)","lang":"fr"},{"youtubeId":"drra-38zZyk","title":"Maîtrisez les permissions Linux ! (chmod & chown)","lang":"fr"},{"youtubeId":"Z3_4RmYTO7s","title":"Linux File Permissions Explained","channel":"TechWorld with Nana","lang":"en"}]'::jsonb WHERE slug = 'permissions' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"_1jGoFEt-n8","title":"Bash Piping & Output Redirection (stdin, stdout, stderr)","lang":"en"},{"youtubeId":"Sx9zG7wa4FA","title":"The Complete Bash Scripting Course","channel":"Dave Eddy","lang":"en"}]'::jsonb WHERE slug = 'pipes-redirect' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"6a-DoqQc_rQ","title":"L''environnement : variables, login, profile, bashrc, export","lang":"fr"},{"youtubeId":"TPCRK0ypWoA","title":"Variables d''environnement — ligne de commande Linux","lang":"fr"},{"youtubeId":"Sx9zG7wa4FA","title":"The Complete Bash Scripting Course","channel":"Dave Eddy","lang":"en"}]'::jsonb WHERE slug = 'env' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"gBCGeLjYBgQ","title":"Introduction au script Bash sur Linux","lang":"fr"},{"youtubeId":"K5sxW4PR_b4","title":"BASH : Des scripts solides","lang":"fr"},{"youtubeId":"5G6yJE1WeaY","title":"Scripting Bash : paramètres, boucles, fonctions et sourcing","lang":"fr"},{"youtubeId":"Sx9zG7wa4FA","title":"The Complete Bash Scripting Course","channel":"Dave Eddy","lang":"en"}]'::jsonb WHERE slug = 'scripting' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"t7_7-BK66Xs","title":"Scripts Bash : conditions et arguments","lang":"fr"},{"youtubeId":"LPbe-X1KXzM","title":"Linux Script Shell — les arguments","lang":"fr"},{"youtubeId":"Sx9zG7wa4FA","title":"The Complete Bash Scripting Course","channel":"Dave Eddy","lang":"en"}]'::jsonb WHERE slug = 'args' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"K5sxW4PR_b4","title":"BASH : Des scripts solides (set -euo pipefail, gestion d''erreurs)","lang":"fr"},{"youtubeId":"Sx9zG7wa4FA","title":"The Complete Bash Scripting Course","channel":"Dave Eddy","lang":"en"}]'::jsonb WHERE slug = 'exit-codes' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"llPJH1IuOIY","title":"Mini tuto — la commande sed pour remplacer du texte","lang":"fr"},{"youtubeId":"oPEnvuj9QrI","title":"Linux Crash Course - awk","channel":"Learn Linux TV","lang":"en"},{"youtubeId":"nXLnx8ncZyE","title":"Linux Crash Course - The sed Command","channel":"Learn Linux TV","lang":"en"}]'::jsonb WHERE slug = 'text-tools' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"56F1_SCjTNs","title":"Maîtriser les processus Linux : top, ps, htop & kill","lang":"fr"},{"youtubeId":"F-ZYtiHTvBk","title":"Mini tuto — lire les processus en cours et les arrêter","lang":"fr"},{"youtubeId":"OjPVuY_dTqg","title":"Tuer un processus non réactif (kill, kill -9, killall)","lang":"fr"}]'::jsonb WHERE slug = 'processes' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"yKeJUdq_ZL0","title":"Tuto SSH : la connexion et scp pour copier des fichiers","lang":"fr"},{"youtubeId":"a3JqmhqzgD0","title":"Copier un fichier à distance avec SSH et SCP","lang":"fr"},{"youtubeId":"yA9IkQmUQpQ","title":"Synchroniser des répertoires distants (rsync + ssh)","lang":"fr"},{"youtubeId":"Zzqtj0sRB1k","title":"Easy SSH Key Setup for GitHub on Ubuntu","lang":"en"}]'::jsonb WHERE slug = 'ssh' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"Yfcso39FUc8","title":"Tâches planifiées crontab sous Linux (en français)","lang":"fr"},{"youtubeId":"jiB5jScG0uE","title":"L''essentiel des tâches cron sous Linux (1/2)","lang":"fr"},{"youtubeId":"QZJ1drMQz1A","title":"Cron Jobs - Schedule tasks with crontab","channel":"Corey Schafer","lang":"en"}]'::jsonb WHERE slug = 'cron' AND module_id = 'm02-terminal-shell';
+UPDATE skills SET videos = '[{"youtubeId":"jjnJiEryOj0","title":"11 raccourcis clavier pour le terminal","lang":"fr"},{"youtubeId":"Szg2niCqL3g","title":"GNU/Linux — raccourcis clavier du terminal","lang":"fr"},{"youtubeId":"ZlrUAohCuYo","title":"Les commandes Terminal que tu devrais connaître (macOS & Linux)","lang":"fr"}]'::jsonb WHERE slug = 'shortcuts' AND module_id = 'm02-terminal-shell';
+
+-- m03-git-github
+UPDATE skills SET videos = '[{"youtubeId":"rP3T0Ee6pLU","title":"Comprendre Git (1/18) : Qu''est ce que git ?","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'git-vs-github' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"chhVBZfRFgI","title":"Comprendre Git (5/18) : Premiers commits","channel":"Grafikart","lang":"fr"},{"youtubeId":"Uszj_k0DGsg","title":"Git for Professionals","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'three-zones' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"chhVBZfRFgI","title":"Comprendre Git : Premiers commits","channel":"Grafikart","lang":"fr"},{"youtubeId":"Uszj_k0DGsg","title":"Git for Professionals","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'basic-cycle' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"JlfCRlFHmd8","title":"Conventional Commits - Git Tutorial part 15","lang":"en"}]'::jsonb WHERE slug = 'commit-messages' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"ZQAQ4HcskAY","title":"Comprendre Git (12/18) : Git Flow","channel":"Grafikart","lang":"fr"},{"youtubeId":"Uszj_k0DGsg","title":"Git for Professionals","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'branches' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"E0xhJLJxgaY","title":"Git merge vs Git rebase","channel":"Grafikart","lang":"fr"},{"youtubeId":"cjSjlHUmaBU","title":"Git Merge vs Rebase Explained Visually","lang":"en"},{"youtubeId":"Uszj_k0DGsg","title":"Git for Professionals","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'merge-vs-rebase' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"ecyc6GQNgRc","title":"Git : résoudre un merge conflict sans paniquer (cas pratique)","lang":"fr"},{"youtubeId":"GKsQwKQ5img","title":"Savoir résoudre un conflit Git","lang":"fr"},{"youtubeId":"cjSjlHUmaBU","title":"Git Merge vs Rebase Explained Visually","lang":"en"}]'::jsonb WHERE slug = 'conflicts' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"Uszj_k0DGsg","title":"Git for Professionals","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'remotes' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"nCKdihvneS0","title":"What is a pull request & how to create one","lang":"en"},{"youtubeId":"a_FLqX3vGR4","title":"GitHub Forks and Pull Requests | Step by Step","lang":"en"}]'::jsonb WHERE slug = 'pull-requests' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"92_DY3eb4lc","title":"Git : revenir en arrière sur un commit","lang":"fr"},{"youtubeId":"Ayr17xFKMHU","title":"Git : stash, revert, restore, rebase, reset, cherry-pick","lang":"fr"},{"youtubeId":"BHfI9BMiK3E","title":"Git Tutorial : undo (amend, cherry-pick, reset, reflog, revert)","lang":"en"}]'::jsonb WHERE slug = 'undo' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"92_DY3eb4lc","title":"Git : revenir en arrière sur un commit","lang":"fr"},{"youtubeId":"BHfI9BMiK3E","title":"Git Tutorial : undo (reflog)","lang":"en"}]'::jsonb WHERE slug = 'reflog' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"Ayr17xFKMHU","title":"Git : reset, rebase, cherry-pick (réécrire l''historique)","lang":"fr"},{"youtubeId":"Uszj_k0DGsg","title":"Git for Professionals (rebase interactif)","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'rewrite-history' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"a_yIuISiJb4","title":"Comprendre Git : le remisage (stash)","channel":"Grafikart","lang":"fr"},{"youtubeId":"QOxMdW3UNrg","title":"Astuce de développeur : la commande git stash","lang":"fr"},{"youtubeId":"Ayr17xFKMHU","title":"Git : stash, revert, restore, rebase, reset, cherry-pick","lang":"fr"}]'::jsonb WHERE slug = 'stash-cherry' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"Zzqtj0sRB1k","title":"Easy SSH Key Setup for GitHub on Ubuntu","lang":"en"}]'::jsonb WHERE slug = 'ssh-keys' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"Uszj_k0DGsg","title":"Git for Professionals","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'gitignore' AND module_id = 'm03-git-github';
+UPDATE skills SET videos = '[{"youtubeId":"s-z6kJxdNJw","title":"How to Remove Leaked Secrets from Git History FAST!","lang":"en"},{"youtubeId":"Rrs-CAolDKY","title":"Fix Leaked Secrets on GitHub Before Hackers Find Them","lang":"en"}]'::jsonb WHERE slug = 'remove-secrets' AND module_id = 'm03-git-github';
+
+-- m04-env-dev
+UPDATE skills SET videos = '[{"youtubeId":"GFmE5_8xypY","title":"Ma configuration Visual Studio Code","channel":"Grafikart","lang":"fr"},{"youtubeId":"1Z1JCuwXmiQ","title":"Visual Studio Code : installation et astuces indispensables","lang":"fr"},{"youtubeId":"ifTF3ags0XI","title":"25 VS Code Productivity Tips and Speed Hacks","channel":"Fireship","lang":"en"}]'::jsonb WHERE slug = 'vscode-config' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"0fSl95ziJYs","title":"38 raccourcis à connaître sur Visual Studio Code","lang":"fr"},{"youtubeId":"ba_eVrOZesU","title":"Top 20 des raccourcis VS Code pour coder plus vite","lang":"fr"},{"youtubeId":"ifTF3ags0XI","title":"25 VS Code Productivity Tips and Speed Hacks","channel":"Fireship","lang":"en"}]'::jsonb WHERE slug = 'shortcuts' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"80rrqS2QuBY","title":"Top 10 VS Code Extensions You Need RIGHT NOW","channel":"Fireship","lang":"en"}]'::jsonb WHERE slug = 'extensions' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"_imeD5H-yCw","title":"Le débogueur JavaScript (VS Code, Google Chrome)","lang":"fr"},{"youtubeId":"AJrfNRddtgo","title":"Utiliser le debugger de VS Code avec une application Node.js","lang":"fr"},{"youtubeId":"2rSIEgV_XfM","title":"Débugger son site web avec Visual Studio Code","lang":"fr"}]'::jsonb WHERE slug = 'debugger' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"SuxytcxLF68","title":"Booster sa productivité avec ses propres snippets VS Code","lang":"fr"},{"youtubeId":"OMqIXDKko_g","title":"Snippets personnalisés avec Visual Studio Code","lang":"fr"}]'::jsonb WHERE slug = 'snippets' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"rdD6ruS7K7k","title":"NPM : qu''est-ce que le gestionnaire de paquets Node.js ?","lang":"fr"},{"youtubeId":"hZ7PibaAInk","title":"Les bases de NPM en 10 minutes","lang":"fr"},{"youtubeId":"E_a6JwCRCaU","title":"Node Version Manager (NVM) Tutorial","lang":"en"}]'::jsonb WHERE slug = 'node-vs-npm' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"uthUCaWYT88","title":"Comment changer la version de Node.js rapidement (NVM)","lang":"fr"},{"youtubeId":"q3wRsMr2Iv0","title":"Changer la version de Node.js avec NVM","lang":"fr"},{"youtubeId":"tjp-oNksxF4","title":"Switch Node.js Versions Like a Pro | NVM Tutorial","lang":"en"}]'::jsonb WHERE slug = 'nvm-fnm' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"3Y4Bw7_xXIc","title":"NPM : le fichier package.json et le dossier node_modules","lang":"fr"},{"youtubeId":"XUe6yIp8noQ","title":"Comment fonctionnent les devDependencies (package.json) ?","lang":"fr"},{"youtubeId":"BdtXNNFBvPg","title":"Créer un package.json pour son projet Node.js","lang":"fr"}]'::jsonb WHERE slug = 'pkg-json' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"u-GU7EkZksA","title":"Semantic Versioning & Conventional Commits Explained","lang":"en"}]'::jsonb WHERE slug = 'semver' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"x5Nt-B1DoNs","title":"Qu''est-ce que pnpm ? (store, lockfile)","lang":"fr"},{"youtubeId":"V8JYzO_zQjo","title":"pnpm vs npm : pourquoi tu fais le mauvais choix ?","lang":"fr"}]'::jsonb WHERE slug = 'lockfile' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"hZ7PibaAInk","title":"Les bases de NPM : install local vs global","lang":"fr"}]'::jsonb WHERE slug = 'global-vs-local' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"0npQNKMvrzM","title":"Tout savoir sur les scripts NPM du package.json","lang":"fr"}]'::jsonb WHERE slug = 'scripts' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"lGCHjQl6XLw","title":"VS Code + ESLint + Prettier : bien configurer le tout","lang":"fr"},{"youtubeId":"IRdPRIPd9FM","title":"Prettier & ESLint in VS Code: The Ultimate Guide","lang":"en"}]'::jsonb WHERE slug = 'format-lint' AND module_id = 'm04-env-dev';
+UPDATE skills SET videos = '[{"youtubeId":"LI_Tv5dJkkk","title":"How I manage my dotfiles with git","lang":"en"},{"youtubeId":"5oXy6ktYs7I","title":"Dotfiles! Here''s how I organize them","lang":"en"}]'::jsonb WHERE slug = 'dotfiles' AND module_id = 'm04-env-dev';
+
+-- m05-html5
+UPDATE skills SET videos = '[{"youtubeId":"3KAG6clVs-8","title":"Structure d''une page HTML5","lang":"fr"},{"youtubeId":"KSg2WJ6QK4g","title":"Cours complet HTML/CSS — Structure d''une page HTML","channel":"Pierre Giraud","lang":"fr"}]'::jsonb WHERE slug = 'structure' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"RFdsBUppiE8","title":"Les bases du HTML : Les balises sémantiques","lang":"fr"},{"youtubeId":"0uQv6HpAcpk","title":"Comprendre les balises sémantiques | HTML","lang":"fr"}]'::jsonb WHERE slug = 'semantic' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"nm9fYYHRTiQ","title":"Apprendre les balises h1, h2, h3… (en-têtes HTML)","lang":"fr"},{"youtubeId":"a_M4FTazc2Q","title":"Balises H1, H2, H3… Comment structurer un texte ?","lang":"fr"}]'::jsonb WHERE slug = 'headings' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"I3aczivx4KU","title":"Cours complet HTML/CSS — Les types block et inline","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"aF2e_XM638g","title":"Maîtriser la propriété display : block, inline et inline-block","lang":"fr"}]'::jsonb WHERE slug = 'block-inline' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"EQrUGEvnCzY","title":"10 Form Validation Tips Every Web Developer SHOULD KNOW","lang":"en"}]'::jsonb WHERE slug = 'forms' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"EQrUGEvnCzY","title":"10 Form Validation Tips","lang":"en"}]'::jsonb WHERE slug = 'input-types' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"EQrUGEvnCzY","title":"10 Form Validation Tips","lang":"en"}]'::jsonb WHERE slug = 'validation' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"N-aiPrb1rOM","title":"Tutoriel HTML : les images responsives (srcset, picture)","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'media' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"0EcCdgq5gM0","title":"Tutoriel HTML : les tableaux (table, tr, td)","lang":"fr"},{"youtubeId":"Ut5ofe-S3zs","title":"HTML : les tableaux (thead, tbody, tfoot)","lang":"fr"}]'::jsonb WHERE slug = 'tables' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"a_M4FTazc2Q","title":"Structurer un texte : titres et balises de texte (strong, em…)","lang":"fr"}]'::jsonb WHERE slug = 'inline-content' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"ksAoV4UHjHc","title":"Métadonnées HTML : Twitter Cards et Open Graph","channel":"Grafikart","lang":"fr"},{"youtubeId":"9BQePrpK2_I","title":"Open Graph & Twitter Cards : maîtrisez vos partages","lang":"fr"}]'::jsonb WHERE slug = 'meta-seo' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"e2nkq3h1P68","title":"Learn Accessibility – Full a11y Tutorial","channel":"Kevin Powell / freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'a11y' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"nRig0Kx5M1w","title":"Validez vos pages avec le validateur officiel W3C","lang":"fr"},{"youtubeId":"hdU50hibrUU","title":"W3C Validator : comment faire valider son code HTML/CSS ?","lang":"fr"}]'::jsonb WHERE slug = 'validation-w3c' AND module_id = 'm05-html5';
+UPDATE skills SET videos = '[{"youtubeId":"2EUbeU5zHXg","title":"JavaScript : l''arbre du DOM","lang":"fr"},{"youtubeId":"LBB9kMPKP5U","title":"JS-DOM : introduction et accès aux nœuds","lang":"fr"}]'::jsonb WHERE slug = 'dom-tree' AND module_id = 'm05-html5';
+
+-- m06-css3-fondamentaux
+UPDATE skills SET videos = '[{"youtubeId":"EM8UlPeBfuk","title":"Découverte du CSS (2/31) : Les sélecteurs","channel":"Grafikart","lang":"fr"},{"youtubeId":"fEgYZlDKCyI","title":"Les sélecteurs CSS","channel":"Grafikart","lang":"fr"},{"youtubeId":"DymZtovzd4o","title":"Tutoriel CSS : Le sélecteur :nth-child","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'selectors' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"JpRzRx1cLXs","title":"Cascade, spécificité et héritage en CSS !","lang":"fr"},{"youtubeId":"4T4vRdhkCxw","title":"Découverte du CSS (12/31) : La spécificité des sélecteurs","channel":"Grafikart","lang":"fr"},{"youtubeId":"c0kfcP_nD9E","title":"CSS Specificity explained","channel":"Kevin Powell","lang":"en"}]'::jsonb WHERE slug = 'cascade' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"LtzlrIpd2JU","title":"L''héritage en CSS [CHTS27]","lang":"fr"},{"youtubeId":"JpRzRx1cLXs","title":"Cascade, spécificité et héritage en CSS !","lang":"fr"}]'::jsonb WHERE slug = 'inheritance' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"pw5esyQmuqs","title":"Cours Complet CSS - Box model","lang":"fr"},{"youtubeId":"uCJxtO5b7Mw","title":"Découverte du CSS (10/31) : Le box-sizing","channel":"Grafikart","lang":"fr"},{"youtubeId":"ZaiIDH0qp1c","title":"CSS box model explained (padding, border, margin)","channel":"Kevin Powell","lang":"en"}]'::jsonb WHERE slug = 'box-model' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"AshVbhPOEAU","title":"REM, EM, VH... : les unités que tu dois absolument connaître en CSS","lang":"fr"},{"youtubeId":"ZV6N6w5bMDU","title":"Tutoriel CSS : px, em et rem","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'units' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"aF2e_XM638g","title":"Maîtriser la propriété display en CSS : block, inline et inline-block","lang":"fr"},{"youtubeId":"I3aczivx4KU","title":"Cours complet HTML et CSS [25/71] : les types block et inline","channel":"Pierre Giraud","lang":"fr"}]'::jsonb WHERE slug = 'display' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"jGtp9KjSO2c","title":"Les positions CSS en 20 minutes : absolute, relative, fixed, sticky","lang":"fr"},{"youtubeId":"lHrF4Yq9gAc","title":"Comprendre la propriété position en CSS","lang":"fr"},{"youtubeId":"86nTToBm2uQ","title":"Stop fighting with CSS positioning","channel":"Kevin Powell","lang":"en"}]'::jsonb WHERE slug = 'position' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"9gZugKEczJ0","title":"Découverte du CSS (11/31) : Flexbox","channel":"Grafikart","lang":"fr"},{"youtubeId":"Pl7LbpGr2uU","title":"Apprendre les Flexbox CSS en 20 minutes !","lang":"fr"},{"youtubeId":"CMxFjX3mdXs","title":"Cours complet CSS Flexbox : maîtrisez l''alignement en CSS","lang":"fr"}]'::jsonb WHERE slug = 'flexbox' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"2H602-zG62w","title":"Tutoriel CSS : display: grid;","channel":"Grafikart","lang":"fr"},{"youtubeId":"9kr8eWz5S8w","title":"CSS Grid Layouts : maîtriser CSS Grid facilement (tutoriel complet débutants)","lang":"fr"},{"youtubeId":"rg7Fvvl3taU","title":"Learn CSS Grid the easy way","channel":"Kevin Powell","lang":"en"}]'::jsonb WHERE slug = 'grid' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"KAn-6wUnRPQ","title":"CSS FLEX ou GRID : lequel utiliser ?","lang":"fr"},{"youtubeId":"DmFkrYbnFwY","title":"Découverte du CSS : Float, Flex ou Grid ?","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'flex-vs-grid' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"1TmxQpcIbUs","title":"Les media queries en 6 minutes (+1 exercice)","lang":"fr"},{"youtubeId":"_cueUCN9XtA","title":"Tutoriel CSS : Responsive, Mobile First","channel":"Grafikart","lang":"fr"},{"youtubeId":"wu1Sk8iOPnE","title":"Découverte du CSS (18/31) : Media query et le responsive","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'responsive' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"CZzrXadXsJo","title":"Comment rendre une image responsive ?","lang":"fr"},{"youtubeId":"6704SPPbFb4","title":"Utiliser CSS object-fit pour le redimensionnement d''images","lang":"en"}]'::jsonb WHERE slug = 'responsive-images' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"vzD9vZDyevo","title":"Importer une font Google en CSS","lang":"fr"},{"youtubeId":"uDV2hUA9OwU","title":"CSS3 : utilisation de Google Fonts pour intégrer des polices","lang":"fr"}]'::jsonb WHERE slug = 'typography' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"IWA83HNkyz8","title":"Les bases du CSS - 3 : comprendre les couleurs (HEX, RGB, HSL)","lang":"fr"},{"youtubeId":"bzfFGpl5Fd0","title":"Les dégradés en CSS","lang":"fr"},{"youtubeId":"VInSzHOeFkE","title":"Switch to HSL color format","channel":"Kevin Powell","lang":"en"}]'::jsonb WHERE slug = 'colors' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"IUPgwXZhQhg","title":"Découverte du CSS (30/31) : Les variables CSS","channel":"Grafikart","lang":"fr"},{"youtubeId":"JJ63aDt48uE","title":"Les variables CSS","channel":"Grafikart","lang":"fr"},{"youtubeId":"W8LlgS9YCP4","title":"How to use CSS variables like a pro","channel":"Kevin Powell","lang":"en"}]'::jsonb WHERE slug = 'css-vars' AND module_id = 'm06-css3-fondamentaux';
+UPDATE skills SET videos = '[{"youtubeId":"enm7_fYIu4s","title":"Utiliser l''inspecteur d''élément et le modifier en CSS","lang":"fr"},{"youtubeId":"VXfsKtl0EzE","title":"Tutoriel CSS : comment dominer l''inspecteur Chrome","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'devtools-css' AND module_id = 'm06-css3-fondamentaux';
+
+-- m07-css-avance-tailwind
+UPDATE skills SET videos = '[{"youtubeId":"KOH-SnAn1K8","title":"Cours complet HTML/CSS [57/71] - Les transitions CSS","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"JOBlm6kWsMM","title":"Decouverte du CSS (17/31) : Animation & Transition","channel":"Grafikart","lang":"fr"},{"youtubeId":"hleg4zmjQ-o","title":"MASTER CSS Transitions in 2024","channel":"Online Tutorials","lang":"en"}]'::jsonb WHERE slug = 'transitions' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"qFgg9DRdfmc","title":"Cours complet HTML/CSS [58/71] - Les animations CSS (@keyframes)","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"JOBlm6kWsMM","title":"Decouverte du CSS (17/31) : Animation & Transition","channel":"Grafikart","lang":"fr"},{"youtubeId":"y8-F5-2EIcg","title":"10 CSS animation tips and tricks","channel":"Kevin Powell","lang":"en"}]'::jsonb WHERE slug = 'keyframes' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"jQG3hAbXQVY","title":"Decouverte du CSS (16/31) : Transform","channel":"Grafikart","lang":"fr"},{"youtubeId":"rzD-cPhq02E","title":"Learn CSS Transform In 15 Minutes","channel":"Web Dev Simplified","lang":"en"},{"youtubeId":"Y9LGaoz5IEY","title":"CSS 3D transform in 20 minutes!","lang":"en"}]'::jsonb WHERE slug = 'transforms' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"N5EW4HnF6FU","title":"The Only 2 CSS Properties You Should Animate","lang":"en"},{"youtubeId":"39K1C92TkWo","title":"CSS Animatable Properties & Performance: What to Animate (and What to Avoid)","lang":"en"},{"youtubeId":"4PStxeSIL9I","title":"How To Create Performant CSS Animations","lang":"en"}]'::jsonb WHERE slug = 'perf-animations' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"Kws6l0Rp1Yg","title":"WTF is prefers-reduced-motion!?!","lang":"en"},{"youtubeId":"r6W1hf7xcrs","title":"Designing accessible animation and movement on your website","lang":"en"}]'::jsonb WHERE slug = 'reduced-motion' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"UmzFk68Bwdk","title":"Incredible scroll-based animations with CSS-only","channel":"Kevin Powell","lang":"en"},{"youtubeId":"bBh8fpb3h5c","title":"Scroll-driven animations without any JS","lang":"en"},{"youtubeId":"Fb-RNqiDoiw","title":"View Transition API Tutorial | New CSS Animation Power","lang":"en"}]'::jsonb WHERE slug = 'modern-animations' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"6qlDR6yhm0I","title":"Notation BEM en CSS !","lang":"fr"},{"youtubeId":"40FjRuIXlKg","title":"La methodologie BEM en CSS et SCSS","lang":"fr"},{"youtubeId":"aKenj9ZQwJg","title":"CSS BEM - The What, How, and Why","lang":"en"}]'::jsonb WHERE slug = 'bem' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"Fix0niR6Hm8","title":"Qu''est-ce que Tailwind CSS ? (philosophie utility-first)","lang":"fr"},{"youtubeId":"izLmft39ySU","title":"CSS, preprocesseurs, BEM, CSS Modules, CSS-in-JS... comment choisir ?","lang":"fr"},{"youtubeId":"ab8RePo5ZYU","title":"Why you don''t need BEM with utility-first CSS","lang":"en"}]'::jsonb WHERE slug = 'utility-first' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"_YfBHwGH4j8","title":"Tailwind CSS v4 je t''explique","lang":"fr"},{"youtubeId":"P1x9b1_0I2U","title":"Tailwind CSS en 1h : Maitriser ce puissant framework CSS","lang":"fr"},{"youtubeId":"RMe5LYEnfy8","title":"Apprendre Tailwind CSS v4 en 2026 : la formation complete","lang":"fr"},{"youtubeId":"9I3JQ1q4IMk","title":"Tailwind CSS for Beginners | Full Course","channel":"Net Ninja","lang":"en"}]'::jsonb WHERE slug = 'tailwind-classes' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"lVPc4bH-dxY","title":"TailwindCSS v4 Tutorial 2026 #005 - Hover, Focus, Active, Disabled, States Variants","lang":"en"},{"youtubeId":"M0umy5gvO1w","title":"Tailwind CSS Group Utilities | Style Child Elements on Hover","lang":"en"},{"youtubeId":"V0jAgtjYq5c","title":"How to use TailwindCSS group-hover to coordinate multiple hover states","lang":"en"}]'::jsonb WHERE slug = 'tailwind-states' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"pBGiaI0qNgo","title":"TailwindCSS 4, une configuration via du CSS (@theme)","channel":"Grafikart","lang":"fr"},{"youtubeId":"bupetqS1SMU","title":"The NEW CSS-first configuration with Tailwind CSS v4 (No more tailwind.config.js)","lang":"en"},{"youtubeId":"MAtaT8BZEAo","title":"Theming Tailwind with CSS Variables","lang":"en"}]'::jsonb WHERE slug = 'tailwind-config' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"MzpYa8vfmXg","title":"shadcn explique en 60 secondes (+ exemple concret)","lang":"fr"},{"youtubeId":"sIKGWcLB2nY","title":"TUTO Shadcn UI avec TailwindCSS : Tout comprendre en 30 minutes","lang":"fr"},{"youtubeId":"oVS9wR-lpGQ","title":"Ma librairie UI preferee pour React (shadcn/ui)","lang":"fr"}]'::jsonb WHERE slug = 'shadcn' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"vs8DjsdOroc","title":"Introduction aux Design Tokens et Design API","lang":"fr"},{"youtubeId":"kOdLc7WPVNI","title":"Organiser les couleurs d''un Design System avec les tokens semantiques","lang":"fr"},{"youtubeId":"CJyJN0ZdEGA","title":"Design Tokens for Dummies | A Complete Guide","lang":"en"}]'::jsonb WHERE slug = 'design-system' AND module_id = 'm07-css-avance-tailwind';
+UPDATE skills SET videos = '[{"youtubeId":"A5TED2RiuVo","title":"Eliminate Unused CSS: Optimize Your Build with PurgeCSS","lang":"en"},{"youtubeId":"txAE6yT0Eu8","title":"What is Critical CSS and How Do You Optimize it?","lang":"en"},{"youtubeId":"ma1pLG6bcws","title":"Setup Tailwind CSS as PostCSS (Purge and Minification for Production)","lang":"en"}]'::jsonb WHERE slug = 'css-perf-prod' AND module_id = 'm07-css-avance-tailwind';
+
+-- m08-javascript-fondamental
+UPDATE skills SET videos = '[{"youtubeId":"9OBKC5EQlZU","title":"Variables | Partie 4 - Les Types Primitifs et les Objets","channel":"Grafikart","lang":"fr"},{"youtubeId":"w6dXNYW7BTY","title":"COURS COMPLET JAVASCRIPT [19/65] - Valeurs primitives et objets natifs","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"PkZNo7MFNFg","title":"Learn JavaScript - Full Course for Beginners","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'types-primitifs' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"w6dXNYW7BTY","title":"COURS COMPLET JAVASCRIPT [19/65] - Valeurs primitives et objets natifs (null/undefined)","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"jgc48OS9wEA","title":"null vs. undefined in JavaScript / TypeScript","lang":"en"}]'::jsonb WHERE slug = 'null-undefined' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"I5daUpU5_A4","title":"== vs === en JavaScript","lang":"fr"},{"youtubeId":"RXMYIog5xmU","title":"JavaScript == vs === Explained: Coercion Demystified","lang":"en"}]'::jsonb WHERE slug = 'coercion' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"SyXyWYucDkM","title":"Apprendre JavaScript - Les opérateurs (affectation, arithmétiques, comparaison, logiques)","channel":"Grafikart","lang":"fr"},{"youtubeId":"3Qsq1nXBYBA","title":"JS idiomatique : Optional Chaining (?.) et Nullish Coalescing (??)","lang":"fr"}]'::jsonb WHERE slug = 'operators' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"zwLmRotDdu8","title":"Apprendre le JavaScript : Les conditions (if/else/switch)","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'control-flow' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"kLdQAsrcyvk","title":"Apprendre le JavaScript : Les boucles (for, while, for...of, for...in)","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'loops' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"EvHAiskwHvE","title":"Apprendre le JavaScript : Les fonctions","channel":"Grafikart","lang":"fr"},{"youtubeId":"UF2a9holPpg","title":"JavaScript les fonctions fléchées | arrow function","lang":"fr"},{"youtubeId":"wVuJTS8aQyA","title":"Apprendre le JavaScript : Pratiquons les fonctions","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'functions' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"LpJa-NRQiXA","title":"Valeur primitive VS valeur par référence en JavaScript !","lang":"fr"},{"youtubeId":"9OBKC5EQlZU","title":"Variables | Partie 4 - Les Types Primitifs et les Objets","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'value-vs-reference' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"q287HJv10Rc","title":"JavaScript : 9 méthodes pour manipuler les chaînes de caractères (string)","lang":"fr"},{"youtubeId":"_nPykgMCIlQ","title":"Strings en JavaScript | Template literals - backticks","lang":"fr"}]'::jsonb WHERE slug = 'strings' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"lIkXktOFJIM","title":"COURS COMPLET JAVASCRIPT [8/65] - Opérations entre variables","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"GgSDt28k-ak","title":"COURS COMPLET JAVASCRIPT [27/65] - L''objet Math et ses méthodes","channel":"Pierre Giraud","lang":"fr"}]'::jsonb WHERE slug = 'numbers' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"qYuvcK8QU4c","title":"Apprendre le JavaScript : La portée des variables","channel":"Grafikart","lang":"fr"},{"youtubeId":"Nt-qa_LlUH0","title":"Execution Contexts, Hoisting, Scopes","lang":"en"}]'::jsonb WHERE slug = 'scope' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"A9sD9GOkMdQ","title":"Tutoriel JavaScript - var, let ou const ?","lang":"fr"},{"youtubeId":"sc4lJ9nv8oU","title":"Variables | Partie 6 - Let, Const ou Var ?","channel":"Grafikart","lang":"fr"},{"youtubeId":"ZUk6RppaEYE","title":"What''s the Difference Between var, let and const?","lang":"en"}]'::jsonb WHERE slug = 'var-let-const' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"LYvQWwsKiME","title":"Scope et closures en JS (et... hoisting ?)","lang":"fr"},{"youtubeId":"Nt-qa_LlUH0","title":"Execution Contexts, Hoisting, Scopes (TDZ)","lang":"en"}]'::jsonb WHERE slug = 'hoisting' AND module_id = 'm08-javascript-fondamental';
+UPDATE skills SET videos = '[{"youtubeId":"Xp60QbXRAPI","title":"One Of the Most IMPORTANT Parts of JavaScript - Truthy and Falsy EXPLAINED","lang":"en"},{"youtubeId":"eo-IS8-hcYI","title":"JavaScript Truthy and Falsy Values - Explained in Detail","lang":"en"}]'::jsonb WHERE slug = 'truthy-falsy' AND module_id = 'm08-javascript-fondamental';
+
+-- m09-javascript-dom
+UPDATE skills SET videos = '[{"youtubeId":"qsBX7lV60fY","title":"Cours complet JavaScript [32/65] - Présentation du DOM HTML","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"sXwPfnsKGiE","title":"JavaScript côté navigateur : Manipuler le DOM","channel":"Grafikart","lang":"fr"},{"youtubeId":"LBB9kMPKP5U","title":"JS-DOM : 1 - Introduction, accès aux noeuds","lang":"fr"}]'::jsonb WHERE slug = 'dom-tree' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"trO063YQbCs","title":"Cours complet JavaScript [33/65] - Accéder à des éléments HTML en JavaScript","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"1pfpASxlbm0","title":"JavaScript et le DOM | Partie 7 - Sélectionner avec querySelector","lang":"fr"},{"youtubeId":"i_KXcwr7PYc","title":"How to Access HTML Elements Using JavaScript (getElementById, querySelector)","lang":"en"}]'::jsonb WHERE slug = 'selectors-js' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"g0YPzvGBvQk","title":"Cours complet JavaScript [34/65] - Modifier du contenu HTML en JavaScript","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"P1iOrkhhfL8","title":"Comprendre innerText vs innerHTML","lang":"fr"},{"youtubeId":"fHs6FS7yRHM","title":"DOM XSS in innerHTML sink (pourquoi innerHTML est dangereux)","lang":"en"}]'::jsonb WHERE slug = 'content-modification' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"trO063YQbCs","title":"Cours complet JavaScript [33/65] - Accéder aux éléments et leurs attributs","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"V0S0LXvnW-o","title":"JavaScript Tutorial For Beginners #35 - Changing Element Attributes","channel":"The Net Ninja","lang":"en"}]'::jsonb WHERE slug = 'attributes' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"I_UnFEkJsC8","title":"Comment faire un toggle d''une classe en JavaScript (classList)","lang":"fr"},{"youtubeId":"62qN2RcpIAE","title":"Learn the JavaScript classList property easy!","channel":"Bro Code","lang":"en"}]'::jsonb WHERE slug = 'classlist' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"ZLhhMiIbNtE","title":"DOM : Naviguer dans les éléments HTML (parentNode, firstChild, nextSibling)","lang":"fr"},{"youtubeId":"0eug_OgmXag","title":"JavaScript DOM Traversal Methods (parentElement, children, siblings)","lang":"en"}]'::jsonb WHERE slug = 'tree-nav' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"8ewtg1AVblQ","title":"JavaScript et le DOM | Partie 9 - Créer des éléments","lang":"fr"},{"youtubeId":"g8znXUnkZvc","title":"Cours complet JavaScript [35/65] - Ajouter et insérer des éléments HTML","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"o7gVp33dLDE","title":"Cours complet JavaScript [36/65] - Modifier ou supprimer des éléments HTML","channel":"Pierre Giraud","lang":"fr"}]'::jsonb WHERE slug = 'create-insert-remove' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"3Qin-KZN1dE","title":"Cours complet JavaScript [38/65] - Introduction aux événements","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"ierLz3rZ0Vk","title":"Cours complet JavaScript [39/65] - La méthode addEventListener","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"55EXq7ZjL4Q","title":"JavaScript côté navigateur : Les écouteurs d''événements","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'events' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"mqS2ACKTjTU","title":"Cours complet JavaScript [41/65] - Présentation de l''objet Event","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"0cYZjrUkZ5o","title":"The difference between event.target and event.currentTarget","channel":"CodeSketched","lang":"en"}]'::jsonb WHERE slug = 'event-object' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"q10j1QGGjq4","title":"Cours complet JavaScript [40/65] - La propagation des événements (bubbling/capturing)","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"DS0ax95yQcc","title":"Apprendre JavaScript #20 - Event Bubbling & stopPropagation","lang":"fr"},{"youtubeId":"NXXTLu2UnLE","title":"JavaScript Event Propagation - Bubbling and Capturing","lang":"en"}]'::jsonb WHERE slug = 'bubbling' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"4Z1qFyxcOco","title":"JavaScript #14 - Propagation d''événements & Délégation","lang":"fr"},{"youtubeId":"tWJxQqMYJJE","title":"La propagation des événements en JavaScript","lang":"fr"}]'::jsonb WHERE slug = 'delegation' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"GzG7vNUKEMY","title":"Gérer la soumission d''un formulaire grâce à FormData","lang":"fr"},{"youtubeId":"gbahruFwnAc","title":"JavaScript et Formulaires #2 - Valider les données d''un formulaire","lang":"fr"}]'::jsonb WHERE slug = 'forms' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"PmrHg7q5raw","title":"JavaScript côté navigateur : Local Storage","channel":"Grafikart","lang":"fr"},{"youtubeId":"NX_YpaAL_Ec","title":"Apprendre JavaScript #21 - Local Storage & Session Storage","lang":"fr"},{"youtubeId":"zmFDvFwj6-8","title":"JavaScript LocalStorage and Session Storage API Tutorial","lang":"en"}]'::jsonb WHERE slug = 'storage' AND module_id = 'm09-javascript-dom';
+UPDATE skills SET videos = '[{"youtubeId":"3Qin-KZN1dE","title":"Cours complet JavaScript [38/65] - Introduction aux événements (DOMContentLoaded)","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"SIbJIfQOS5c","title":"Scripts: async & defer with DOMContentLoaded","lang":"en"}]'::jsonb WHERE slug = 'script-loading' AND module_id = 'm09-javascript-dom';
+
+-- m10-javascript-moderne-es6
+UPDATE skills SET videos = '[{"youtubeId":"-WvmzxOVeL0","title":"Les fonctions fléchées (Arrow Functions) en JavaScript ES6","channel":"Grafikart","lang":"fr"},{"youtubeId":"TVpsLBPytI0","title":"JavaScript ES6 : Les fonctions fléchées","lang":"fr"},{"youtubeId":"SVS1_sQua08","title":"JavaScript Arrow Functions & this Explained Simply","channel":"Web Dev Simplified","lang":"en"}]'::jsonb WHERE slug = 'arrow-functions' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"ADlEiHC2Lt8","title":"JavaScript ES6 : Les template strings","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'template-literals' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"hLEmoS4-wBI","title":"JavaScript ES6 : Paramètres et arguments des fonctions (defaults + rest)","lang":"fr"}]'::jsonb WHERE slug = 'defaults-rest' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"u9M4qToqfvI","title":"Débuter en JavaScript : l''opérateur de décomposition (Spread Operator)","lang":"fr"},{"youtubeId":"cnjlBdGboYs","title":"JavaScript ES6 : Comprendre destructuring et spread operator","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'spread' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"cnjlBdGboYs","title":"JavaScript ES6 : Comprendre destructuring et spread operator","channel":"Grafikart","lang":"fr"},{"youtubeId":"eKDGKz1bvlw","title":"Astuce JavaScript : déstructuration d''objet avec valeurs par défaut et alias","lang":"fr"}]'::jsonb WHERE slug = 'destructuring-obj' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"kACyI51stO0","title":"JavaScript : Maîtrisez la destructuration de tableaux et d''objets","lang":"fr"}]'::jsonb WHERE slug = 'destructuring-arr' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"r0xv0uZM5V4","title":"Manipuler les tableaux avec map, reduce et filter","channel":"Grafikart","lang":"fr"},{"youtubeId":"qkPwQv1w8-0","title":"Apprendre la méthode JavaScript REDUCE en 20 minutes","lang":"fr"},{"youtubeId":"snhaYhafUXE","title":"JavaScript reduce() : 3 exemples utiles en 10 min","lang":"fr"}]'::jsonb WHERE slug = 'map-filter-reduce' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"rehuXwBEE0A","title":"Trouver un élément dans un tableau en JS avec find et findIndex","lang":"fr"},{"youtubeId":"4sgugU_QV54","title":"Tableau JavaScript : les méthodes some & every","lang":"fr"}]'::jsonb WHERE slug = 'find-some-every' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"12vf2GwKHN4","title":"Protip JS : flat et flatMap","lang":"fr"},{"youtubeId":"LkGCDD0tXQI","title":"JavaScript Array sort() vs toSorted() (new in ES2023)","lang":"en"}]'::jsonb WHERE slug = 'flat-flatmap' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"KkQSNNs_L9g","title":"Tableau en JavaScript : 7 méthodes pour manipuler un Array (ajout, suppression, inversion)","lang":"fr"},{"youtubeId":"LkGCDD0tXQI","title":"JavaScript Array sort() vs toSorted() : muter vs ne pas muter (ES2023)","lang":"en"}]'::jsonb WHERE slug = 'mutating-vs-not' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"kk7FWl-46P4","title":"5 façons d''itérer à travers un objet en JS (keys / values / entries)","lang":"fr"}]'::jsonb WHERE slug = 'object-methods' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"DJewHNOFqD0","title":"Apprendre le JavaScript : Les modules (import / export)","channel":"Grafikart","lang":"fr"},{"youtubeId":"42E7iLumsE8","title":"JavaScript ES6 : Apprendre import et export","lang":"fr"}]'::jsonb WHERE slug = 'modules-es' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"I3DrifH-rJE","title":"ESM vs CommonJS in your Node Projects","lang":"en"}]'::jsonb WHERE slug = 'cjs-vs-esm' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"2HAPViIAYjc","title":"Apprendre le JavaScript : Les classes","channel":"Grafikart","lang":"fr"},{"youtubeId":"WdDJA3MrgyQ","title":"Comment créer une class en JavaScript ? (constructor, getter, extends...)","lang":"fr"}]'::jsonb WHERE slug = 'classes-es6' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"3Qsq1nXBYBA","title":"JS idiomatique : Optional Chaining et Nullish Coalescing","lang":"fr"}]'::jsonb WHERE slug = 'modern-operators' AND module_id = 'm10-javascript-moderne-es6';
+UPDATE skills SET videos = '[{"youtubeId":"vv4_a60aoO0","title":"Apprendre le JavaScript : Set & Map","channel":"Grafikart","lang":"fr"},{"youtubeId":"kzuvppEWm88","title":"JavaScript Map, Set, WeakMap, WeakSet - When & Why to Use Them","lang":"en"}]'::jsonb WHERE slug = 'map-set' AND module_id = 'm10-javascript-moderne-es6';
 
 COMMIT;

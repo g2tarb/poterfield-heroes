@@ -1,864 +1,295 @@
 -- ============================================================
--- Skill videos curation — M11 à M25 (Phase 3 → 5)
--- ============================================================
--- Idempotent : UPDATE des skills existants avec 1 à 3 vidéos
--- YouTube pédagogiques par skill (FR + EN quand possible).
---
--- Application en prod (Coolify / Hostinger) :
---   docker exec -i <postgres> psql -U $POSTGRES_USER -d $POSTGRES_DB < 05-skill-videos-data-m11-m25.sql
---
+-- Skill videos — M11 à M25
+-- GÉNÉRÉ depuis packages/db/src/seed/skill-videos.ts (source de vérité).
+-- Ne pas éditer à la main : régénérer via le seed.
 -- Tous les youtubeId sont des IDs YouTube réels à 11 caractères.
--- Source de vérité : packages/db/src/seed/skill-videos.ts
 -- ============================================================
 
 BEGIN;
 
--- ============================================================
--- M11 — JavaScript asynchrone
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"8aGhZQkoFbQ","title":"What the heck is the event loop anyway?","channel":"Philip Roberts (JSConf EU)","lang":"en"}
-]'::jsonb WHERE slug = 'single-threaded' AND module_id = 'm11-javascript-async';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"8aGhZQkoFbQ","title":"What the heck is the event loop anyway?","channel":"Philip Roberts (JSConf EU)","lang":"en"},
-  {"youtubeId":"cCOL7MC4Pl0","title":"Jake Archibald: In The Loop (JSConf.Asia 2018)","channel":"JSConf","lang":"en"}
-]'::jsonb WHERE slug = 'event-loop' AND module_id = 'm11-javascript-async';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"EerdGm-ehJQ","title":"JavaScript Tutorial Full Course (callbacks)","channel":"SuperSimpleDev","lang":"en"}
-]'::jsonb WHERE slug = 'callbacks' AND module_id = 'm11-javascript-async';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"05mKXSdkCJg","title":"Apprendre le JavaScript : Promise","channel":"Grafikart","lang":"fr"},
-  {"youtubeId":"RvYYCGs45L4","title":"JavaScript Promise in 100 Seconds","channel":"Fireship","lang":"en"}
-]'::jsonb WHERE slug = 'promises' AND module_id = 'm11-javascript-async';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"QO-3d128l28","title":"Promise.all, allSettled, race, any","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'promise-static' AND module_id = 'm11-javascript-async';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"WNFNEe4bc5A","title":"Comment utiliser async & await ?","channel":"FR","lang":"fr"},
-  {"youtubeId":"EerdGm-ehJQ","title":"JavaScript Tutorial Full Course (async/await)","channel":"SuperSimpleDev","lang":"en"}
-]'::jsonb WHERE slug = 'async-await' AND module_id = 'm11-javascript-async';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"MQRQkyx6rJg","title":"JavaScript Promise : then() - async/await - fetch() en français","channel":"FR","lang":"fr"}
-]'::jsonb WHERE slug = 'fetch' AND module_id = 'm11-javascript-async';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"MQRQkyx6rJg","title":"JavaScript Promise + fetch() en français","channel":"FR","lang":"fr"}
-]'::jsonb WHERE slug = 'fetch-post' AND module_id = 'm11-javascript-async';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"jSFw9XR-eP0","title":"AbortController in JavaScript / cancel fetch requests","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'abort-controller' AND module_id = 'm11-javascript-async';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"cCOL7MC4Pl0","title":"Jake Archibald: In The Loop (microtasks)","channel":"JSConf","lang":"en"}
-]'::jsonb WHERE slug = 'microtasks' AND module_id = 'm11-javascript-async';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"cjIswDCKgu0","title":"Debounce and Throttle in JavaScript","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'debounce-throttle' AND module_id = 'm11-javascript-async';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"EerdGm-ehJQ","title":"JavaScript Tutorial Full Course (timers)","channel":"SuperSimpleDev","lang":"en"}
-]'::jsonb WHERE slug = 'timers' AND module_id = 'm11-javascript-async';
-
--- ============================================================
--- M12 — JavaScript avancé (closures, this, prototype)
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Nt-qa_LlUH0","title":"Execution Contexts, Hoisting, Scopes","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'execution-context' AND module_id = 'm12-javascript-avance';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"LYvQWwsKiME","title":"Scope et closures en JS (et hoisting)","channel":"FR","lang":"fr"},
-  {"youtubeId":"Nt-qa_LlUH0","title":"Execution Contexts, Hoisting, Scopes","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'lexical-scope' AND module_id = 'm12-javascript-avance';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"LYvQWwsKiME","title":"Scope et closures en JS (et hoisting)","channel":"FR","lang":"fr"}
-]'::jsonb WHERE slug = 'hoisting' AND module_id = 'm12-javascript-avance';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"qikxEIxsXco","title":"Closures in JS | Namaste JavaScript Episode 10","channel":"Akshay Saini","lang":"en"},
-  {"youtubeId":"LYvQWwsKiME","title":"Scope et closures en JS","channel":"FR","lang":"fr"}
-]'::jsonb WHERE slug = 'closures' AND module_id = 'm12-javascript-avance';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"qikxEIxsXco","title":"Closures in JS | Namaste JavaScript","channel":"Akshay Saini","lang":"en"}
-]'::jsonb WHERE slug = 'closure-patterns' AND module_id = 'm12-javascript-avance';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Pv9flm-80vM","title":"JavaScript THIS keyword explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'this-contexts' AND module_id = 'm12-javascript-avance';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Pv9flm-80vM","title":"JavaScript THIS keyword (arrow vs function)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'arrow-vs-function' AND module_id = 'm12-javascript-avance';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"DqUPa0D2N78","title":"Learn JavaScript INHERITANCE in 7 minutes","channel":"Bro Code","lang":"en"}
-]'::jsonb WHERE slug = 'prototypes' AND module_id = 'm12-javascript-avance';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"MsbNJPsjD-w","title":"JavaScript ES6 - Classes","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'classes-prototypes' AND module_id = 'm12-javascript-avance';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"DqUPa0D2N78","title":"Learn JavaScript INHERITANCE in 7 minutes","channel":"Bro Code","lang":"en"}
-]'::jsonb WHERE slug = 'inheritance' AND module_id = 'm12-javascript-avance';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"iZLP4qOwY8I","title":"Function Currying in JavaScript | Namaste JavaScript","channel":"Akshay Saini","lang":"en"}
-]'::jsonb WHERE slug = 'currying' AND module_id = 'm12-javascript-avance';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"WbwP4w6TpCk","title":"Memoization in JavaScript","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'memoization' AND module_id = 'm12-javascript-avance';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"BMUiFMZr7vk","title":"Functional Programming in JavaScript","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'functional' AND module_id = 'm12-javascript-avance';
-
--- ============================================================
--- M13 — TypeScript
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"zQnBQ4tB3ZA","title":"TypeScript in 100 Seconds","channel":"Fireship","lang":"en"},
-  {"youtubeId":"ffCIANfx_-0","title":"Apprendre TypeScript : Introduction","channel":"Grafikart","lang":"fr"}
-]'::jsonb WHERE slug = 'what-is-ts' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"PtsTS2S8hZM","title":"Apprendre TypeScript : Syntaxe de base","channel":"Grafikart","lang":"fr"}
-]'::jsonb WHERE slug = 'tsconfig' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"PtsTS2S8hZM","title":"Apprendre TypeScript : Syntaxe de base","channel":"Grafikart","lang":"fr"},
-  {"youtubeId":"d56mG7DezGs","title":"TypeScript Tutorial for Beginners","channel":"Programming with Mosh","lang":"en"}
-]'::jsonb WHERE slug = 'primitives' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"d56mG7DezGs","title":"TypeScript Tutorial for Beginners","channel":"Programming with Mosh","lang":"en"}
-]'::jsonb WHERE slug = 'complex' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"crjIq7LEAJw","title":"Type vs Interface - Which Should You Use In TypeScript?","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'interface-vs-type' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"d56mG7DezGs","title":"TypeScript Tutorial for Beginners","channel":"Programming with Mosh","lang":"en"}
-]'::jsonb WHERE slug = 'union-intersection' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"ahn80ZdHzhE","title":"TypeScript Tips: Literal Types, as const","channel":"Matt Pocock","lang":"en"}
-]'::jsonb WHERE slug = 'literal-types' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"ahn80ZdHzhE","title":"TypeScript Tips: Type narrowing","channel":"Matt Pocock","lang":"en"}
-]'::jsonb WHERE slug = 'narrowing' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"9bcuk1ngLDk","title":"TypeScript any vs unknown vs never","channel":"Matt Pocock","lang":"en"}
-]'::jsonb WHERE slug = 'any-unknown-never' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Zz_Uf7JEddk","title":"LWJ: TypeScript Generics with Matt Pocock","channel":"Learn With Jason","lang":"en"}
-]'::jsonb WHERE slug = 'generics' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Hg9rPl7Z4zA","title":"Apprendre TypeScript : Types utilitaires","channel":"Grafikart","lang":"fr"}
-]'::jsonb WHERE slug = 'utility-types' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"BwuLxPH8IDs","title":"TypeScript keyof, typeof, as const explained","channel":"Matt Pocock","lang":"en"}
-]'::jsonb WHERE slug = 'keyof-typeof' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"R1MlRKjCOLU","title":"Apprendre TypeScript : Typer React","channel":"Grafikart","lang":"fr"},
-  {"youtubeId":"-jnV9cNSCS8","title":"Tutoriel TypeScript avec React en 1 HEURE","channel":"MelvynxDev","lang":"fr"}
-]'::jsonb WHERE slug = 'ts-react' AND module_id = 'm13-typescript';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"p6dO9u0M7MQ","title":"TypeScript Crash Course with Matt Pocock","channel":"Matt Pocock","lang":"en"}
-]'::jsonb WHERE slug = 'strict-mode' AND module_id = 'm13-typescript';
-
--- ============================================================
--- M14 — React hooks
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Tn6-PIqc4UM","title":"React in 100 Seconds","channel":"Fireship","lang":"en"}
-]'::jsonb WHERE slug = 'react-concept' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"MAtdgvLKn8E","title":"Vite + React + TypeScript Setup","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'vite-react-setup' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"hQAHSlTtcmY","title":"Learn React In 30 Minutes","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'jsx' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"hQAHSlTtcmY","title":"Learn React In 30 Minutes","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'components' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"hQAHSlTtcmY","title":"Learn React In 30 Minutes","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'props' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"O6P86uwfdR0","title":"Learn useState In 15 Minutes - React Hooks Explained","channel":"Web Dev Simplified","lang":"en"},
-  {"youtubeId":"ilqxZiXnwD8","title":"Apprendre React : Le hook useState","channel":"Grafikart","lang":"fr"}
-]'::jsonb WHERE slug = 'use-state' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"dH6i3GurZW8","title":"Mastering React''s useEffect","channel":"Jack Herrington","lang":"en"},
-  {"youtubeId":"vNLwY2UlbQg","title":"Apprendre React : Le hook useEffect","channel":"Grafikart","lang":"fr"}
-]'::jsonb WHERE slug = 'use-effect' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"LlvBzyy-558","title":"React Hooks Course - All React Hooks Explained","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'use-ref' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"LlvBzyy-558","title":"React Hooks Course - All React Hooks Explained","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'use-context' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"LlvBzyy-558","title":"React Hooks Course - All React Hooks Explained","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'memo-callback' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"hQAHSlTtcmY","title":"Learn React In 30 Minutes","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'conditional-render' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"xe9bvyzHRao","title":"Why React Keys Matter (and why index is dangerous)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'lists-key' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"LlvBzyy-558","title":"React Hooks Course (controlled forms)","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'forms' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"-aBKrvK5Vn8","title":"Learn useActionState In 8 Minutes","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'react19-actions' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"56_OUG-0wgI","title":"You''re Doing React Hooks Wrong, Probably","channel":"Jack Herrington","lang":"en"}
-]'::jsonb WHERE slug = 'rerender' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"LlvBzyy-558","title":"React Hooks Course - All React Hooks Explained","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'hooks-rules' AND module_id = 'm14-react-composants-hooks';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"J-g9ZJha8FE","title":"Custom React Hooks Tutorial","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'custom-hooks' AND module_id = 'm14-react-composants-hooks';
-
--- ============================================================
--- M15 — React écosystème
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"s1kzDQccUS0","title":"TanStack Router - Full Tutorial for Beginners","channel":"EN","lang":"en"},
-  {"youtubeId":"Ab01W6h4Giw","title":"TanStack Router - How to Become a Routing God in React","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'tanstack-router' AND module_id = 'm15-react-ecosysteme';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"4rTsQTD9Me4","title":"Tanstack Router Tutorial - Routing, Lazy Loading, Data Fetching, Params","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'router-params' AND module_id = 'm15-react-ecosysteme';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"novnyCaa7To","title":"React Query Tutorial #1 - Intro & Setup","channel":"Net Ninja","lang":"en"},
-  {"youtubeId":"KkxPtimqaew","title":"TanStack Query - How to Master God-Tier React Query","channel":"Jack Herrington","lang":"en"}
-]'::jsonb WHERE slug = 'tanstack-query' AND module_id = 'm15-react-ecosysteme';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"KkxPtimqaew","title":"TanStack Query (mutations + optimistic)","channel":"Jack Herrington","lang":"en"}
-]'::jsonb WHERE slug = 'mutations' AND module_id = 'm15-react-ecosysteme';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"_ngCLZ5Iz-0","title":"Zustand - Complete Tutorial","channel":"EN","lang":"en"},
-  {"youtubeId":"fZPgBnL2x-Q","title":"Zustand React State Management Course","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'zustand' AND module_id = 'm15-react-ecosysteme';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"4nXVitqJ8EM","title":"React Hook Form Tutorial - Advanced Validation","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'rhf' AND module_id = 'm15-react-ecosysteme';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"L6BE-U3oy80","title":"Learn Zod in 30 Minutes","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'zod-forms' AND module_id = 'm15-react-ecosysteme';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"urlCrgNO0HY","title":"Shadcn UI Complete Guide","channel":"Code With Antonio","lang":"en"}
-]'::jsonb WHERE slug = 'shadcn' AND module_id = 'm15-react-ecosysteme';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"2V1WK-3HQNk","title":"Framer Motion (for React) #1 - Introduction","channel":"Net Ninja","lang":"en"}
-]'::jsonb WHERE slug = 'framer-motion' AND module_id = 'm15-react-ecosysteme';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"ePcBC--QtZw","title":"React.lazy and Suspense - Code Splitting","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'code-splitting' AND module_id = 'm15-react-ecosysteme';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"DTBta08WgXE","title":"React Error Boundaries Explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'error-boundaries' AND module_id = 'm15-react-ecosysteme';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"0ZJgIjIuY7U","title":"React DevTools Profiler","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'devtools-profiler' AND module_id = 'm15-react-ecosysteme';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"lvhPq5chokM","title":"React Compiler Explained","channel":"Theo - t3.gg","lang":"en"}
-]'::jsonb WHERE slug = 'compiler' AND module_id = 'm15-react-ecosysteme';
-
--- ============================================================
--- M16 — Node.js
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"ahCwqrYpIuM","title":"Node.js in 100 Seconds","channel":"Fireship","lang":"en"}
-]'::jsonb WHERE slug = 'what-is-node' AND module_id = 'm16-nodejs-runtime';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"ahCwqrYpIuM","title":"Node.js in 100 Seconds","channel":"Fireship","lang":"en"}
-]'::jsonb WHERE slug = 'browser-vs-node' AND module_id = 'm16-nodejs-runtime';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"_l9qbXB1cFE","title":"CommonJS vs ES Modules - The Battle","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'cjs-vs-esm' AND module_id = 'm16-nodejs-runtime';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"nkp_xhM0L0s","title":"Comprendre le dossier node_modules de NodeJS","channel":"Grafikart","lang":"fr"}
-]'::jsonb WHERE slug = 'package-json' AND module_id = 'm16-nodejs-runtime';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"_l9qbXB1cFE","title":"Node fs/promises tutorial","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'fs-promises' AND module_id = 'm16-nodejs-runtime';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"8gtO_W5GE5E","title":"Node.js HTTP module crash course","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'http-natif' AND module_id = 'm16-nodejs-runtime';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"f2EqECiTBL8","title":"Node.js Process explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'process' AND module_id = 'm16-nodejs-runtime';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"P9csgxBgaZ8","title":"Node.js Event Loop Architecture","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'event-loop-node' AND module_id = 'm16-nodejs-runtime';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"jXjbWXn6Ng4","title":"Node.js EventEmitter tutorial","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'event-emitter' AND module_id = 'm16-nodejs-runtime';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"iZCYQSq9IQM","title":"NodeJS (4/6) : Les Streams","channel":"Grafikart","lang":"fr"}
-]'::jsonb WHERE slug = 'streams' AND module_id = 'm16-nodejs-runtime';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"8gtO_W5GE5E","title":"Node.js error handling best practices","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'error-async' AND module_id = 'm16-nodejs-runtime';
-
--- ============================================================
--- M17 — Fastify
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"a9uEhq1uwNk","title":"Fastify: The Node.js Framework You Didn''t Know You Needed","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'framework-why' AND module_id = 'm17-fastify-rest-api';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"a9uEhq1uwNk","title":"Fastify vs Express - Performance comparison","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'fastify-vs-others' AND module_id = 'm17-fastify-rest-api';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"btGtOue1oDA","title":"Fastify Course - The Performant Node.js Web Framework","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'setup' AND module_id = 'm17-fastify-rest-api';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"btGtOue1oDA","title":"Fastify Course (routing)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'routing' AND module_id = 'm17-fastify-rest-api';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"L6BE-U3oy80","title":"Learn Zod in 30 Minutes","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'schemas-zod' AND module_id = 'm17-fastify-rest-api';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"L6BE-U3oy80","title":"Learn Zod in 30 Minutes (TS inference)","channel":"Web Dev Simplified","lang":"en"}
-]'::jsonb WHERE slug = 'ts-inference' AND module_id = 'm17-fastify-rest-api';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"btGtOue1oDA","title":"Fastify Course (hooks)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'lifecycle-hooks' AND module_id = 'm17-fastify-rest-api';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"btGtOue1oDA","title":"Fastify Course (plugins)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'plugins' AND module_id = 'm17-fastify-rest-api';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"x3SG71Ut2tA","title":"Unlocking Node.js'' Power: A Journey into Fastify","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'core-plugins' AND module_id = 'm17-fastify-rest-api';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"lsMQRaeKNDk","title":"REST API best practices","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'rest-conventions' AND module_id = 'm17-fastify-rest-api';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"btGtOue1oDA","title":"Fastify Course (Swagger)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'swagger' AND module_id = 'm17-fastify-rest-api';
-
--- ============================================================
--- M18 — SQL / PostgreSQL
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"qw--VYLpxG4","title":"Learn PostgreSQL Tutorial - Full Course for Beginners","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'relational-concept' AND module_id = 'm18-sql-postgresql';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"qw--VYLpxG4","title":"Learn PostgreSQL Tutorial - Full Course","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'setup-pg' AND module_id = 'm18-sql-postgresql';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"qw--VYLpxG4","title":"Learn PostgreSQL Tutorial - Full Course (DDL)","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'ddl' AND module_id = 'm18-sql-postgresql';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"qw--VYLpxG4","title":"Learn PostgreSQL Tutorial - Full Course (DML)","channel":"freeCodeCamp","lang":"en"},
-  {"youtubeId":"HXV3zeQKqGY","title":"SQL Tutorial - Full Database Course for Beginners","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'dml-basic' AND module_id = 'm18-sql-postgresql';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"qw--VYLpxG4","title":"Learn PostgreSQL Tutorial - Full Course","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'types' AND module_id = 'm18-sql-postgresql';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"qw--VYLpxG4","title":"Learn PostgreSQL Tutorial - Full Course (constraints)","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'constraints' AND module_id = 'm18-sql-postgresql';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"qw--VYLpxG4","title":"Learn PostgreSQL Tutorial - Full Course (JOINs)","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'joins' AND module_id = 'm18-sql-postgresql';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"qw--VYLpxG4","title":"Learn PostgreSQL Tutorial - Full Course (GROUP BY)","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'aggregations' AND module_id = 'm18-sql-postgresql';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"QNfnuK-1YYY","title":"PostgreSQL CTE Tutorial","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'cte' AND module_id = 'm18-sql-postgresql';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Ww71knvhQ-s","title":"PostgreSQL Window Functions Tutorial","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'window' AND module_id = 'm18-sql-postgresql';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"P80Js_qClUE","title":"Postgres Transactions Tutorial","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'transactions' AND module_id = 'm18-sql-postgresql';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"fsG1XaZEa78","title":"PostgreSQL Indexes Explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'indexes' AND module_id = 'm18-sql-postgresql';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"0qIAa9rROpY","title":"EXPLAIN ANALYZE Postgres","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'explain' AND module_id = 'm18-sql-postgresql';
-
--- ============================================================
--- M19 — Drizzle ORM
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"hIYNOiZXQ7Y","title":"Learn Drizzle ORM in 13 mins (crash course)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'orm-concept' AND module_id = 'm19-drizzle-orm';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"A2a3jznxvUs","title":"Drizzle ORM Full Course Tutorial For Beginners","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'drizzle-vs-prisma' AND module_id = 'm19-drizzle-orm';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"7-NZ0MlPpJA","title":"Learn Drizzle In 60 Minutes","channel":"EN","lang":"en"},
-  {"youtubeId":"mMv7nTf0qaw","title":"Drizzle ORM : comment l''installer et démarrer proprement","channel":"Mike Codeur","lang":"fr"}
-]'::jsonb WHERE slug = 'setup-drizzle' AND module_id = 'm19-drizzle-orm';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"7-NZ0MlPpJA","title":"Learn Drizzle In 60 Minutes","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'schema-ts' AND module_id = 'm19-drizzle-orm';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"vyU5mJGCJMw","title":"Drizzle ORM Tutorial - Full Drizzle Course for Beginners","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'query-builder' AND module_id = 'm19-drizzle-orm';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"vyU5mJGCJMw","title":"Drizzle ORM Tutorial - Full Course (joins)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'drizzle-joins' AND module_id = 'm19-drizzle-orm';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"vyU5mJGCJMw","title":"Drizzle ORM Tutorial - Full Course (relations)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'relations' AND module_id = 'm19-drizzle-orm';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"vyU5mJGCJMw","title":"Drizzle ORM Tutorial - Full Course (RQB)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'relational-queries' AND module_id = 'm19-drizzle-orm';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"A2a3jznxvUs","title":"Drizzle ORM Full Course Tutorial (transactions)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'transactions-drizzle' AND module_id = 'm19-drizzle-orm';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"vyU5mJGCJMw","title":"Drizzle ORM Tutorial - Full Course (drizzle-kit)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'drizzle-kit' AND module_id = 'm19-drizzle-orm';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"A2a3jznxvUs","title":"Drizzle ORM Full Course (drizzle-zod)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'drizzle-zod' AND module_id = 'm19-drizzle-orm';
-
--- ============================================================
--- M20 — Sécurité OWASP + Auth
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"hryt-rCLJUA","title":"OWASP Top 10 2021 - The List and How You Should Use It","channel":"EN","lang":"en"},
-  {"youtubeId":"kdTkj6DdbCg","title":"OWASP Top 10 2021 Explained | Web Application Vulnerabilities","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'owasp-top10' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"I48cIcCdII8","title":"Authentication vs Authorization explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'auth-vs-authz' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"8ZtInClXe1Q","title":"Password Hashing, Salts, Peppers | Explained!","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'hash-passwords' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"S-xBAo47W58","title":"Tutoriel : Découverte du JWT","channel":"Grafikart","lang":"fr"},
-  {"youtubeId":"V27fNfRNHkg","title":"Introduction au JWT : principe de fonctionnement","channel":"FR","lang":"fr"}
-]'::jsonb WHERE slug = 'jwt' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"iJKCj8uAHz8","title":"Where to store JWT tokens (localStorage vs httpOnly cookie)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'token-storage' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"4TtAGhr61VI","title":"Access Token & Refresh Token Authentication","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'refresh-tokens' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"996OiexHze0","title":"OAuth 2.0 Explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'oauth-oidc' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"1Ee5z0PnQB4","title":"Content Security Policy (CSP) tutorial","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'csp' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"vRBihr41JTo","title":"Cross Site Request Forgery","channel":"Computerphile","lang":"en"}
-]'::jsonb WHERE slug = 'csrf' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"L5l9lSnNMxg","title":"Cracking Websites with Cross Site Scripting","channel":"Computerphile","lang":"en"},
-  {"youtubeId":"EoaDgUgS6QA","title":"Cross-Site Scripting (XSS) Explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'xss' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"ciNHn38EyRc","title":"SQL Injection - Computerphile","channel":"Computerphile","lang":"en"}
-]'::jsonb WHERE slug = 'sql-injection' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"P7y8nPlGy5w","title":"Rate Limiting explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'rate-limit' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"17UVejOw3zA","title":"Stop Hardcoding Secrets - env vars best practices","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'secrets' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"k_ScPsb3WSk","title":"SSL/TLS pour les nuls","channel":"Julien Aubert","lang":"fr"}
-]'::jsonb WHERE slug = 'https-tls' AND module_id = 'm20-securite-auth';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"0mvCeNsTa1g","title":"How TOTP / Two-Factor Authentication works","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = '2fa' AND module_id = 'm20-securite-auth';
-
--- ============================================================
--- M21 — Tests
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"u6QfIXgjwGQ","title":"Why You Should Write Tests","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'why-test' AND module_id = 'm21-tests';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Fha2bVoC8SE","title":"The Testing Pyramid explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'pyramid' AND module_id = 'm21-tests';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Jv2uxzhPFl4","title":"Test Driven Development - Fun TDD Introduction with JavaScript","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'tdd' AND module_id = 'm21-tests';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"MsqhBNZilB8","title":"Testing JavaScript project with Vitest","channel":"EN","lang":"en"},
-  {"youtubeId":"CxSL0knFxAs","title":"React Vite Testing Tutorial - Vitest Crash Course","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'vitest-basics' AND module_id = 'm21-tests';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"CxSL0knFxAs","title":"Vitest Testing Crash Course (assertions)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'assertions' AND module_id = 'm21-tests';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"CxSL0knFxAs","title":"Vitest Testing Crash Course (mocks)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'mocks' AND module_id = 'm21-tests';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"JBSUgDxICg8","title":"React Testing Library Tutorial","channel":"Net Ninja","lang":"en"}
-]'::jsonb WHERE slug = 'testing-library' AND module_id = 'm21-tests';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"JBSUgDxICg8","title":"Testing Library Philosophy","channel":"Net Ninja","lang":"en"}
-]'::jsonb WHERE slug = 'tl-philosophy' AND module_id = 'm21-tests';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Vsk0nDJ12VE","title":"MSW Mock Service Worker Tutorial","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'msw' AND module_id = 'm21-tests';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Ov9e_F8I5zc","title":"Playwright Tutorial Crash Course using Typescript","channel":"EN","lang":"en"},
-  {"youtubeId":"7ApphAma11A","title":"Playwright Crash Course","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'playwright' AND module_id = 'm21-tests';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Ov9e_F8I5zc","title":"Playwright Tutorial (Trace Viewer)","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'playwright-traces' AND module_id = 'm21-tests';
-
--- ============================================================
--- M22 — DevOps déploiement
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"Gjnup-PuquQ","title":"Docker in 100 Seconds","channel":"Fireship","lang":"en"}
-]'::jsonb WHERE slug = 'docker-why' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"gAkwW2tuIqE","title":"Learn Docker in 7 Easy Steps - Full Beginner''s Tutorial","channel":"Fireship","lang":"en"}
-]'::jsonb WHERE slug = 'dockerfile' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"8vXoMqWgbQQ","title":"Docker Multi-stage Builds Tutorial","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'multi-stage' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"gAkwW2tuIqE","title":"Learn Docker in 7 Easy Steps","channel":"Fireship","lang":"en"}
-]'::jsonb WHERE slug = 'docker-cli' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"DM65_JyGxCo","title":"Docker Compose Tutorial - From Zero to Hero","channel":"TechWorld with Nana","lang":"en"}
-]'::jsonb WHERE slug = 'compose' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"R8_veQiYBjI","title":"GitHub Actions Tutorial - Basic Concepts and CI/CD Pipeline with Docker","channel":"TechWorld with Nana","lang":"en"},
-  {"youtubeId":"Xwpi0ITkL3U","title":"Complete GitHub Actions Course - From BEGINNER to PRO","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'github-actions' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"R8_veQiYBjI","title":"GitHub Actions Tutorial (secrets)","channel":"TechWorld with Nana","lang":"en"}
-]'::jsonb WHERE slug = 'secrets-vars' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"YLtlz88zrLg","title":"CI/CD Tutorial using GitHub Actions","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'ci-pipeline' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"YLtlz88zrLg","title":"CI/CD Tutorial using GitHub Actions","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'cd-pipeline' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"MFFXuXEYRp4","title":"Vercel, Netlify, Railway - Where to deploy?","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'paas' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"AiiGjB2AxqA","title":"Deploy Next.js to Vercel - Tutorial","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'deploy-nextjs' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"0n8CN4LcMqU","title":"Graceful Shutdown Node.js - SIGTERM handling","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'healthcheck-shutdown' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"9wKgKr_LFTM","title":"Sentry Error Tracking Tutorial","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'monitoring' AND module_id = 'm22-devops-deploiement';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"1OhmRmMsGdQ","title":"Twelve-Factor App Methodology Explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = '12factor' AND module_id = 'm22-devops-deploiement';
-
--- ============================================================
--- M23 — Three.js / R3F
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"NLphiJpL0Jc","title":"Three.js Journey — 30k students (free lesson)","channel":"Bruno Simon","lang":"en"}
-]'::jsonb WHERE slug = 'webgl-threejs' AND module_id = 'm23-threejs-r3f';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"pUgWfqWZWmM","title":"Getting Started with THREE.JS in 2021","channel":"DesignCourse","lang":"en"}
-]'::jsonb WHERE slug = 'pipeline-3d' AND module_id = 'm23-threejs-r3f';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"pUgWfqWZWmM","title":"Getting Started with THREE.JS","channel":"DesignCourse","lang":"en"}
-]'::jsonb WHERE slug = 'basics' AND module_id = 'm23-threejs-r3f';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"B16IJLW_WoI","title":"Meshes - React Three Fiber Tutorial for Beginners","channel":"Wael Yasmina","lang":"en"}
-]'::jsonb WHERE slug = 'geometries' AND module_id = 'm23-threejs-r3f';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"pUgWfqWZWmM","title":"Getting Started with THREE.JS (materials)","channel":"DesignCourse","lang":"en"}
-]'::jsonb WHERE slug = 'materials' AND module_id = 'm23-threejs-r3f';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"mb7Jr8awsLI","title":"Applying Textures to Meshes - React Three Fiber","channel":"Wael Yasmina","lang":"en"}
-]'::jsonb WHERE slug = 'textures' AND module_id = 'm23-threejs-r3f';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"pUgWfqWZWmM","title":"Getting Started with THREE.JS (lights)","channel":"DesignCourse","lang":"en"}
-]'::jsonb WHERE slug = 'lights' AND module_id = 'm23-threejs-r3f';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"WKSVa0Q2W4s","title":"Geometric Transformations - React Three Fiber","channel":"Wael Yasmina","lang":"en"}
-]'::jsonb WHERE slug = 'transforms' AND module_id = 'm23-threejs-r3f';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"jKy2Rm7EVOk","title":"React Three Fiber Crash Course for Beginners","channel":"Wael Yasmina","lang":"en"},
-  {"youtubeId":"XBcnD7WRYkY","title":"Setting Up - React Three Fiber Tutorial","channel":"Wael Yasmina","lang":"en"}
-]'::jsonb WHERE slug = 'r3f' AND module_id = 'm23-threejs-r3f';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"5TkuOGN0X_Y","title":"Helpers and Gizmos - React Three Fiber","channel":"Wael Yasmina","lang":"en"}
-]'::jsonb WHERE slug = 'drei' AND module_id = 'm23-threejs-r3f';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"J3zQd_PRJC8","title":"Loading Models and the Primitive Component - R3F","channel":"Wael Yasmina","lang":"en"}
-]'::jsonb WHERE slug = 'gltf-workflow' AND module_id = 'm23-threejs-r3f';
-
--- ============================================================
--- M24 — Python scripting / data
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"x7X9w_GIm1s","title":"Python in 100 Seconds","channel":"Fireship","lang":"en"}
-]'::jsonb WHERE slug = 'python-vs-js' AND module_id = 'm24-python-scripting-data';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"rfscVS0vtbw","title":"Learn Python - Full Course for Beginners","channel":"freeCodeCamp","lang":"en"},
-  {"youtubeId":"XKHEtdqhLK8","title":"Python Full Course for free","channel":"Bro Code","lang":"en"}
-]'::jsonb WHERE slug = 'syntax' AND module_id = 'm24-python-scripting-data';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"rfscVS0vtbw","title":"Learn Python - Full Course (data structures)","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'data-structures' AND module_id = 'm24-python-scripting-data';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"3dt4OGnU5sM","title":"Python List Comprehensions explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'comprehensions' AND module_id = 'm24-python-scripting-data';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"rfscVS0vtbw","title":"Learn Python - Full Course (functions)","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'functions-py' AND module_id = 'm24-python-scripting-data';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"rfscVS0vtbw","title":"Learn Python - Full Course (classes)","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'classes-py' AND module_id = 'm24-python-scripting-data';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"yScuF1UgGU0","title":"Python Type Hints - Modern Python","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'type-hints' AND module_id = 'm24-python-scripting-data';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"UcKkmwirGRg","title":"Python pathlib module tutorial","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'pathlib' AND module_id = 'm24-python-scripting-data';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"rfscVS0vtbw","title":"Learn Python - Full Course (file I/O)","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'io-csv-json' AND module_id = 'm24-python-scripting-data';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"t5Bo1Je9EmE","title":"Python asyncio tutorial","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'asyncio' AND module_id = 'm24-python-scripting-data';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"cHYq1MRoyI0","title":"Pytest Tutorial - How to Test Python Code","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'pytest' AND module_id = 'm24-python-scripting-data';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"8mk85fyzevc","title":"Python venv + uv - Virtual environments","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'venv' AND module_id = 'm24-python-scripting-data';
-
--- ============================================================
--- M25 — IA appliquée (Anthropic SDK, RAG, agents)
--- ============================================================
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"zjkBMFhNj_g","title":"[1hr Talk] Intro to Large Language Models","channel":"Andrej Karpathy","lang":"en"}
-]'::jsonb WHERE slug = 'llm-concept' AND module_id = 'm25-ia-appliquee';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"zjkBMFhNj_g","title":"Intro to LLMs (model families)","channel":"Andrej Karpathy","lang":"en"}
-]'::jsonb WHERE slug = 'model-families' AND module_id = 'm25-ia-appliquee';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"TqC1qOfiVcQ","title":"Claude Agent SDK [Full Workshop]","channel":"Anthropic","lang":"en"}
-]'::jsonb WHERE slug = 'sdks' AND module_id = 'm25-ia-appliquee';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"dOxUroR57xs","title":"Prompt Engineering Tutorial","channel":"freeCodeCamp","lang":"en"}
-]'::jsonb WHERE slug = 'prompt-eng' AND module_id = 'm25-ia-appliquee';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"TqC1qOfiVcQ","title":"Claude Agent SDK (structured output)","channel":"Anthropic","lang":"en"}
-]'::jsonb WHERE slug = 'structured-output' AND module_id = 'm25-ia-appliquee';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"ArnMdc-ICCM","title":"Embeddings - Understanding Vector Representations","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'embeddings' AND module_id = 'm25-ia-appliquee';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"klTvEwg3oJ4","title":"Vector Databases simply explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'vector-db' AND module_id = 'm25-ia-appliquee';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"T-D1OfcDW1M","title":"What is Retrieval-Augmented Generation (RAG)?","channel":"IBM Technology","lang":"en"},
-  {"youtubeId":"tKPSmn-urB4","title":"AI Explained: What is RAG - Retrieval Augmented Generation?","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'rag' AND module_id = 'm25-ia-appliquee';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"8OJC21T2SL4","title":"Chunking Strategies for RAG","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'chunking' AND module_id = 'm25-ia-appliquee';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"TqC1qOfiVcQ","title":"Claude Agent SDK Full Workshop (ReAct agents)","channel":"Anthropic","lang":"en"}
-]'::jsonb WHERE slug = 'agents-react' AND module_id = 'm25-ia-appliquee';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"7j_NE6Pjv-E","title":"Model Context Protocol (MCP) Explained","channel":"EN","lang":"en"}
-]'::jsonb WHERE slug = 'mcp' AND module_id = 'm25-ia-appliquee';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"zjkBMFhNj_g","title":"Intro to LLMs (prompt injection)","channel":"Andrej Karpathy","lang":"en"}
-]'::jsonb WHERE slug = 'prompt-injection' AND module_id = 'm25-ia-appliquee';
-
-UPDATE skills SET videos = '[
-  {"youtubeId":"ASAaKhK1B5w","title":"Even Anthropic Engineers Use This Claude Code Workflow","channel":"Anthropic","lang":"en"}
-]'::jsonb WHERE slug = 'prompt-caching' AND module_id = 'm25-ia-appliquee';
+-- m11-javascript-async
+UPDATE skills SET videos = '[{"youtubeId":"4RCK8CYm63I","title":"JavaScript Async en français [1/4] : Synchrone vs Asynchrone","lang":"fr"},{"youtubeId":"7Gevq7rZIPI","title":"Javascript asynchrone, pourquoi et comment ?","lang":"fr"},{"youtubeId":"8aGhZQkoFbQ","title":"What the heck is the event loop anyway?","channel":"Philip Roberts (JSConf EU)","lang":"en"}]'::jsonb WHERE slug = 'single-threaded' AND module_id = 'm11-javascript-async';
+UPDATE skills SET videos = '[{"youtubeId":"H7uVLPPRKZI","title":"JAVASCRIPT - C''est quoi l''EVENT LOOP","channel":"Cocadmin","lang":"fr"},{"youtubeId":"OFnSq_0_Pyc","title":"Event loop et asynchronisme en JavaScript","channel":"Benjamin Cavy","lang":"fr"},{"youtubeId":"8aGhZQkoFbQ","title":"What the heck is the event loop anyway?","channel":"Philip Roberts (JSConf EU)","lang":"en"},{"youtubeId":"eiC58R16hb8","title":"JavaScript Visualized - Event Loop, Web APIs, (Micro)task Queue","channel":"Lydia Hallie","lang":"en"}]'::jsonb WHERE slug = 'event-loop' AND module_id = 'm11-javascript-async';
+UPDATE skills SET videos = '[{"youtubeId":"VAw4-umCOck","title":"Javascript asynchrone, Callback hell ?","lang":"fr"},{"youtubeId":"NOlOw03qBfw","title":"What is JavaScript CALLBACK HELL?","channel":"Fireship","lang":"en"}]'::jsonb WHERE slug = 'callbacks' AND module_id = 'm11-javascript-async';
+UPDATE skills SET videos = '[{"youtubeId":"05mKXSdkCJg","title":"Apprendre le JavaScript : Promise","channel":"Grafikart","lang":"fr"},{"youtubeId":"MQRQkyx6rJg","title":"JavaScript Promise : then() - async/await - fetch() en français","lang":"fr"},{"youtubeId":"Xs1EMmBLpn4","title":"JavaScript Visualized - Promise Execution","channel":"Lydia Hallie","lang":"en"},{"youtubeId":"RvYYCGs45L4","title":"JavaScript Promise in 100 Seconds","channel":"Fireship","lang":"en"}]'::jsonb WHERE slug = 'promises' AND module_id = 'm11-javascript-async';
+UPDATE skills SET videos = '[{"youtubeId":"merGSVXAFLI","title":"Promise.all, Promise.any et Promise.race","lang":"fr"},{"youtubeId":"L5aCbiYhGa8","title":"Javascript de A à Z - La méthode Promise.all","channel":"La minute de code","lang":"fr"},{"youtubeId":"tt1KxvkuTkU","title":"Promise.all, Promise.allSettled, Promise.any, and Promise.race","lang":"en"}]'::jsonb WHERE slug = 'promise-static' AND module_id = 'm11-javascript-async';
+UPDATE skills SET videos = '[{"youtubeId":"DBKb_v1jf4E","title":"JavaScript Async en français [4/4] : Async / Await","lang":"fr"},{"youtubeId":"WNFNEe4bc5A","title":"Comment utiliser async & await ?","lang":"fr"},{"youtubeId":"RvYYCGs45L4","title":"JavaScript Promise in 100 Seconds","channel":"Fireship","lang":"en"}]'::jsonb WHERE slug = 'async-await' AND module_id = 'm11-javascript-async';
+UPDATE skills SET videos = '[{"youtubeId":"z9pcgJX1DdY","title":"Apprendre le JavaScript : Appel HTTP avec fetch()","channel":"Grafikart","lang":"fr"},{"youtubeId":"60HllThTSLc","title":"Récupérer & traiter des données facilement avec l''API Fetch en JavaScript !","lang":"fr"},{"youtubeId":"MQRQkyx6rJg","title":"JavaScript Promise : then() - async/await - fetch() en français","lang":"fr"}]'::jsonb WHERE slug = 'fetch' AND module_id = 'm11-javascript-async';
+UPDATE skills SET videos = '[{"youtubeId":"tMzybZOw3t4","title":"Utilisation de la méthode POST dans une requête HTTP avec fetch()","lang":"fr"},{"youtubeId":"XHokFQeQ6Lk","title":"Fetch API in 4 Minutes (GET, POST, PUT, DELETE | JSON)","lang":"en"}]'::jsonb WHERE slug = 'fetch-post' AND module_id = 'm11-javascript-async';
+UPDATE skills SET videos = '[{"youtubeId":"GRAp6lJr0ZY","title":"Comment arrêter une requête fetch() en cours ? AbortController","lang":"fr"},{"youtubeId":"bLpA9tvABb8","title":"How To Abort A Fetch Request With AbortController In JavaScript","lang":"en"}]'::jsonb WHERE slug = 'abort-controller' AND module_id = 'm11-javascript-async';
+UPDATE skills SET videos = '[{"youtubeId":"eiC58R16hb8","title":"JavaScript Visualized - Event Loop, Web APIs, (Micro)task Queue","channel":"Lydia Hallie","lang":"en"},{"youtubeId":"cCOL7MC4Pl0","title":"Jake Archibald: In The Loop (microtasks vs tasks)","channel":"JSConf","lang":"en"}]'::jsonb WHERE slug = 'microtasks' AND module_id = 'm11-javascript-async';
+UPDATE skills SET videos = '[{"youtubeId":"zq97PFCftNA","title":"How to Implement Exponential Backoff & Retry Logic (429, 5xx)","lang":"en"},{"youtubeId":"nDIxiea-eLg","title":"How to Add Automatic Retry Support to Fetch in Node.js","lang":"en"}]'::jsonb WHERE slug = 'retry-backoff' AND module_id = 'm11-javascript-async';
+UPDATE skills SET videos = '[{"youtubeId":"JLrYtOgvuPk","title":"Tutoriel JavaScript : Debounce & Throttle","lang":"fr"},{"youtubeId":"cjIswDCKgu0","title":"Debounce and Throttle in JavaScript","lang":"en"}]'::jsonb WHERE slug = 'debounce-throttle' AND module_id = 'm11-javascript-async';
+UPDATE skills SET videos = '[{"youtubeId":"5XvRiuBETiA","title":"Javascript et le temps - 2 : Timers (setInterval & setTimeout)","lang":"fr"},{"youtubeId":"zucCjXApXOU","title":"Meet the Timers: setTimeout, setInterval, and requestAnimationFrame","lang":"en"}]'::jsonb WHERE slug = 'timers' AND module_id = 'm11-javascript-async';
+
+-- m12-javascript-avance
+UPDATE skills SET videos = '[{"youtubeId":"qYuvcK8QU4c","title":"Apprendre le JavaScript : La portée des variables","channel":"Grafikart","lang":"fr"},{"youtubeId":"LYvQWwsKiME","title":"Scope et closures en JS (et... hoisting ?)","lang":"fr"},{"youtubeId":"Nt-qa_LlUH0","title":"Execution Contexts, Hoisting, Scopes, and Closures in JS","lang":"en"}]'::jsonb WHERE slug = 'execution-context' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"LYvQWwsKiME","title":"Scope et closures en JS (lexical scoping)","lang":"fr"},{"youtubeId":"qYuvcK8QU4c","title":"Apprendre le JavaScript : La portée des variables","channel":"Grafikart","lang":"fr"},{"youtubeId":"Nt-qa_LlUH0","title":"Execution Contexts, Hoisting, Scopes, and Closures in JS","lang":"en"}]'::jsonb WHERE slug = 'lexical-scope' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"LYvQWwsKiME","title":"Scope et closures en JS (et... hoisting ?)","lang":"fr"},{"youtubeId":"bE7iQBNzRE8","title":"JavaScript Hoisting Explained Visually (var, let, const, TDZ)","lang":"en"}]'::jsonb WHERE slug = 'hoisting' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"iwaXTY1bSqk","title":"Les Closures Expliquées Simplement, le secret des devs confirmés","lang":"fr"},{"youtubeId":"ABFFm6a-DbE","title":"Cours complet JavaScript [31/65] - Les closures en JavaScript","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"6Ixyltr8_R0","title":"JavaScript Visualized - Closures","lang":"en"},{"youtubeId":"qikxEIxsXco","title":"Closures in JS | Namaste JavaScript Episode 10","channel":"Akshay Saini","lang":"en"}]'::jsonb WHERE slug = 'closures' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"d1mnTl51oJA","title":"Encapsulation, Module Pattern, IIFE, Closure en JavaScript","lang":"fr"},{"youtubeId":"qikxEIxsXco","title":"Closures in JS | Namaste JavaScript Episode 10","channel":"Akshay Saini","lang":"en"}]'::jsonb WHERE slug = 'closure-patterns' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"JPA3g46ozwQ","title":"JavaScript : enfin comprendre call() apply() bind()","lang":"fr"},{"youtubeId":"9jjCZiz1UBc","title":"JavaScript ES6 : comprendre et utiliser call, apply et bind","lang":"fr"},{"youtubeId":"Pv9flm-80vM","title":"JavaScript THIS keyword explained","lang":"en"}]'::jsonb WHERE slug = 'this-contexts' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"DbJXmYwz0K8","title":"Fonction classique vs Fonction fléchée en JavaScript : la comparaison essentielle","lang":"fr"},{"youtubeId":"C_kr3okAu1c","title":"La vérité sur le THIS dans les fonctions fléchées en JS","lang":"fr"}]'::jsonb WHERE slug = 'arrow-vs-function' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"QEh3d6ltr1Q","title":"Prototype et chaîne de prototypes en JavaScript","lang":"fr"},{"youtubeId":"GhJTy5-X3kA","title":"Understanding the JavaScript Prototype Chain","lang":"en"}]'::jsonb WHERE slug = 'prototypes' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"2HAPViIAYjc","title":"Apprendre le JavaScript : Les classes","channel":"Grafikart","lang":"fr"},{"youtubeId":"Qvr6Nh7rtAI","title":"Apprendre le JavaScript : Le sucre syntaxique","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'classes-prototypes' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"KjXBPJZPmYU","title":"Classes et héritages en JavaScript (POO)","lang":"fr"},{"youtubeId":"s75Z7pM84oM","title":"Composition over Inheritance : les mixins en JavaScript","lang":"fr"}]'::jsonb WHERE slug = 'inheritance' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"SiYJITtSsCY","title":"Le currying en JavaScript","lang":"fr"},{"youtubeId":"35OdU_TzXnI","title":"Tutoriel JavaScript : Curryfication","lang":"fr"}]'::jsonb WHERE slug = 'currying' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"TyWwJKMCKPY","title":"La mémoïsation en JavaScript","lang":"fr"},{"youtubeId":"jmnI7PKsCVQ","title":"Memoization : gagnez en vitesse - Optimise ton JS ! #2","lang":"fr"}]'::jsonb WHERE slug = 'memoization' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"aBalAxmK1AY","title":"Réparer les fuites mémoire NodeJS : ma première expérience de plombier","lang":"fr"},{"youtubeId":"IkoGmbNJolo","title":"JavaScript Memory Leaks and How To Fix Them","lang":"en"}]'::jsonb WHERE slug = 'gc' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"z9ZTQZm2O0Q","title":"Programmation fonctionnelle avec JavaScript - ''A la ferme''","lang":"fr"},{"youtubeId":"W-b_XK48vGE","title":"Les fonctions pures en JavaScript","lang":"fr"},{"youtubeId":"BMUiFMZr7vk","title":"Functional Programming in JavaScript - Beau teaches JS","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'functional' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"ViihgYPIcFw","title":"Les 3 nouveautés principales d''ES2022 !","lang":"fr"},{"youtubeId":"dwfUJRbGXX0","title":"ES2022 : Class Private Fields and Methods","lang":"en"}]'::jsonb WHERE slug = 'es2022' AND module_id = 'm12-javascript-avance';
+UPDATE skills SET videos = '[{"youtubeId":"Q9ATc3GEQO8","title":"Écris ta première librairie NPM avec TypeScript en 10 minutes","lang":"fr"},{"youtubeId":"9pOm7xhgMlU","title":"JavaScript côté serveur : Utiliser npm","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'read-libs' AND module_id = 'm12-javascript-avance';
+
+-- m13-typescript
+UPDATE skills SET videos = '[{"youtubeId":"zQnBQ4tB3ZA","title":"TypeScript in 100 Seconds","channel":"Fireship","lang":"en"},{"youtubeId":"ffCIANfx_-0","title":"Apprendre TypeScript : Introduction","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'what-is-ts' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"PtsTS2S8hZM","title":"Apprendre TypeScript : Syntaxe de base (tsconfig, compilation)","channel":"Grafikart","lang":"fr"},{"youtubeId":"eJXVEju3XLM","title":"The TSConfig Cheat Sheet (target, module, strict)","channel":"Matt Pocock","lang":"en"}]'::jsonb WHERE slug = 'tsconfig' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"PtsTS2S8hZM","title":"Apprendre TypeScript : Syntaxe de base (types primitifs)","channel":"Grafikart","lang":"fr"},{"youtubeId":"x-ZSzC8Jbtc","title":"TypeScript AVANCÉ : any, unknown, undefined, never (void/never inclus)","channel":"Web FR","lang":"fr"}]'::jsonb WHERE slug = 'primitives' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"yxCOyCqy2Jw","title":"Apprendre TypeScript : Tuple & Enum","channel":"Grafikart","lang":"fr"},{"youtubeId":"85pP2wvqKUo","title":"TypeScript pour Débutants : Tableaux et Tuples en détail","channel":"Web FR","lang":"fr"},{"youtubeId":"d56mG7DezGs","title":"TypeScript Tutorial for Beginners (arrays, objects, functions)","channel":"Programming with Mosh","lang":"en"}]'::jsonb WHERE slug = 'complex' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"sFNQeh5Oc08","title":"Apprendre TypeScript : Type ou Interface ?","channel":"Grafikart","lang":"fr"},{"youtubeId":"crjIq7LEAJw","title":"Type vs Interface - Which Should You Use In TypeScript?","channel":"Web Dev Simplified","lang":"en"}]'::jsonb WHERE slug = 'interface-vs-type' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"dB_LbNMgVAA","title":"Apprendre TypeScript : Alias & Generics (unions & intersections)","channel":"Grafikart","lang":"fr"},{"youtubeId":"ozUaIWSFGX0","title":"Advanced TypeScript | Union and Intersection Types","channel":"ColorCode","lang":"en"}]'::jsonb WHERE slug = 'union-intersection' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"F7JbpI6UKcQ","title":"TypeScript : ''as const'' expliqué simplement (types littéraux précis)","channel":"Web FR","lang":"fr"},{"youtubeId":"jxSh-RZTCws","title":"Literal types are SO USEFUL in TS - Advanced TypeScript","channel":"Matt Pocock","lang":"en"}]'::jsonb WHERE slug = 'literal-types' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"HUZhBJL0Dv4","title":"TypeScript Crash Course Part 2 – Union Types & Type Narrowing","channel":"ColorCode","lang":"en"},{"youtubeId":"jlj7_CWQymU","title":"Safer Type Narrowing in TypeScript with Discriminated Unions","channel":"Matt Pocock","lang":"en"}]'::jsonb WHERE slug = 'narrowing' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"x-ZSzC8Jbtc","title":"TypeScript AVANCÉ : any, unknown, undefined, never (j''explique TOUT)","channel":"Web FR","lang":"fr"},{"youtubeId":"aBoAjDz7ouo","title":"TypeScript : Any vs Unknown vs Never – comprendre leurs différences","channel":"Web FR","lang":"fr"},{"youtubeId":"kWmUNChlzVw","title":"any vs unknown vs never: TypeScript demystified","channel":"ColorCode","lang":"en"}]'::jsonb WHERE slug = 'any-unknown-never' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"dB_LbNMgVAA","title":"Apprendre TypeScript : Alias & Generics","channel":"Grafikart","lang":"fr"},{"youtubeId":"FIZilZ2KKbo","title":"TypeScript : Maîtriser la généricité en TypeScript","channel":"Web FR","lang":"fr"},{"youtubeId":"Zz_Uf7JEddk","title":"TypeScript Generics with Matt Pocock","channel":"Learn With Jason","lang":"en"}]'::jsonb WHERE slug = 'generics' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"Hg9rPl7Z4zA","title":"Apprendre TypeScript : Types utilitaires (Partial, Pick, Omit, Record...)","channel":"Grafikart","lang":"fr"},{"youtubeId":"0p-VafFxuUE","title":"TypeScript Utility Types you must know - Pick, Omit, Partial, Record","channel":"Web Dev Simplified","lang":"en"}]'::jsonb WHERE slug = 'utility-types' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"20QbmIAiw2c","title":"These TypeScript Tricks are POWERFUL (mapped, conditional, template literal)","channel":"Matt Pocock","lang":"en"},{"youtubeId":"VBsKNKEZNnY","title":"Extracting React Props using CONDITIONAL TYPES - Advanced TypeScript","channel":"Matt Pocock","lang":"en"}]'::jsonb WHERE slug = 'advanced-types' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"F7JbpI6UKcQ","title":"TypeScript : ''as const'' expliqué simplement","channel":"Web FR","lang":"fr"},{"youtubeId":"Ckn7UrkonD4","title":"KEYOF + TYPEOF is an amazing combination in TypeScript","channel":"Matt Pocock","lang":"en"},{"youtubeId":"Eat7AXkEtNs","title":"4 TypeScript tips: as const, typeof, keyof and template string types","channel":"Matt Pocock","lang":"en"}]'::jsonb WHERE slug = 'keyof-typeof' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"R1MlRKjCOLU","title":"Apprendre TypeScript : Typer React","channel":"Grafikart","lang":"fr"},{"youtubeId":"-jnV9cNSCS8","title":"Tutoriel TypeScript avec React en 1 HEURE (l''essentiel 2025)","channel":"MelvynxDev","lang":"fr"},{"youtubeId":"Km1onb6Oe-Y","title":"Apprendre React avec TypeScript : composants, props, useState","channel":"Web FR","lang":"fr"}]'::jsonb WHERE slug = 'ts-react' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"JFrlqGoUtFU","title":"How to Provide Types for your Node.js/JavaScript NPM Package","channel":"Matt Pocock","lang":"en"},{"youtubeId":"aKTSC4D1GL8","title":"The NPM Library Speedrun - build, CI and publish (avec types)","channel":"Matt Pocock","lang":"en"}]'::jsonb WHERE slug = 'lib-types' AND module_id = 'm13-typescript';
+UPDATE skills SET videos = '[{"youtubeId":"qabYnswX3FY","title":"Crée ta première App React avec ViteJS | Prettier | ESLint","channel":"MelvynxDev","lang":"fr"},{"youtubeId":"eJXVEju3XLM","title":"The TSConfig Cheat Sheet (strict, noUncheckedIndexedAccess)","channel":"Matt Pocock","lang":"en"},{"youtubeId":"n58QJ_k0ITo","title":"Configuring ESLint to Minimize Bugs & Promote Type-Safety","channel":"Web Dev Simplified","lang":"en"}]'::jsonb WHERE slug = 'strict-mode' AND module_id = 'm13-typescript';
+
+-- m14-react-composants-hooks
+UPDATE skills SET videos = '[{"youtubeId":"Tn6-PIqc4UM","title":"React in 100 Seconds","channel":"Fireship","lang":"en"},{"youtubeId":"NT0s0aOHu0Q","title":"Apprendre React : Introduction","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'react-concept' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"qabYnswX3FY","title":"Crée ta première App React avec ViteJS | Prettier | ESLint | npm","lang":"fr"},{"youtubeId":"RbZyQWOEmD0","title":"How To Setup Your First React + TypeScript Project With Vite","lang":"en"}]'::jsonb WHERE slug = 'vite-react-setup' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"TAuiJHmvPAQ","title":"Apprendre React : La syntaxe JSX","channel":"Grafikart","lang":"fr"},{"youtubeId":"hQAHSlTtcmY","title":"Learn React In 30 Minutes","channel":"Web Dev Simplified","lang":"en"}]'::jsonb WHERE slug = 'jsx' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"8mPcI2Vj9Vw","title":"ReactJs pour débutants #2 LES COMPOSANTS | Tuto français","lang":"fr"},{"youtubeId":"EqiNee6K_S8","title":"Apprendre React : Propriétés de rendu (composants)","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'components' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"en0If_3jkRU","title":"Apprendre ReactJS | Passer des props à un composant","lang":"fr"},{"youtubeId":"TMm8dYD5syc","title":"La différence entre PROPS et STATE en React expliqué simplement","lang":"fr"},{"youtubeId":"EqiNee6K_S8","title":"Apprendre React : Propriétés de rendu","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'props' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"ilqxZiXnwD8","title":"Apprendre React : Le hook useState","channel":"Grafikart","lang":"fr"},{"youtubeId":"O6P86uwfdR0","title":"Learn useState In 15 Minutes - React Hooks Explained","channel":"Web Dev Simplified","lang":"en"}]'::jsonb WHERE slug = 'use-state' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"vNLwY2UlbQg","title":"Apprendre React : Le hook useEffect","channel":"Grafikart","lang":"fr"},{"youtubeId":"fmsTYrfZdao","title":"Apprendre useEffect en 18 minutes | React Hooks 2024","lang":"fr"},{"youtubeId":"dH6i3GurZW8","title":"Mastering React''s useEffect","channel":"Jack Herrington","lang":"en"}]'::jsonb WHERE slug = 'use-effect' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"bBy8EO5S_go","title":"Apprendre React : Le hook useRef","channel":"Grafikart","lang":"fr"},{"youtubeId":"t2ypzz6gJm0","title":"Learn useRef in 11 Minutes","channel":"Web Dev Simplified","lang":"en"}]'::jsonb WHERE slug = 'use-ref' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"CeyqosSakOQ","title":"Apprendre React : Le hook useContext","channel":"Grafikart","lang":"fr"},{"youtubeId":"O179--nXRyc","title":"Communication entre composants : React Context","lang":"fr"}]'::jsonb WHERE slug = 'use-context' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"2Cs9H5kiNb4","title":"Apprendre React : Le hook useMemo","channel":"Grafikart","lang":"fr"},{"youtubeId":"fhbBI_8s58s","title":"Apprendre React : Mémoisation et useCallback","channel":"Grafikart","lang":"fr"}]'::jsonb WHERE slug = 'memo-callback' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"H_dEaebG2u4","title":"Gérer l''affichage conditionnel en React","channel":"Dans Ton Code","lang":"fr"},{"youtubeId":"7PcIYG7DXwM","title":"Le PIÈGE du rendu conditionnel en React","lang":"fr"}]'::jsonb WHERE slug = 'conditional-render' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"0GzWbhPGdAs","title":"Pourquoi tu ne dois JAMAIS utiliser INDEX en tant que KEY dans React","lang":"fr"},{"youtubeId":"xe9bvyzHRao","title":"Why React Keys Matter (and why index is dangerous)","lang":"en"}]'::jsonb WHERE slug = 'lists-key' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"rhPIw9a1CxQ","title":"Apprendre React : Les formulaires","channel":"Grafikart","lang":"fr"},{"youtubeId":"VyWKgNfqSiA","title":"Gérer les inputs avec React (Controlled vs Uncontrolled)","lang":"fr"}]'::jsonb WHERE slug = 'forms' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"iNQbsdhOqGI","title":"React 19 Hooks - useTransition, useActionState, useFormStatus, useOptimistic in 20 mins","lang":"en"},{"youtubeId":"NafMDSppo1M","title":"React 19 Form Actions Explained | useActionState Hook","lang":"en"}]'::jsonb WHERE slug = 'react19-actions' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"Aykxy0-kgtI","title":"QUAND React Re-Render ? Ce qu''il faut absolument savoir","channel":"Melvynx","lang":"fr"},{"youtubeId":"G8Mk6lsSOcw","title":"The Ultimate React Performance Guide (Part 1): Stop Useless Re-Renders!","lang":"en"}]'::jsonb WHERE slug = 'rerender' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"rLYtXmIjHdA","title":"Les règles ESSENTIELLES pour les Hooks React","lang":"fr"},{"youtubeId":"o_7wgRHBzeA","title":"This is Why You Can''t Render React Hooks Conditionally","channel":"Web Dev Simplified","lang":"en"}]'::jsonb WHERE slug = 'hooks-rules' AND module_id = 'm14-react-composants-hooks';
+UPDATE skills SET videos = '[{"youtubeId":"yzvh4utcEN8","title":"Apprendre React : Créer un hook personnalisé","channel":"Grafikart","lang":"fr"},{"youtubeId":"6tiIphGAeD8","title":"Build Powerful Custom React Hooks | useToggle, useDebounce & useFetch","lang":"en"}]'::jsonb WHERE slug = 'custom-hooks' AND module_id = 'm14-react-composants-hooks';
+
+-- m15-react-ecosysteme
+UPDATE skills SET videos = '[{"youtubeId":"s1kzDQccUS0","title":"TanStack Router - Full Tutorial for Beginners","lang":"en"},{"youtubeId":"WyqxZniJk5w","title":"Complete TanStack Router Tutorial - Type-Safe File-Based Routing","lang":"en"},{"youtubeId":"Ab01W6h4Giw","title":"TanStack Router - How to Become a Routing God in React","lang":"en"}]'::jsonb WHERE slug = 'tanstack-router' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"xUrbLlcrIXY","title":"TanStack Router: Path Parameters & Loader","lang":"en"},{"youtubeId":"fE0CeXZF7CY","title":"TanStack Router: Query Parameters & Validation (search params typés)","lang":"en"},{"youtubeId":"4rTsQTD9Me4","title":"TanStack Router - Routing, Lazy Loading, Data Fetching, Params","lang":"en"}]'::jsonb WHERE slug = 'router-params' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"38wJmjeJNAk","title":"Découverte de react-query (TanStack Query)","channel":"Grafikart","lang":"fr"},{"youtubeId":"8-6--06ptek","title":"Tutoriel React Query #1 - Initiation & Fetch Data avec useQuery","lang":"fr"},{"youtubeId":"novnyCaa7To","title":"React Query Tutorial #1 - Intro & Setup","channel":"Net Ninja","lang":"en"},{"youtubeId":"KkxPtimqaew","title":"TanStack Query - How to Master God-Tier React Query","channel":"Jack Herrington","lang":"en"}]'::jsonb WHERE slug = 'tanstack-query' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"_EuPZrr3faU","title":"TanStack React Query v5 - Full Guide (Mutations, Optimistic Updates)","lang":"en"},{"youtubeId":"KkxPtimqaew","title":"TanStack Query - Mutations + Optimistic Updates (God-Tier)","channel":"Jack Herrington","lang":"en"}]'::jsonb WHERE slug = 'mutations' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"YMXN-t4jXbU","title":"Zustand : la MEILLEURE librairie de state management en React","lang":"fr"},{"youtubeId":"JRGMte2Zq0k","title":"TUTO / COURS sur Zustand avec React en 2024","lang":"fr"},{"youtubeId":"_ngCLZ5Iz-0","title":"Zustand - Complete Tutorial","lang":"en"}]'::jsonb WHERE slug = 'zustand' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"nk_65cL9-kA","title":"Gestion Pro des formulaires - Tuto React Hook Form","channel":"React Academy","lang":"fr"},{"youtubeId":"Ipgf8PLRmY8","title":"Tutoriel React : Présentation de React Hook Form","channel":"Grafikart","lang":"fr"},{"youtubeId":"4nXVitqJ8EM","title":"React Hook Form Tutorial - Advanced Validation","channel":"Web Dev Simplified","lang":"en"}]'::jsonb WHERE slug = 'rhf' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"haJq2YXLgmk","title":"Pourquoi il FAUT utiliser Zod dans ton application TypeScript","channel":"Melvynx","lang":"fr"},{"youtubeId":"bZNwQ5Pvt2s","title":"Tuto react-hook-form et Zod combinés pour un formulaire efficace","lang":"fr"},{"youtubeId":"L6BE-U3oy80","title":"Learn Zod in 30 Minutes","channel":"Web Dev Simplified","lang":"en"}]'::jsonb WHERE slug = 'zod-forms' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"oVS9wR-lpGQ","title":"Ma librairie UI préférée pour React (shadcn/ui)","channel":"Melvynx","lang":"fr"},{"youtubeId":"VanmyVow1Ig","title":"Découverte de Shadcn, encore une librairie de composant ?","channel":"Grafikart","lang":"fr"},{"youtubeId":"sIKGWcLB2nY","title":"TUTO Shadcn UI avec TailwindCSS : tout comprendre en 30 min","lang":"fr"},{"youtubeId":"urlCrgNO0HY","title":"Shadcn UI Complete Guide","channel":"Code With Antonio","lang":"en"}]'::jsonb WHERE slug = 'shadcn' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"gX4N44sPNHY","title":"Apprendre React : Animer avec Framer Motion","channel":"Grafikart","lang":"fr"},{"youtubeId":"yAR0UJ28pO0","title":"Coder des animations avec React et Framer Motion (e-commerce) - Partie 1/2","lang":"fr"},{"youtubeId":"2V1WK-3HQNk","title":"Framer Motion (for React) #1 - Introduction","channel":"Net Ninja","lang":"en"}]'::jsonb WHERE slug = 'framer-motion' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"SGSAPfjOHBM","title":"Use React.lazy and Suspense to Code-Split Your App","lang":"en"},{"youtubeId":"wtW06D5MYbg","title":"React Lazy Loading Explained (Lazy, Suspense and Code Splitting)","lang":"en"}]'::jsonb WHERE slug = 'code-splitting' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"POHZrI_WqXk","title":"Apprendre React : Capturer les erreurs avec ErrorBoundary","channel":"Grafikart","lang":"fr"},{"youtubeId":"_FuDMEgIy7I","title":"Learn React Error Boundaries In 7 Minutes","lang":"en"}]'::jsonb WHERE slug = 'error-boundaries' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"4U37IRrt_zQ","title":"React Developer Tools - Components & Profiler","lang":"en"},{"youtubeId":"00RoZflFE34","title":"How to use the React Profiler to find and fix Performance Problems","lang":"en"}]'::jsonb WHERE slug = 'devtools-profiler' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"I906IcXVrZ4","title":"Le nouveau compiler de React, la fin du memo ?","lang":"fr"},{"youtubeId":"aJcburd0r2k","title":"React 19 Compiler Explained: Auto Optimisations vs Manual Memoization","lang":"en"}]'::jsonb WHERE slug = 'compiler' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"MWD7qbFQf0E","title":"Créer des custom hooks avec React","channel":"Grafikart","lang":"fr"},{"youtubeId":"RmtDfvlohfc","title":"5 custom hooks super utiles pour tes applications React !","lang":"fr"},{"youtubeId":"qOH2X5hciiA","title":"React: How to Apply Clean Architecture","lang":"en"}]'::jsonb WHERE slug = 'patterns' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"l5rUTjUpABg","title":"[ReactJS FR] Authentification avec le Context Hook (Partie 1)","lang":"fr"},{"youtubeId":"A__Mo3TyBKU","title":"[ReactJS FR] Authentification (dernière partie - routes protégées)","lang":"fr"},{"youtubeId":"AcYF18oGn6Y","title":"Authentication in React with JWTs, Access & Refresh Tokens","lang":"en"}]'::jsonb WHERE slug = 'auth-flow' AND module_id = 'm15-react-ecosysteme';
+UPDATE skills SET videos = '[{"youtubeId":"woMYLIXKNOY","title":"React i18n : traduire intelligemment React avec i18next","channel":"Grafikart","lang":"fr"},{"youtubeId":"LFaFPORPmeo","title":"Complete Guide - React Internationalization (i18n) with i18next","lang":"en"}]'::jsonb WHERE slug = 'i18n' AND module_id = 'm15-react-ecosysteme';
+
+-- m16-nodejs-runtime
+UPDATE skills SET videos = '[{"youtubeId":"97rRv9xy2iw","title":"Apprendre Node.js #2 - Node.js c''est quoi ?","lang":"fr"},{"youtubeId":"mzX6DX1S7Fc","title":"C''est quoi Node.js et pourquoi l''apprendre ?","lang":"fr"},{"youtubeId":"ahCwqrYpIuM","title":"Node.js in 100 Seconds","channel":"Fireship","lang":"en"}]'::jsonb WHERE slug = 'what-is-node' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"t2KrvQPvWMs","title":"Apprendre Node.js #7 - Les différences avec le navigateur","lang":"fr"},{"youtubeId":"ywpfVrJbN2w","title":"JavaScript et Node.JS : différence entre code client et code serveur","lang":"fr"}]'::jsonb WHERE slug = 'browser-vs-node' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"4QSx_g8itfE","title":"Node JS de A à Z #14 - Les modules ES et CommonJS","lang":"fr"},{"youtubeId":"I3DrifH-rJE","title":"ESM vs CommonJS in your Node Projects","lang":"en"},{"youtubeId":"lMWUqWKEGgQ","title":"Start Using ES Modules Now","lang":"en"}]'::jsonb WHERE slug = 'cjs-vs-esm' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"3Y4Bw7_xXIc","title":"NPM #6 - Qu''est-ce que le fichier package.json et le dossier node_modules ?","lang":"fr"},{"youtubeId":"nkp_xhM0L0s","title":"Comprendre le dossier node_modules de NodeJS","channel":"Grafikart","lang":"fr"},{"youtubeId":"qcITXvs6shU","title":"package.json Demystified - The ''Type'' Keyword","lang":"en"}]'::jsonb WHERE slug = 'package-json' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"BhB3HuJ9vq4","title":"Cours Node.js #5 - Gestion des fichiers (fs)","lang":"fr"},{"youtubeId":"heDjstLEXS4","title":"Node JS de A à Z #27 - Le module fs/promises","lang":"fr"},{"youtubeId":"A1vr8vtTHyk","title":"Node.js FS Module with Promises: Write, Read, Update & Delete Files","lang":"en"}]'::jsonb WHERE slug = 'fs-promises' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"Uaj3ToRAuCM","title":"Path Module in Node.js : __filename, __dirname, path.join()","lang":"en"},{"youtubeId":"9-lqk6GfdN4","title":"ES Modules in Node.js - __dirname & __filename Fixes, Top-Level Await","lang":"en"}]'::jsonb WHERE slug = 'path' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"-u64j9SbMFI","title":"Node.js : Créer un serveur avec node:http","lang":"fr"},{"youtubeId":"5oqK_ePpyYE","title":"Node.js - Créer un serveur HTTP et écouter les requêtes","lang":"fr"},{"youtubeId":"qNDUQ-hLeoE","title":"How to Create a Simple HTTP Server in Node.js (HTTP Module Basics)","lang":"en"}]'::jsonb WHERE slug = 'http-natif' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"UUhqbcBs0-g","title":"Node.js #17 - process.argv (arguments en ligne de commande)","lang":"fr"},{"youtubeId":"6qMn3ef_6oU","title":"How to Use Command Line Arguments (Flags) in NodeJS","lang":"en"},{"youtubeId":"L0dNCfd0HTs","title":"Listen for SIGINT and SIGTERM Events in a Script","lang":"en"}]'::jsonb WHERE slug = 'process' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"HkgKfzrP_kE","title":"Use Environment Files (.env) in Node.js 20.6+ (--env-file)","lang":"en"},{"youtubeId":"T_OlUb5YwaU","title":"You DON''T NEED Dotenv to Handle Environment Variables Anymore!","lang":"en"},{"youtubeId":"XBdoRrK8CrE","title":"How to use environment variables with Node.js - dotenv tutorial","lang":"en"}]'::jsonb WHERE slug = 'env-vars' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"eiC58R16hb8","title":"JavaScript Visualized - Event Loop, Web APIs, (Micro)task Queue","channel":"Lydia Hallie","lang":"en"},{"youtubeId":"HlebgIgOfHM","title":"Phases of Event Loop in Node.js (Advanced Node.js)","lang":"en"},{"youtubeId":"paI6J8my3Yw","title":"This is how the Node.js Event Loop really works","lang":"en"}]'::jsonb WHERE slug = 'event-loop-node' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"NhHXcsR2KN4","title":"setImmediate() vs setTimeout() vs process.nextTick()","lang":"en"},{"youtubeId":"5FoIxj7GHxU","title":"Understanding setImmediate vs. process.nextTick in Node.js","lang":"en"}]'::jsonb WHERE slug = 'next-tick' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"pQZ6zeBcBcs","title":"Comment utiliser emit pour gérer des événements","lang":"fr"},{"youtubeId":"wINRm5arVlM","title":"Node.js \"Event Emitters\" Explained","lang":"en"}]'::jsonb WHERE slug = 'event-emitter' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"O2v_ghJlVAA","title":"JavaScript côté serveur : Les streams","channel":"Grafikart","lang":"fr"},{"youtubeId":"iZCYQSq9IQM","title":"NodeJS (4/6) : Les Streams","channel":"Grafikart","lang":"fr"},{"youtubeId":"p6A1q_uFeo4","title":"Node.js Streams Part 1 - Read/Write Streams, Backpressure and Pipes","lang":"en"}]'::jsonb WHERE slug = 'streams' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"QeFWvq7WW7s","title":"Buffers in Node.js EXPLAINED! Alloc, Encoding & Performance Tips","lang":"en"},{"youtubeId":"WEGHqsF3xP8","title":"Character Sets and Encoding | UTF-8 in Node.js","lang":"en"}]'::jsonb WHERE slug = 'buffer' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"8PVc-9wfQ2A","title":"Écrire du code NodeJS sécurisé #4 - La gestion des erreurs","lang":"fr"},{"youtubeId":"NlYxiALRkMQ","title":"Node.js Async/Await Error Handling: Try-Catch for Beginners","lang":"en"},{"youtubeId":"wsoQ-fgaoyQ","title":"5 Async + Await Error Handling Strategies","lang":"en"}]'::jsonb WHERE slug = 'error-async' AND module_id = 'm16-nodejs-runtime';
+UPDATE skills SET videos = '[{"youtubeId":"4N00XnEcNWE","title":"Modules in Node: CommonJS and ESM (node: builtin imports)","lang":"en"}]'::jsonb WHERE slug = 'node-prefix' AND module_id = 'm16-nodejs-runtime';
+
+-- m17-fastify-rest-api
+UPDATE skills SET videos = '[{"youtubeId":"YnWjki-M-7A","title":"Apprendre le JavaScript : Découverte de Fastify","channel":"Grafikart","lang":"fr"},{"youtubeId":"a9uEhq1uwNk","title":"Fastify: The Node.js Framework You Didn''t Know You Needed","lang":"en"}]'::jsonb WHERE slug = 'framework-why' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"eQgWsme6VdI","title":"Express.js or Fastify? Choose the Best in 2025","lang":"en"},{"youtubeId":"EFoaqR_SKdQ","title":"Express vs Fastify vs Hono: Node.js Performance Comparison (2024)","lang":"en"},{"youtubeId":"PUXW6UEAW7k","title":"Why aren''t you using Fastify? Or Koa? Or NestJS?","lang":"en"}]'::jsonb WHERE slug = 'fastify-vs-others' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"o2LqTcH8IhE","title":"LiveCoding NodeJS : Découverte de Fastify","channel":"Grafikart","lang":"fr"},{"youtubeId":"GWPhASMhmVQ","title":"How To Set Up Fastify With TypeScript and Automatic Reload","lang":"en"},{"youtubeId":"btGtOue1oDA","title":"Fastify Course - The Performant Node.js Web Framework (setup)","lang":"en"}]'::jsonb WHERE slug = 'setup' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"7p6J6sCKh3E","title":"Building a REST API in Fastify | Node.js Tutorial","lang":"en"},{"youtubeId":"xdzqcG5dS7Q","title":"Fastify Complete Course - learn how to build REST APIs","lang":"en"}]'::jsonb WHERE slug = 'routing' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"haJq2YXLgmk","title":"Pourquoi il FAUT utiliser Zod dans ton application TypeScript","lang":"fr"},{"youtubeId":"L6BE-U3oy80","title":"Learn Zod in 30 Minutes","channel":"Web Dev Simplified","lang":"en"},{"youtubeId":"IcyjtsAdKRs","title":"Zod Validation Tutorial for Beginners [FULL COURSE in 40 Minutes!]","lang":"en"}]'::jsonb WHERE slug = 'schemas-zod' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"ZPa9I_pvRU0","title":"Stop Writing Types AND Validation (Use Zod)","lang":"en"},{"youtubeId":"siQfpESFOhI","title":"Zod Tutorial: Auto-Generate Schemas & Validate API Responses in TypeScript","lang":"en"}]'::jsonb WHERE slug = 'ts-inference' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"9GmYxoEBqtg","title":"Master Fastify (Prisma, Hooks, Decorators, Plugins)","lang":"en"},{"youtubeId":"ZHLB4StAqPM","title":"Learn Just Enough Fastify to be Productive","lang":"en"}]'::jsonb WHERE slug = 'lifecycle-hooks' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"U_VTjYtALg4","title":"Fastify Plugins | Register and Decorate API","lang":"en"},{"youtubeId":"9GmYxoEBqtg","title":"Master Fastify (Hooks, Decorators, Plugins)","lang":"en"},{"youtubeId":"17qoZq2Eq5U","title":"Learning Fastify: Part 3 - Creating my first plugin","lang":"en"}]'::jsonb WHERE slug = 'plugins' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"QnAodcAz9kI","title":"Sécuriser une API - #4/6 - Le CORS","lang":"fr"},{"youtubeId":"Qkd3gABsCtk","title":"Sécuriser une API - #5/6 - HELMET","lang":"fr"},{"youtubeId":"mQWFVLBdhrs","title":"Fastify Plugins: Turbocharge Your REST API","lang":"en"}]'::jsonb WHERE slug = 'core-plugins' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"GQ8RyFBCods","title":"Fastify - Error Handling","lang":"en"}]'::jsonb WHERE slug = 'error-handler' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"4fD5vXljaSc","title":"Mastering Pino: The Definitive Guide to Logging in Node.js","lang":"en"},{"youtubeId":"vUDH8OX5DTM","title":"Fastify Application Development | Logging with Pino.js","lang":"en"}]'::jsonb WHERE slug = 'logger-pino' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"bqpXOT5mwW4","title":"Tutoriel REST : comprendre REST","channel":"Grafikart","lang":"fr"},{"youtubeId":"UQwjytQzoqE","title":"API REST JSON - Explication et exemples","lang":"fr"},{"youtubeId":"9rIFUDCcRm8","title":"HTTP Status Codes - API Course","lang":"en"}]'::jsonb WHERE slug = 'rest-conventions' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"MFZi2dcm-QE","title":"Node JS : 4 architectures différentes de projet Node JS","lang":"fr"},{"youtubeId":"ff62ijMbSLI","title":"Build Scalable Node.js Apps: Mastering the Repository Pattern with TypeScript","lang":"en"},{"youtubeId":"cdnYINPRe3Y","title":"Enterprise Node.js Refactor: Routes, Controllers, Services (Deep Guide)","lang":"en"}]'::jsonb WHERE slug = 'layers' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"gBgO8XSW7GM","title":"Fastify - Swagger","lang":"en"},{"youtubeId":"EV4Kv6O6FEA","title":"Easily Build Swagger Docs with Fastify Zod & Fastify Swagger","lang":"en"}]'::jsonb WHERE slug = 'swagger' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"ppc9xxkGDM0","title":"This Testing Mistake Costs Node.js Developers Thousands","lang":"en"},{"youtubeId":"gq8ZQrBJb2M","title":"Test your Fastify REST API With Node Tap","lang":"en"}]'::jsonb WHERE slug = 'app-inject' AND module_id = 'm17-fastify-rest-api';
+UPDATE skills SET videos = '[{"youtubeId":"Nd1GJvj271Y","title":"Hosting Node.js Apps For Free | Render And Railway Tutorial","lang":"en"},{"youtubeId":"-OjPhPV6Rjs","title":"Here''s how to Gracefully Shutdown your apps (with Node.js examples)","lang":"en"}]'::jsonb WHERE slug = 'deploy' AND module_id = 'm17-fastify-rest-api';
+
+-- m18-sql-postgresql
+UPDATE skills SET videos = '[{"youtubeId":"l3AM9_wRkLo","title":"SQL et bases de données relationnelles : tout comprendre depuis zéro","lang":"fr"},{"youtubeId":"5X_g8MAESjg","title":"Clé étrangère d''une base de données (relations entre tables)","lang":"fr"},{"youtubeId":"dKcJrVuYjig","title":"Transactions ACID pour les bases de données relationnelles","lang":"fr"}]'::jsonb WHERE slug = 'relational-concept' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"eHRCdpmf6m4","title":"PostgreSQL en 3 minutes","lang":"fr"},{"youtubeId":"4M5P7HTVjjQ","title":"SQL & PostgreSQL : Tutoriel complet pour débutants (installation + psql)","channel":"WeWantCode","lang":"fr"},{"youtubeId":"Hs9Fh1fr5s8","title":"Run Postgres in a Docker Container (Easiest PostgreSQL Setup)","lang":"en"}]'::jsonb WHERE slug = 'setup-pg' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"jaNqlwlYzFM","title":"Création des tables via psql et pgAdmin 4 — PostgreSQL #5","lang":"fr"},{"youtubeId":"Ivad1Wl2ios","title":"Modifier la structure d''une table — ALTER TABLE (pgAdmin 4) — PostgreSQL #27","lang":"fr"},{"youtubeId":"qw--VYLpxG4","title":"Learn PostgreSQL Tutorial - Full Course (section DDL)","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'ddl' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"IS1e9tzkfaA","title":"SQL : apprenez les 4 requêtes magiques d''un CRUD (SELECT/INSERT/UPDATE/DELETE)","lang":"fr"},{"youtubeId":"bjGCpGzAHCk","title":"Bases de Données — SQL : INSERT, DELETE & UPDATE","lang":"fr"},{"youtubeId":"AHHGjL5ZPr0","title":"Tutoriel français SQL : requêtes SELECT et vues de base","lang":"fr"}]'::jsonb WHERE slug = 'dml-basic' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"6alT6svFg4E","title":"Les types de données — Comprendre le SQL","lang":"fr"},{"youtubeId":"kCK6VD1rzT0","title":"Understanding Data Types in PostgreSQL (CHAR, VARCHAR, TEXT, and More)","lang":"en"},{"youtubeId":"gnTMq2E8X2Q","title":"Data Types in PostgreSQL: UUID Data Type","lang":"en"}]'::jsonb WHERE slug = 'types' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"fBCKn9AHsKw","title":"Les contraintes en SQL : PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK","lang":"fr"},{"youtubeId":"9qNXA7UVRQg","title":"Langage SQL — CREATE / types de données / contraintes SQL / DROP","lang":"fr"}]'::jsonb WHERE slug = 'constraints' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"hrHrvPQG4NI","title":"Apprendre SQL : les JOINTURES (INNER, LEFT, RIGHT, FULL, CROSS, SELF) — tutoriel complet","lang":"fr"},{"youtubeId":"0vJoRP6_5tI","title":"Apprendre et maîtriser SQL : clés étrangères et jointures","channel":"Grafikart","lang":"fr"},{"youtubeId":"i_aZCElvJxI","title":"Postgres : connaissez-vous les jointures LEFT et RIGHT JOIN ? (exemple concret)","lang":"fr"}]'::jsonb WHERE slug = 'joins' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"SbSzh4HDrI4","title":"Apprendre SQL : fonctions d''agrégation & GROUP BY (SUM, AVG, COUNT, MIN, MAX, HAVING)","lang":"fr"},{"youtubeId":"FhvTxTGGrQc","title":"Les fonctions d''agrégation — SQL (SUM/COUNT/AVG/MIN/MAX) via pgAdmin 4 — PostgreSQL #16","lang":"fr"}]'::jsonb WHERE slug = 'aggregations' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"NkdBYPodiT4","title":"Apprendre et maîtriser SQL : requêtes imbriquées (sous-requêtes)","channel":"Grafikart","lang":"fr"},{"youtubeId":"Cw-TlkPKKFk","title":"Langage SQL : les sous-requêtes dans les clauses SELECT et FROM","lang":"fr"}]'::jsonb WHERE slug = 'subqueries' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"EQadZsOUSbk","title":"Sous-requêtes SQL & CTE (WITH) : écrire des requêtes propres et professionnelles","lang":"fr"},{"youtubeId":"KSVeW55vuec","title":"Maîtriser les CTE SQL : expressions de table communes expliquées","lang":"fr"},{"youtubeId":"K1WeoKxLZ5o","title":"Advanced SQL Tutorial | CTE (Common Table Expression)","lang":"en"}]'::jsonb WHERE slug = 'cte' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"pbyEWVvfQ20","title":"SQL pour les débutants : les fonctions de partition avec OVER PARTITION BY (exemple simple)","lang":"fr"},{"youtubeId":"rIcB4zMYMas","title":"SQL Window Functions Clearly Explained (PARTITION BY, ROW_NUMBER, RANK, DENSE_RANK)","lang":"en"},{"youtubeId":"XO1WnmJs9RI","title":"The Magic of Window Functions in Postgres","lang":"en"}]'::jsonb WHERE slug = 'window' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"dKcJrVuYjig","title":"Transactions ACID pour les bases de données relationnelles","lang":"fr"},{"youtubeId":"Oy2NpxfV9ok","title":"Understand SQL Transactions in 5 Minutes (BEGIN, COMMIT, ROLLBACK)","lang":"en"},{"youtubeId":"DvJq4L41ru0","title":"How to implement Transactions (COMMIT, ROLLBACK, Savepoint) in PostgreSQL","lang":"en"},{"youtubeId":"oNCEXY83yuQ","title":"PostgreSQL Transaction Isolation Levels / Concurrency Explained","lang":"en"}]'::jsonb WHERE slug = 'transactions' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"r4pTomhzeok","title":"Optimisation base de données #02 : index B-Tree","lang":"fr"},{"youtubeId":"_HG2eB27j00","title":"PostgreSQL indexes — B-Tree, GIN, BRIN. What''s the difference? Easy explanation","lang":"en"},{"youtubeId":"3o1l9tGuIHQ","title":"How to create a GIN Index? — Deep Dive Into PostgreSQL Indexes","lang":"en"}]'::jsonb WHERE slug = 'indexes' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"Mll5SqR4RYk","title":"Understand PostgreSQL query plan in 10 minutes","lang":"en"},{"youtubeId":"GmX8tjT7UcQ","title":"Understanding EXPLAIN and EXPLAIN ANALYZE in PostgreSQL","lang":"en"},{"youtubeId":"whHvqayU38c","title":"Sequential vs Index Scan — PostgreSQL Performance Tuning","lang":"en"}]'::jsonb WHERE slug = 'explain' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"mAMOWvbxMkE","title":"Normalisation des bases de données relationnelles — Introduction","lang":"fr"},{"youtubeId":"j1fB8RKAZJc","title":"Normalisation : première forme normale (1FN)","lang":"fr"},{"youtubeId":"nzD-cXS3bcM","title":"Normalisation : deuxième forme normale (2FN)","lang":"fr"},{"youtubeId":"ThuKCep7hwE","title":"Normalisation : troisième forme normale (3FN)","lang":"fr"}]'::jsonb WHERE slug = 'normalization' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"gMyLp2KyAhU","title":"NodeJS — Connect to Postgres (Pool, paramètres, Query, refactor)","lang":"en"},{"youtubeId":"tS264hwZn0Y","title":"node-postgres Connection Pool","lang":"en"},{"youtubeId":"Azo9tDUtC9s","title":"SQL Injection Explained by Example with Express and PostgreSQL","lang":"en"}]'::jsonb WHERE slug = 'pg-driver' AND module_id = 'm18-sql-postgresql';
+UPDATE skills SET videos = '[{"youtubeId":"nxeUiRz4G-M","title":"How to store and query JSON data in Postgres (JSONB)","lang":"en"},{"youtubeId":"aYqZXa2byrI","title":"JSONB Tricks: Operators, Indexes, And When To (NOT) Use It","lang":"en"},{"youtubeId":"EwFjETYge9I","title":"Faster queries with GIN index on JSONB columns in Postgres","lang":"en"}]'::jsonb WHERE slug = 'jsonb' AND module_id = 'm18-sql-postgresql';
+
+-- m19-drizzle-orm
+UPDATE skills SET videos = '[{"youtubeId":"3PbaEP7fpsM","title":"Qu''est-ce qu''un ORM ?","lang":"fr"},{"youtubeId":"DXk73GfyV9I","title":"Prisma, Doctrine : Pourquoi utiliser un ORM ?","lang":"fr"},{"youtubeId":"i_mAHOhpBSA","title":"Drizzle ORM in 100 Seconds","channel":"Fireship","lang":"en"},{"youtubeId":"hIYNOiZXQ7Y","title":"Learn Drizzle ORM in 13 mins (crash course)","lang":"en"}]'::jsonb WHERE slug = 'orm-concept' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"dFmFBgroZa4","title":"Drizzle vs Prisma : Quel ORM TypeScript choisir ?","lang":"fr"},{"youtubeId":"Fceni6cdYOk","title":"Drizzle vs Prisma: Which ORM is right for YOU?","lang":"en"},{"youtubeId":"cTu9-C2rd-0","title":"Is Drizzle Really Better Than Prisma?","lang":"en"}]'::jsonb WHERE slug = 'drizzle-vs-prisma' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"mMv7nTf0qaw","title":"Drizzle ORM : comment l''installer et démarrer proprement","channel":"Mike Codeur","lang":"fr"},{"youtubeId":"a1DPO7siG4s","title":"Drizzle ORM Tutorial - Project Setup (Part 1)","lang":"en"},{"youtubeId":"7-NZ0MlPpJA","title":"Learn Drizzle In 60 Minutes","channel":"Web Dev Simplified","lang":"en"}]'::jsonb WHERE slug = 'setup-drizzle' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"fDjZOZ1Hgf8","title":"Drizzle ORM #1 - Setup, Schema, Migrations","lang":"en"},{"youtubeId":"ZYe-5wbLP4s","title":"Drizzle ORM Course Part 2 - Schema And Push Command","lang":"en"},{"youtubeId":"vLze97zZKsU","title":"Complex Schema Design with Drizzle ORM | Common Patterns","lang":"en"}]'::jsonb WHERE slug = 'schema-ts' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"UHx6-p_Touc","title":"Drizzle ORM Tutorial - Queries, Mutations, Joins [Crash Course 2024]","lang":"en"},{"youtubeId":"R4ZgTB-1wEg","title":"Drizzle ORM #4 - All Query Filters","lang":"en"},{"youtubeId":"vyU5mJGCJMw","title":"Drizzle ORM Tutorial - Full Course for Beginners","lang":"en"}]'::jsonb WHERE slug = 'query-builder' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"HR8v8Y1UOnQ","title":"Drizzle ORM Complex Queries (Joins)","lang":"en"},{"youtubeId":"uUryANJtv5c","title":"How to join tables and build a complex query using Drizzle ORM","lang":"en"}]'::jsonb WHERE slug = 'drizzle-joins' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"M79FrQdglUo","title":"Drizzle ORM #5 - One To One Relation","lang":"en"},{"youtubeId":"PmCHk-ADJq8","title":"Drizzle ORM #6 - One To Many Relation","lang":"en"},{"youtubeId":"QdKdvb6iIXs","title":"Drizzle ORM #7 - Many-To-Many Relations","lang":"en"}]'::jsonb WHERE slug = 'relations' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"KqI1fkzIuQI","title":"Drizzle ORM Course Part 5 - Relational Queries","lang":"en"},{"youtubeId":"szh7jdCwZW0","title":"Drizzle relations are amazing // Stop using manual joins","lang":"en"},{"youtubeId":"N4-VDia4NcI","title":"Drizzle''s new relational API is nuts!","lang":"en"}]'::jsonb WHERE slug = 'relational-queries' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"fTQ4b61T28A","title":"Database Transactions: Safest Way to Insert Using Drizzle ORM","lang":"en"},{"youtubeId":"A2a3jznxvUs","title":"Drizzle ORM Full Course (transactions)","lang":"en"}]'::jsonb WHERE slug = 'transactions-drizzle' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"dHTGEQnogPw","title":"How database migrations work when using Drizzle ORM","lang":"en"},{"youtubeId":"lmTlR0R8MQU","title":"Drizzle ORM Tutorial #6 - Schema Migrations with Drizzle","lang":"en"},{"youtubeId":"wNygB8DhR3k","title":"Drizzle ORM Course Part 4 - SQL-like And Drizzle Studio","lang":"en"}]'::jsonb WHERE slug = 'drizzle-kit' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"ff62ijMbSLI","title":"Build Scalable Node.js Apps: Mastering the Repository Pattern with TypeScript","lang":"en"},{"youtubeId":"XU0w62XQjpA","title":"Service Repository Pattern in TypeScript (Build Cleaner Backends!)","lang":"en"}]'::jsonb WHERE slug = 'repo-pattern' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"O9zxsSl9zgE","title":"This Drizzle ORM feature is a game changer! (prepared statements)","lang":"en"}]'::jsonb WHERE slug = 'prepared' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"bg6KyucKd88","title":"Next.js with React-Hook-Form, Drizzle-Zod & ShadCN/ui","lang":"en"},{"youtubeId":"1hafPV81jk4","title":"Zod Tutorial: The Ultimate Validation","lang":"en"}]'::jsonb WHERE slug = 'drizzle-zod' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"mJrrJEIQxOQ","title":"The N+1 Query Problem with ORM, explained","lang":"en"},{"youtubeId":"wNygB8DhR3k","title":"Drizzle ORM Course Part 4 - SQL-like And Drizzle Studio","lang":"en"}]'::jsonb WHERE slug = 'logger-sql' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"0My0On3lvTc","title":"Tuto / Cours sur Prisma : L''ORM parfait pour tes applications","lang":"fr"},{"youtubeId":"akP9E1vURBU","title":"Apprendre à utiliser Prisma avec Next.js","lang":"fr"},{"youtubeId":"RebA5J-rlwg","title":"Learn Prisma In 60 Minutes","channel":"Web Dev Simplified","lang":"en"}]'::jsonb WHERE slug = 'prisma-readonly' AND module_id = 'm19-drizzle-orm';
+UPDATE skills SET videos = '[{"youtubeId":"yodr3CGaSos","title":"SQL Optimistic vs Pessimistic Locking","lang":"en"},{"youtubeId":"3wdCi9E7EmY","title":"Mastering Data Integrity with Audit Trails and Soft Deletes","lang":"en"}]'::jsonb WHERE slug = 'advanced-patterns' AND module_id = 'm19-drizzle-orm';
+
+-- m20-securite-auth
+UPDATE skills SET videos = '[{"youtubeId":"xe9LN2w7hfE","title":"OWASP Top 10 2021 : les 10 vulnérabilités web les plus critiques (exemples inclus)","lang":"fr"},{"youtubeId":"Q5KB2KrNzlA","title":"Failles de sécurité expliquées - TOP 10 OWASP","lang":"fr"},{"youtubeId":"jvHibPtVglw","title":"Top 10 OWASP 2023","lang":"fr"},{"youtubeId":"hryt-rCLJUA","title":"OWASP Top 10 2021 - The List and How You Should Use It","lang":"en"}]'::jsonb WHERE slug = 'owasp-top10' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"UmKZ2ajPhKI","title":"Cybersécurité : Authentification vs Autorisation","lang":"fr"},{"youtubeId":"oUz60SCrk9k","title":"Les concepts avancés d''authentification et d''autorisation expliqués simplement (Julien Topçu)","lang":"fr"},{"youtubeId":"I48cIcCdII8","title":"Authentication vs Authorization explained","lang":"en"}]'::jsonb WHERE slug = 'auth-vs-authz' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"Kb4mAd9Kizc","title":"Comment les sites web sécurisent les mots de passe ? Hashage et salage expliqués","lang":"fr"},{"youtubeId":"_XxrfGrdrB8","title":"Comment sécuriser des mots de passe avec Bcrypt ? (Node.js)","lang":"fr"},{"youtubeId":"W56slyAbTo4","title":"Crypter son mot de passe en PHP avec Argon2id","lang":"fr"},{"youtubeId":"8ZtInClXe1Q","title":"Password Hashing, Salts, Peppers | Explained!","lang":"en"}]'::jsonb WHERE slug = 'hash-passwords' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"5qNfPBcogCs","title":"C''est quoi un JWT ?","lang":"fr"},{"youtubeId":"S-xBAo47W58","title":"Tutoriel : Découverte du JWT","channel":"Grafikart","lang":"fr"},{"youtubeId":"V27fNfRNHkg","title":"Introduction au JWT (Json Web Token) : principe de fonctionnement","lang":"fr"},{"youtubeId":"AmIo8UVQ2vI","title":"Les JWT et les bases de l''authentification avec Express","lang":"fr"}]'::jsonb WHERE slug = 'jwt' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"vNxfPctMFf4","title":"Local Storage vs Http Only Cookies","lang":"en"},{"youtubeId":"vq861XoZI9k","title":"Does Storing JWTs In HTTP Only Cookies Stop XSS Attacks?","lang":"en"},{"youtubeId":"M6N7gEZ-IUQ","title":"Why LocalStorage is Vulnerable to XSS (and cookies are too)","lang":"en"}]'::jsonb WHERE slug = 'token-storage' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"Tx2jTih_jr0","title":"JWT - Ajout d''un refresh token dans un projet Symfony 5","lang":"fr"},{"youtubeId":"_vecyDnQJeo","title":"Refresh Tokens Explained","lang":"en"},{"youtubeId":"s-4k5TcGKHg","title":"Refresh Token Rotation and Reuse Detection in Node.js JWT Authentication","lang":"en"}]'::jsonb WHERE slug = 'refresh-tokens' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"dnqccNyklPA","title":"Qu''est-ce que OAuth2 expliqué simplement ?","lang":"fr"},{"youtubeId":"YdShQveywpo","title":"OAuth 2.1 expliqué simplement (même si tu n''es pas dev) (Julien Topçu)","lang":"fr"},{"youtubeId":"y9gtJYETCe8","title":"OAuth : le protocole d''autorisation indispensable","lang":"fr"},{"youtubeId":"996OiexHze0","title":"OAuth 2.0 Explained","lang":"en"}]'::jsonb WHERE slug = 'oauth-oidc' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"v4ODdfBujvM","title":"Tutoriel HTML/CSS/JS - Introduction aux CSP","lang":"fr"},{"youtubeId":"uMsj7X3KQV0","title":"Protéger votre application avec l''en-tête Content Security Policy (L. Brunet)","lang":"fr"},{"youtubeId":"-LjPRzFR5f0","title":"Content Security Policy Explained","lang":"en"}]'::jsonb WHERE slug = 'csp' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"XBuabJP7Jc4","title":"HTTPS vs HSTS","lang":"fr"},{"youtubeId":"hNlPFCLcOZ4","title":"La sécurité avec les headers HTTP : tour d''horizon des attaques et défenses (Mathieu Humbert)","lang":"fr"},{"youtubeId":"4bQeGUzHpOE","title":"HTTP Secure Headers for Web App Security | CORS, CSP, HSTS and more","lang":"en"}]'::jsonb WHERE slug = 'headers-security' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"irpWV4effNE","title":"Comprendre le CORS","channel":"Grafikart","lang":"fr"},{"youtubeId":"seLMCPVZLgw","title":"Le problème des CORS... Comment résoudre l''erreur CORS","lang":"fr"},{"youtubeId":"tcLW5d0KAYE","title":"CORS, Preflight Request, OPTIONS Method | Access Control Allow Origin Error Explained","lang":"en"}]'::jsonb WHERE slug = 'cors-strict' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"UxmXhnrYv8k","title":"Tout ce qu''il faut savoir sur les failles CSRF en 5 minutes","lang":"fr"},{"youtubeId":"xsnBRYZnBUc","title":"Sécuriser ses applications web : Attaques CSRF","channel":"Grafikart","lang":"fr"},{"youtubeId":"58y6772MHKw","title":"Tutoriel PHP : Sécurité, Les Failles CSRF","lang":"fr"},{"youtubeId":"vRBihr41JTo","title":"Cross Site Request Forgery","channel":"Computerphile","lang":"en"}]'::jsonb WHERE slug = 'csrf' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"Bkg7JoBs2ac","title":"Tout savoir sur la faille XSS - la faille la plus exploitée par les pirates","lang":"fr"},{"youtubeId":"fbw_nkSlNco","title":"Sécuriser ses applications web : Les failles XSS","channel":"Grafikart","lang":"fr"},{"youtubeId":"E47rY21gXSY","title":"Vulnérabilité XSS (Cross-site-scripting) : explication et démo","lang":"fr"},{"youtubeId":"L5l9lSnNMxg","title":"Cracking Websites with Cross Site Scripting","channel":"Computerphile","lang":"en"}]'::jsonb WHERE slug = 'xss' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"EjCiSmWKn-c","title":"Comprendre les injections SQL","lang":"fr"},{"youtubeId":"bHmiPghYZtA","title":"Sécuriser ses applications web : Les injections SQL","channel":"Grafikart","lang":"fr"},{"youtubeId":"tfFwY39wd94","title":"Base de données : Requêtes préparées","channel":"Grafikart","lang":"fr"},{"youtubeId":"ciNHn38EyRc","title":"SQL Injection","channel":"Computerphile","lang":"en"}]'::jsonb WHERE slug = 'sql-injection' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"q4AYT6-onpw","title":"Sécuriser une API - #3/6 - 1/3 Rate Limit","lang":"fr"},{"youtubeId":"EU4uLamrCi4","title":"Sécuriser une API - #3/6 - 2/3 Rate Limit","lang":"fr"},{"youtubeId":"X3G8gdh9GKE","title":"System Design: Rate Limiting Algorithms | API Rate Limiter","lang":"en"}]'::jsonb WHERE slug = 'rate-limit' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"xb28A3blj_k","title":"NodeJs : Les variables d''environnement | dotenv","lang":"fr"},{"youtubeId":"C4cfTFglgJc","title":"Apprendre Node.js #11 - Les variables d''environnement","lang":"fr"},{"youtubeId":"M5IkdUunf8g","title":"Stop putting secrets in .env","lang":"en"}]'::jsonb WHERE slug = 'secrets' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"k_ScPsb3WSk","title":"SSL/TLS pour les nuls","channel":"Julien Aubert","lang":"fr"},{"youtubeId":"XBuabJP7Jc4","title":"HTTPS vs HSTS","lang":"fr"}]'::jsonb WHERE slug = 'https-tls' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"KnCeZvWSZjQ","title":"1 minute pour mieux comprendre le principe de la double authentification","lang":"fr"},{"youtubeId":"SKtc5Lrh59Y","title":"Tutoriel PHP : Authentification 2 facteurs, TOTP","lang":"fr"},{"youtubeId":"e-1Yh8iH8jk","title":"Double authentification en PHP (Google Authenticator TOTP)","lang":"fr"},{"youtubeId":"0mvCeNsTa1g","title":"How TOTP / Two-Factor Authentication works","lang":"en"}]'::jsonb WHERE slug = '2fa' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"TQeKvw2FBqU","title":"Secure Your Code: Auto-Fix Vulnerabilities with Dependabot (GitHub Tutorial)","lang":"en"},{"youtubeId":"QflNpG3VuGY","title":"Find Security Vulnerabilities With npm audit","lang":"en"},{"youtubeId":"ezfFg1sdDOY","title":"Secure Your Code from Dev to Deployment with Snyk: SAST, SCA & DAST","lang":"en"}]'::jsonb WHERE slug = 'audit' AND module_id = 'm20-securite-auth';
+UPDATE skills SET videos = '[{"youtubeId":"hHaOxbyqy44","title":"PII data leaks: Identifying personal information in logs with CodeQL","lang":"en"},{"youtubeId":"Zpj8pG2APJI","title":"PII Discovery and Remediation Best Practices","lang":"en"}]'::jsonb WHERE slug = 'logs-redact' AND module_id = 'm20-securite-auth';
+
+-- m21-tests
+UPDATE skills SET videos = '[{"youtubeId":"Nxbt6j5sSu0","title":"Tests Unitaires en JavaScript (1/11) : Présentation","channel":"Grafikart","lang":"fr"},{"youtubeId":"XrXkbnfCYzU","title":"QU''EST CE QU''UN TEST UNITAIRE ? (exemple en JavaScript)","lang":"fr"},{"youtubeId":"u6QfIXgjwGQ","title":"Why You Should Write Tests","lang":"en"}]'::jsonb WHERE slug = 'why-test' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"lbx0WzZsSwU","title":"Pyramide de test : les 4 niveaux de test","lang":"fr"},{"youtubeId":"5Q2PHSEvU_w","title":"Test unitaire vs test fonctionnel vs test intégration (exemple réel)","lang":"fr"},{"youtubeId":"Fha2bVoC8SE","title":"The Testing Pyramid Explained","lang":"en"}]'::jsonb WHERE slug = 'pyramid' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"W5vD3PQUp3U","title":"TDD en Action : Red, Green, Refactor expliqué !","lang":"fr"},{"youtubeId":"9VVCUhcV2gA","title":"Unit Testing (Vitest) Tutorial #7 - Test Driven Development","channel":"Net Ninja","lang":"en"},{"youtubeId":"Jv2uxzhPFl4","title":"Test Driven Development // Fun TDD Introduction with JavaScript","lang":"en"}]'::jsonb WHERE slug = 'tdd' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"AqOTGi9UVLY","title":"Tester votre code JavaScript avec Vitest","lang":"fr"},{"youtubeId":"kqBTL_YWbuE","title":"Comment setup des tests React avec Vitest - Guide pour débutants","lang":"fr"},{"youtubeId":"XdDZKeM5_pQ","title":"Unit Testing (Vitest) Tutorial #1 - What is Unit Testing?","channel":"Net Ninja","lang":"en"},{"youtubeId":"9Op6lK4wnRE","title":"Unit Testing (Vitest) Tutorial #2 - Writing Your First Test","channel":"Net Ninja","lang":"en"}]'::jsonb WHERE slug = 'vitest-basics' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"qj7nPbRgXNc","title":"Unit Testing (Vitest) Tutorial #3 - Using Different Matchers","channel":"Net Ninja","lang":"en"},{"youtubeId":"cBHwPrWTh-8","title":"Unit Testing (Vitest) Tutorial #9 - Asymmetric Matchers","channel":"Net Ninja","lang":"en"}]'::jsonb WHERE slug = 'assertions' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"dF_zUg7uCpA","title":"Tests Unitaires en JavaScript (6/11) : Spy, Mock et Stubs","channel":"Grafikart","lang":"fr"},{"youtubeId":"uX5SF94RBNI","title":"Unit Testing (Vitest) Tutorial #11 - Mock Functions","channel":"Net Ninja","lang":"en"},{"youtubeId":"XMk1sG6ndwY","title":"Unit Testing (Vitest) Tutorial #12 - Creating Spies","channel":"Net Ninja","lang":"en"}]'::jsonb WHERE slug = 'mocks' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"ZRw-xeaxn9c","title":"Apprendre React : Tester du code React","channel":"Grafikart","lang":"fr"},{"youtubeId":"BCNEkTIvIhk","title":"Formation React Testing Library : tester avec la méthode render","lang":"fr"},{"youtubeId":"JBSUgDxICg8","title":"React Testing Library Tutorial - Jest, Testing Library Basics","channel":"Net Ninja","lang":"en"}]'::jsonb WHERE slug = 'testing-library' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"YIVz3j9s1z4","title":"React Testing Library Tutorial #6 - Finding elements by role (getByRole)","lang":"en"},{"youtubeId":"Veaql3noyyo","title":"React Testing Tutorial - getByRole (tester comme un user)","lang":"en"}]'::jsonb WHERE slug = 'tl-philosophy' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"HewTP74I-Nk","title":"Tester une application React avec Vitest, React Testing Library et MSW","lang":"fr"},{"youtubeId":"Vsk0nDJ12VE","title":"MSW Mock Service Worker Tutorial","lang":"en"}]'::jsonb WHERE slug = 'msw' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"ppc9xxkGDM0","title":"How to Test Fastify & Node.js Applications","lang":"en"},{"youtubeId":"gq8ZQrBJb2M","title":"Test your Fastify REST API With Node Tap","lang":"en"}]'::jsonb WHERE slug = 'fastify-inject' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"UgF2LwlNnC8","title":"Test end to end avec Playwright","channel":"Grafikart","lang":"fr"},{"youtubeId":"BySKT0cBdvs","title":"Apprendre Playwright : écrire votre premier script de test - étape par étape","lang":"fr"},{"youtubeId":"7ApphAma11A","title":"Playwright Crash Course","lang":"en"}]'::jsonb WHERE slug = 'playwright' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"Ov9e_F8I5zc","title":"Playwright Tutorial Crash Course (Trace Viewer)","lang":"en"}]'::jsonb WHERE slug = 'playwright-traces' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"8yk7g9-Zq08","title":"Fastify Layers: A Deep Dive into Test Cases (DB & repositories)","lang":"en"}]'::jsonb WHERE slug = 'db-tests' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"67xWmbV7Hh4","title":"Le code coverage ne sert à rien ?","lang":"fr"},{"youtubeId":"tv59vLKLNws","title":"Tutoriel tests unitaires #17 - Introduction au code coverage (istanbul)","lang":"fr"}]'::jsonb WHERE slug = 'coverage' AND module_id = 'm21-tests';
+UPDATE skills SET videos = '[{"youtubeId":"ByWnpZo4u1M","title":"Let''s test: Unit testing antipatterns","lang":"en"},{"youtubeId":"ykFcQf2EAzM","title":"Testing Anti-Patterns: Workshop","lang":"en"}]'::jsonb WHERE slug = 'anti-patterns' AND module_id = 'm21-tests';
+
+-- m22-devops-deploiement
+UPDATE skills SET videos = '[{"youtubeId":"J27puPcFFQo","title":"Docker, c''est quoi ? Tuto Docker pour les nuls - Explications","channel":"cocadmin","lang":"fr"},{"youtubeId":"SXB6KJ4u5vg","title":"Docker : débuter de zéro avec Docker en français - Tutoriel 1/3","channel":"cocadmin","lang":"fr"},{"youtubeId":"Gjnup-PuquQ","title":"Docker in 100 Seconds","channel":"Fireship","lang":"en"}]'::jsonb WHERE slug = 'docker-why' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"cWkmqZPWwiw","title":"Apprendre Docker #2 - Créer ses propres images Docker (Dockerfile)","channel":"cocadmin","lang":"fr"},{"youtubeId":"Ik_mC7JSJ-A","title":"Docker - 7. Dockerfile : créer une image","channel":"Xavki","lang":"fr"},{"youtubeId":"gAkwW2tuIqE","title":"Learn Docker in 7 Easy Steps - Full Beginner''s Tutorial","channel":"Fireship","lang":"en"}]'::jsonb WHERE slug = 'dockerfile' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"tkfZGbYXVWc","title":"Docker - 17. Dockerfile : multistage build d''une image","channel":"Xavki","lang":"fr"},{"youtubeId":"8vXoMqWgbQQ","title":"Docker Multi-stage Builds Tutorial","lang":"en"}]'::jsonb WHERE slug = 'multi-stage' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"IdMp7RhFVdA","title":"Docker : manipuler les conteneurs (run, ps, exec, logs)","lang":"fr"},{"youtubeId":"akn4f0X9wnE","title":"Docker : maîtrisez les commandes de base - Run, Stop, Logs, Exec","lang":"fr"}]'::jsonb WHERE slug = 'docker-cli' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"pMAGe6nTkws","title":"Docker-compose - 1. Introduction et premier run","channel":"Xavki","lang":"fr"},{"youtubeId":"nZBq_UAqLOg","title":"Créez un fichier docker compose pour orchestrer vos conteneurs","channel":"Grafikart","lang":"fr"},{"youtubeId":"DM65_JyGxCo","title":"Docker Compose Tutorial - From Zero to Hero","channel":"TechWorld with Nana","lang":"en"}]'::jsonb WHERE slug = 'compose' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"FsvVKa639BM","title":"Docker : créer une image avec Dockerfile et la partager sur Docker Hub","lang":"fr"},{"youtubeId":"RgZyX-e6W9E","title":"Push Docker Images to GitHub Container Registry (GHCR)","lang":"en"}]'::jsonb WHERE slug = 'registries' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"DpAgmhwgnO8","title":"Devenez un héros de GitHub Actions","lang":"fr"},{"youtubeId":"R8_veQiYBjI","title":"GitHub Actions Tutorial - Basic Concepts and CI/CD Pipeline with Docker","channel":"TechWorld with Nana","lang":"en"},{"youtubeId":"Xwpi0ITkL3U","title":"Complete GitHub Actions Course - From BEGINNER to PRO","lang":"en"}]'::jsonb WHERE slug = 'github-actions' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"Ug3Gzk5NIJc","title":"GitHub Actions - Variables & Secrets","lang":"en"},{"youtubeId":"1mKJjQStGmg","title":"Secrets & Environment Variables in GitHub Actions | Secure DevOps Tutorial","lang":"en"}]'::jsonb WHERE slug = 'secrets-vars' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"RoBy0ZrCWSQ","title":"Intégration Continue et Couverture de Test avec GitHub Actions et Codecov.io","channel":"Grafikart","lang":"fr"},{"youtubeId":"YLtlz88zrLg","title":"CI/CD Tutorial using GitHub Actions - Automated Testing & Deployments","lang":"en"}]'::jsonb WHERE slug = 'ci-pipeline' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"YLtlz88zrLg","title":"CI/CD Tutorial using GitHub Actions - Automated Testing & Deployments","lang":"en"},{"youtubeId":"ejAuHlParNs","title":"Master GitHub Actions & GHCR: Auto-Push Docker Images (Zero to Hero DevOps)","lang":"en"}]'::jsonb WHERE slug = 'cd-pipeline' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"EqlLy9PfWLs","title":"Déployer vos services docker sans effort avec Coolify et Dokploy","lang":"fr"},{"youtubeId":"lLg0WLTSLXo","title":"Vercel vs Netlify vs Render (2025) - Which One Is BEST?","lang":"en"}]'::jsonb WHERE slug = 'paas' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"Nd1GJvj271Y","title":"Hosting Node.js Apps For Free | Render And Railway Tutorial","lang":"en"},{"youtubeId":"EqlLy9PfWLs","title":"Déployer vos services docker sans effort avec Coolify (self-host VPS)","lang":"fr"},{"youtubeId":"1dFto3Um4y8","title":"Deploying your Node.js (with Postgres DB) Application on Railway","lang":"en"}]'::jsonb WHERE slug = 'deploy-fastify' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"EkI-ztdZTVs","title":"Next JS de A à Z - Déployer une application Next JS avec Vercel","lang":"fr"},{"youtubeId":"kXtWjQowvVw","title":"How To Deploy A Next.js App To Vercel (Simple)","lang":"en"}]'::jsonb WHERE slug = 'deploy-nextjs' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"fDjZOZ1Hgf8","title":"Drizzle ORM #1 - Setup, Schema, Migrations","lang":"en"},{"youtubeId":"cX4PeFKCMiI","title":"Automatiser les Migrations SQL de Drizzle en Production avec les GitHub Actions","lang":"fr"},{"youtubeId":"dHTGEQnogPw","title":"How database migrations work when using Drizzle ORM","lang":"en"}]'::jsonb WHERE slug = 'migrations-ci' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"J7X1iE3LEzs","title":"Understanding Deployment Environments: Dev, Test, Staging & Production Explained","lang":"en"},{"youtubeId":"H2p4wowlD3Q","title":"Difference Between Development, Staging, and Prod Environment?","lang":"en"}]'::jsonb WHERE slug = 'environments' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"-BpUoATetQg","title":"Live Coding - Graceful shutdown in Node.js and Fastify","lang":"en"},{"youtubeId":"-OjPhPV6Rjs","title":"Here''s how to Gracefully Shutdown your apps (with Node.js examples)","lang":"en"}]'::jsonb WHERE slug = 'healthcheck-shutdown' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"DzhVEK65eYg","title":"Sentry 101: Error Monitoring For Backend Applications","lang":"en"},{"youtubeId":"cl8tPBI4qUc","title":"Sentry 101: Error Monitoring For Frontend Applications","lang":"en"}]'::jsonb WHERE slug = 'monitoring' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"MKZC4Vt4PDE","title":"PostgreSQL - 21. Sauvegardes : pg_dump","channel":"Xavki","lang":"fr"},{"youtubeId":"l46yS2G4kkg","title":"Postgres: automated Backup and Restore with Docker and Cron","lang":"en"}]'::jsonb WHERE slug = 'backups' AND module_id = 'm22-devops-deploiement';
+UPDATE skills SET videos = '[{"youtubeId":"6R4lN8fo9zA","title":"Notions - 4. Twelve Factors","channel":"Xavki","lang":"fr"},{"youtubeId":"Iuwt_wntVrs","title":"Les 12 facteurs dans une application SaaS - Geoffroy Dubruel","lang":"fr"},{"youtubeId":"1OhmRmMsGdQ","title":"What is 12-Factor App? | Twelve Factor App Methodology Explained","channel":"KodeKloud","lang":"en"}]'::jsonb WHERE slug = '12factor' AND module_id = 'm22-devops-deploiement';
+
+-- m23-threejs-r3f
+UPDATE skills SET videos = '[{"youtubeId":"4IvhajhllFo","title":"ThreeJS expliqué en 3 minutes (JavaScript 3D)","lang":"fr"},{"youtubeId":"-C5Tjbxicz8","title":"WebGL tutoriel 01 - Introduction","lang":"fr"},{"youtubeId":"Y9Mn6FtZGpA","title":"Three.js in 100 Seconds","channel":"Fireship","lang":"en"}]'::jsonb WHERE slug = 'webgl-threejs' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"763XrkxwNuw","title":"Créer des scènes 3D dans un navigateur web avec Three.js","lang":"fr"},{"youtubeId":"vhK6o26OV4Q","title":"Tuto THREE.JS [Javascript] (scene, camera, renderer)","lang":"fr"}]'::jsonb WHERE slug = 'pipeline-3d' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"vhK6o26OV4Q","title":"Tuto THREE.JS [Javascript] - les bases","lang":"fr"},{"youtubeId":"HbhQpkKNjW0","title":"Three.js Scene, Camera, Renderer Explained (Beginner #2)","lang":"en"},{"youtubeId":"x097KglSvWc","title":"Introduction to Three.js (Part 1) - scene, camera, renderer, animation loop","lang":"en"}]'::jsonb WHERE slug = 'basics' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"oqGmiVX973Y","title":"MESH et GEOMETRY en THREE.JS","lang":"fr"},{"youtubeId":"q5EctYACcI4","title":"Three.js Tutorial Part 3: Geometry (Beginner)","lang":"en"},{"youtubeId":"B16IJLW_WoI","title":"Meshes - React Three Fiber Tutorial for Beginners","channel":"Wael Yasmina","lang":"en"}]'::jsonb WHERE slug = 'geometries' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"HsE_7C1tRTo","title":"Three.js Part 4: Materials","lang":"en"},{"youtubeId":"6XvqaokjuYU","title":"How To Create Realistic Scenes In Three.js (Tone Mapping, HDR, sRGB)","lang":"en"}]'::jsonb WHERE slug = 'materials' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"VdnN5nuxj-s","title":"Learning three.js 04 :: Textures, Normal, and Bump Maps","lang":"en"},{"youtubeId":"0QiBkKPHX4g","title":"Generate Environment Texture from HDRI in Three.js","lang":"en"},{"youtubeId":"sH213Lt_MPY","title":"Load HDR Image In Three.js","lang":"en"}]'::jsonb WHERE slug = 'textures' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"T6PhV4Hz0u4","title":"Three.js Lighting Tutorial | Light Types Explained!","lang":"en"},{"youtubeId":"AUF15I3sy6s","title":"Three.js Shadows Explained | Tutorial for Beginners","lang":"en"},{"youtubeId":"7GGNzryHfTw","title":"Three.js Realistic Lighting Setup Tutorial","lang":"en"}]'::jsonb WHERE slug = 'lights' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"WKSVa0Q2W4s","title":"Geometric Transformations - React Three Fiber","channel":"Wael Yasmina","lang":"en"}]'::jsonb WHERE slug = 'transforms' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"LbLOXsDVyaM","title":"Tutoriel JavaScript : Panorama 360° (Three.js + contrôles caméra)","channel":"Grafikart","lang":"fr"},{"youtubeId":"Nxd9L6X8quo","title":"Your Guide To The Orbit Controls Module In Three.js","lang":"en"},{"youtubeId":"yoVWWKdG2eg","title":"MASTERING Orbit Controls With React Three Fiber","lang":"en"}]'::jsonb WHERE slug = 'controls' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"CbUhot3K-gc","title":"Three.js Raycaster Tutorial | How to Handle Mouse Input","lang":"en"},{"youtubeId":"WPGE4OvAdIA","title":"Hover Over Objects in ThreeJS - Raycast","lang":"en"}]'::jsonb WHERE slug = 'raycasting' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"Uh7yvnBnLj0","title":"Particules 3D connectées avec Three.js","channel":"Grafikart","lang":"fr"},{"youtubeId":"Zpo4xcDHAL4","title":"Tutoriel JavaScript : Particules 3D Three.js","channel":"Grafikart","lang":"fr"},{"youtubeId":"gGVZt8rLZjY","title":"Three.js: Particles (BufferGeometry + ShaderMaterial + Points)","lang":"en"}]'::jsonb WHERE slug = 'particles' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"r5r1BLrg8y0","title":"Du CSS aux shaders WebGL - panorama des techniques d''animation","lang":"fr"},{"youtubeId":"EntBBM6nqQA","title":"Three.js Shaders Tutorial (1/2) | Intro to GLSL Vertex and Fragment Shaders","lang":"en"},{"youtubeId":"oKbCaj1J6EI","title":"Three.js Shaders (GLSL) Crash Course For Absolute Beginners","lang":"en"}]'::jsonb WHERE slug = 'glsl' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"vowT_8oVFmM","title":"Customize ThreeJS Materials With Shaders (uniforms, injection)","lang":"en"},{"youtubeId":"CepFdiDe3Lw","title":"Animated wave plane in React Three Fiber - Custom shader material","lang":"en"},{"youtubeId":"jK4uXGY07vA","title":"Create Realistic Water with Three.js - GLSL Shader Tutorial","lang":"en"},{"youtubeId":"qZ2VpOOD9-0","title":"Three.js fully interactive shader tutorial - Perlin noise","lang":"en"}]'::jsonb WHERE slug = 'custom-shaders' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"C1gp_WNCu3Y","title":"Des sites en 3D avec Three.js et React (VOD Coding Talk)","lang":"fr"},{"youtubeId":"vTfMjI4rVSI","title":"React Three Fiber (R3F) - The Basics","lang":"en"},{"youtubeId":"jKy2Rm7EVOk","title":"React Three Fiber Crash Course for Beginners","channel":"Wael Yasmina","lang":"en"},{"youtubeId":"5wRiJU2DLxM","title":"React Three Fiber useFrame is the MOST IMPORTANT hook","lang":"en"}]'::jsonb WHERE slug = 'r3f' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"5TkuOGN0X_Y","title":"Helpers and Gizmos - React Three Fiber (drei)","channel":"Wael Yasmina","lang":"en"},{"youtubeId":"dsjS3eFAby0","title":"Camera Controls - React Three Fiber Tutorial for Beginners","lang":"en"}]'::jsonb WHERE slug = 'drei' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"zjINoWzmr_s","title":"How To Use React Three Fiber Post Processing Shaders","lang":"en"},{"youtubeId":"ZtK70Tb9uqg","title":"Unreal Bloom Pass - Three.js Post-Processing Tutorial","lang":"en"}]'::jsonb WHERE slug = 'postprocessing' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"dc5iJVInpPY","title":"Three.js Optimization - Best Practices and Techniques","lang":"en"},{"youtubeId":"dKg5H1OtDK8","title":"Create 100,000+ Objects With Instancing - Three.js Instanced Rendering","lang":"en"},{"youtubeId":"IsRBxh4Jb18","title":"Better Performance With LOD (Level Of Detail) In Three.js","lang":"en"}]'::jsonb WHERE slug = 'performance-3d' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"J3zQd_PRJC8","title":"Loading Models and the Primitive Component - R3F","channel":"Wael Yasmina","lang":"en"},{"youtubeId":"l0kGZKfutFc","title":"3D Models in React App: converting glb to jsx with gltfjsx","lang":"en"},{"youtubeId":"tBSbgRRpNzI","title":"Showcase your 3D model with three.js, R3F, drei and gltfjsx","lang":"en"}]'::jsonb WHERE slug = 'gltf-workflow' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"b6oOBWjQFKc","title":"How to Bake Procedural Textures into GLTF/GLB in Blender","lang":"en"},{"youtubeId":"utLy9sDv06U","title":"Three.js | Part 4: Import Model from Blender (GLB)","lang":"en"}]'::jsonb WHERE slug = 'blender-workflow' AND module_id = 'm23-threejs-r3f';
+UPDATE skills SET videos = '[{"youtubeId":"sVz-HV2myjQ","title":"Three.js: Introduction to WebGPU and TSL","lang":"en"},{"youtubeId":"73quCt_NQMA","title":"TSL :: An Overview Of Three.js Shading Language","lang":"en"}]'::jsonb WHERE slug = 'webgpu-tsl' AND module_id = 'm23-threejs-r3f';
+
+-- m24-python-scripting-data
+UPDATE skills SET videos = '[{"youtubeId":"k_Xiov3dvfk","title":"Apprendre Python vs JavaScript (Developpeur Debutant)","lang":"fr"},{"youtubeId":"khtqQblU7DI","title":"JavaScript / PHP / Python : quel langage apprendre en 2026 ?","lang":"fr"},{"youtubeId":"x7X9w_GIm1s","title":"Python in 100 Seconds","channel":"Fireship","lang":"en"}]'::jsonb WHERE slug = 'python-vs-js' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"otFi4KLMCXk","title":"uv : l''outil qui remplace pip en 10x plus rapide (tutoriel)","lang":"fr"},{"youtubeId":"ctJzKEO4TIc","title":"uv vs Poetry : le nouveau package manager Python 10x plus rapide ?","lang":"fr"},{"youtubeId":"828S-DMQog8","title":"Ruff - A Fast Linter & Formatter to Replace Multiple Tools","lang":"en"},{"youtubeId":"AMdG7IjgSPM","title":"uv - A Faster, All-in-One Package Manager to Replace Pip and Venv","lang":"en"}]'::jsonb WHERE slug = 'uv-ruff' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"Uwhsok0dhMY","title":"Apprendre Python 3 - Les boucles For | range | enumerate","channel":"Pierre Giraud","lang":"fr"},{"youtubeId":"Sovw64eHe6o","title":"Parcourir une liste avec for, range, enumerate et zip","lang":"fr"},{"youtubeId":"rfscVS0vtbw","title":"Learn Python - Full Course for Beginners","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'syntax' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"Cx2vIe-lZwM","title":"Collections en Python : liste, tuple, set et dictionnaire","lang":"fr"},{"youtubeId":"qFiK62vpmUw","title":"Tuple, Set et Dictionnaire en Python","lang":"fr"}]'::jsonb WHERE slug = 'data-structures' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"TzVQgK6RSXc","title":"Creer une liste en comprehension - Tutoriel Python #7/7","lang":"fr"},{"youtubeId":"n2n-TTfqCA4","title":"Comprehension de liste en Python : guide complet pour debutants","lang":"fr"},{"youtubeId":"3IDMOC6qhlM","title":"Les comprehensions de liste en 1 minute","lang":"fr"}]'::jsonb WHERE slug = 'comprehensions' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"JYnSjlCYp2w","title":"Python - Fonctions : *args et **kwargs","lang":"fr"},{"youtubeId":"nHWKmdp7EIY","title":"TUTO Python : utilisation de fonctions Lambda","lang":"fr"}]'::jsonb WHERE slug = 'functions-py' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"7p8yD__Qrwc","title":"Introduction a la Programmation Orientee Objet (POO) en Python","lang":"fr"},{"youtubeId":"ot5WfAv534M","title":"POO en Python : heritage simple","lang":"fr"},{"youtubeId":"6Ltk49YhrWY","title":"Python : les dataclasses","channel":"Docstring","lang":"fr"}]'::jsonb WHERE slug = 'classes-py' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"mSh4h-J0z1c","title":"Python : modules et packages (8/30)","lang":"fr"},{"youtubeId":"Hrv5KjLPYpc","title":"Importer des modules Python (de la bonne facon)","lang":"fr"}]'::jsonb WHERE slug = 'modules-py' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"a5HGF_ELI1E","title":"Tutoriel Python - annotations de type","lang":"fr"},{"youtubeId":"NiLXrK6WDPs","title":"TUTO Python : typage de vos fonctions et controle avec mypy","lang":"fr"},{"youtubeId":"RwH2UzC2rIo","title":"Type Hints - From Basic Annotations to Advanced Generics","lang":"en"}]'::jsonb WHERE slug = 'type-hints' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"L-YHtsPAv_8","title":"Pathlib en Python : guide complet pour debutants !","lang":"fr"},{"youtubeId":"rXcNRPvhQuc","title":"Arrete de galerer avec tes fichiers Python : voici la vraie methode (pathlib)","lang":"fr"}]'::jsonb WHERE slug = 'pathlib' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"th8o3LdmdV4","title":"Lecture et ecriture dans un fichier en Python","lang":"fr"},{"youtubeId":"G4vQR3LCQAA","title":"Lire et ecrire un fichier .CSV en Python","lang":"fr"},{"youtubeId":"xwBsaaTGwX4","title":"Lecture / ecriture fichiers en Python : serialisation / deserialisation (JSON)","lang":"fr"}]'::jsonb WHERE slug = 'io-csv-json' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"d5pT-Ni6TRk","title":"Python - Requetes HTTP (24/30)","lang":"fr"},{"youtubeId":"qAh5dDODJ5k","title":"HTTPX Tutorial - A next-generation HTTP client for Python","lang":"en"}]'::jsonb WHERE slug = 'httpx' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"A4oQEv3Ny1M","title":"Initiation aux fonctions asynchrones en Python avec asyncio","lang":"fr"},{"youtubeId":"q_yk3oV14hE","title":"Python AsyncIO Explained in 9 Minutes","lang":"en"},{"youtubeId":"t5Bo1Je9EmE","title":"Python Asynchronous Programming - AsyncIO & Async/Await","lang":"en"}]'::jsonb WHERE slug = 'asyncio' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"H2yBbKNzNK8","title":"Comment scraper un site web avec Python et BeautifulSoup","lang":"fr"},{"youtubeId":"Wvc2ZqdIPpk","title":"Apprendre le Web Scraping avec Python - Partie 1","lang":"fr"},{"youtubeId":"cO997sPYZ9U","title":"Playwright Python Browser Automation Crash Course","lang":"en"}]'::jsonb WHERE slug = 'scraping' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"zZkNOdBWgFQ","title":"Pandas Python Francais - Introduction + Analyse du Titanic (17/30)","channel":"Machine Learnia","lang":"fr"},{"youtubeId":"lWLs75O0bvw","title":"Gestion de tableaux de donnees avec pandas | Python pour la Science #6","lang":"fr"},{"youtubeId":"9IrMz0wbp5Q","title":"Working With Python Polars: Getting Started with DataFrames","lang":"en"}]'::jsonb WHERE slug = 'pandas-polars' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"apgReCCAQr4","title":"Tutoriel Python - tests unitaires","lang":"fr"},{"youtubeId":"L6N3BgZh2AA","title":"Unit Testing in Python with pytest | Getting Started","lang":"en"}]'::jsonb WHERE slug = 'pytest' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"Hs07URZ7TMo","title":"Apprendre le Python #13 - Les environnements virtuels (venv)","lang":"fr"},{"youtubeId":"cLWJZ5XtuSM","title":"Mini tuto - Environnement virtuel Python","lang":"fr"}]'::jsonb WHERE slug = 'venv' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"aaim2oCGedk","title":"Application CLI avec Python et processus de CI / CD (partie 1)","lang":"fr"},{"youtubeId":"9VVYMXaZ0d4","title":"Build Python CLI Apps With Typer: Arguments, Options, and Commands","lang":"en"}]'::jsonb WHERE slug = 'typer-cli' AND module_id = 'm24-python-scripting-data';
+UPDATE skills SET videos = '[{"youtubeId":"6XsC0sD9u4M","title":"Apprendre Python | #07 - Jupyter Notebook","lang":"fr"},{"youtubeId":"RYDPywqi_PE","title":"Python pour les debutants #4 : installer Jupyter Notebook","lang":"fr"}]'::jsonb WHERE slug = 'jupyter' AND module_id = 'm24-python-scripting-data';
+
+-- m25-ia-appliquee
+UPDATE skills SET videos = '[{"youtubeId":"HOyapuA9UAw","title":"Next Token Prediction expliqué : Le secret des LLM (GPT, Claude)","lang":"fr"},{"youtubeId":"zjkBMFhNj_g","title":"[1hr Talk] Intro to Large Language Models","channel":"Andrej Karpathy","lang":"en"}]'::jsonb WHERE slug = 'llm-concept' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"3Pe91mA-38E","title":"Quel LLM choisir ? GPT, Claude, Gemini ou Grok","lang":"fr"},{"youtubeId":"tcf_hcihjDo","title":"DeepSeek / ChatGPT / Mistral / Claude, quel est le meilleur ? Le test !","lang":"fr"}]'::jsonb WHERE slug = 'model-families' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"0SSwzadQ9E8","title":"Claude 3 d''Anthropic - Tuto pour utiliser l''API en Python","lang":"fr"},{"youtubeId":"VxhrGyZJPPY","title":"Anthropic Claude API with Python","lang":"en"},{"youtubeId":"TqC1qOfiVcQ","title":"Claude Agent SDK [Full Workshop]","channel":"Anthropic","lang":"en"}]'::jsonb WHERE slug = 'sdks' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"MkaazQttbpc","title":"The Secret Controls for your LLM: Temperature, Top-K, Top-P","lang":"en"},{"youtubeId":"9Joy5c_-Ldk","title":"Understanding LLM Parameters: Context Window, Temperature, Max Tokens","lang":"en"}]'::jsonb WHERE slug = 'params' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"H89bSRvuY14","title":"Formation au Prompt Engineering (français) : le guide pour ChatGPT, Google","lang":"fr"},{"youtubeId":"ysPbXH0LpIE","title":"Prompting 101 | Code w/ Claude","channel":"Anthropic","lang":"en"},{"youtubeId":"dOxUroR57xs","title":"Prompt Engineering Tutorial","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'prompt-eng' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"n6MckKY_ZCA","title":"How XML tags improve your AI responses","lang":"en"},{"youtubeId":"TBeZmQiZR5k","title":"Structured LLM Prompting with XML","lang":"en"}]'::jsonb WHERE slug = 'xml-prompts' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"cVEJaWgiudU","title":"Anthropic function calling for structured LLM outputs","lang":"en"},{"youtubeId":"7r9DpUXj0JQ","title":"Instructor - Structured LLM Outputs (Hands-on Demo)","lang":"en"},{"youtubeId":"PkQIREapb9o","title":"Pydantic Crash Course - Build Reliable Python & AI Applications","lang":"en"}]'::jsonb WHERE slug = 'structured-output' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"8jgad3Vsf2k","title":"RAG et LLM : Comprendre les Embeddings et la Recherche Sémantique","channel":"Louis-François Bouchard","lang":"fr"},{"youtubeId":"Q4ZMoV2XGjA","title":"RAG avec Python : Générer ses premiers Embeddings avec OpenAI","lang":"fr"},{"youtubeId":"c6f6wcmm3fY","title":"Embeddings and Cosine Similarity","lang":"en"}]'::jsonb WHERE slug = 'embeddings' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"R6_4Bqm4bvc","title":"PostgreSQL, base de données vectorielle avec pgvector","lang":"fr"},{"youtubeId":"klTvEwg3oJ4","title":"Vector Databases simply explained","lang":"en"},{"youtubeId":"mke1V-2__D0","title":"pgvector vs Pinecone vs Redis - how to choose a vector database?","lang":"en"}]'::jsonb WHERE slug = 'vector-db' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"ijX1cEdUf5U","title":"Qu''est-ce qu''un RAG (Retrieval-Augmented Generation) ?","lang":"fr"},{"youtubeId":"_l6wAvZYJ6U","title":"Méthodes Avancées de Recherche RAG (Hybride, Embedding, Filtrage)","lang":"fr"},{"youtubeId":"T-D1OfcDW1M","title":"What is Retrieval-Augmented Generation (RAG)?","channel":"IBM Technology","lang":"en"},{"youtubeId":"sVcwVQRHIc8","title":"Learn RAG From Scratch – Python AI Tutorial (LangChain Engineer)","channel":"freeCodeCamp","lang":"en"}]'::jsonb WHERE slug = 'rag' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"Lk6D1huUK0s","title":"Why Your RAG Gives Wrong Answers (4 Chunking Strategies to Fix It)","lang":"en"},{"youtubeId":"GYj4Ay7SdWw","title":"Text Chunking in RAG: Essential Guide with Anton from ChromaDB","lang":"en"}]'::jsonb WHERE slug = 'chunking' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"Uh9bYiVrW_s","title":"RAG But Better: Rerankers with Cohere AI","lang":"en"},{"youtubeId":"ZFbaA9eM0uo","title":"Advanced RAG: Reranking with Cross Encoders and Cohere API","lang":"en"}]'::jsonb WHERE slug = 'rerank' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"ASFVBKuarls","title":"Comment fonctionnent réellement les agents d''IA : ReAct vs Plan-and-Execute","lang":"fr"},{"youtubeId":"f8whjxDBcd8","title":"Building a ReAct AI Agent (Tutorial)","lang":"en"},{"youtubeId":"5hnt-bWeeOM","title":"Build a ReAct AI Agent from Scratch in Python (No LangChain)","lang":"en"}]'::jsonb WHERE slug = 'agents-react' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"sfCBCyNyw7U","title":"The simplest MCP demo: what is Model Context Protocol (Claude / Anthropic)","lang":"en"},{"youtubeId":"kQmXtrmQ5Zg","title":"Building Agents with Model Context Protocol - Full Workshop (Anthropic)","channel":"Anthropic","lang":"en"},{"youtubeId":"N3vHJcHBS-w","title":"Model Context Protocol (MCP) Explained in 20 Minutes","lang":"en"}]'::jsonb WHERE slug = 'mcp' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"uJJ6uP5IViA","title":"Découvrez LangChain - la librairie open source pour applications LLM","lang":"fr"},{"youtubeId":"cUfLrn3TM3M","title":"LangGraph Explained for Beginners","lang":"en"},{"youtubeId":"I90xJlzAUW0","title":"CrewAI Tutorial: Multiple Agents Working Together in Python","lang":"en"}]'::jsonb WHERE slug = 'frameworks' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"vAK0iqA6-QI","title":"RAG Tutorial: Complete Introduction to Retrieval Augmented Generation","lang":"en"},{"youtubeId":"Rpg9TQtqqhE","title":"AI Structured Outputs & Evaluation with LlamaIndex & Pydantic","lang":"en"}]'::jsonb WHERE slug = 'evaluation' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"twXxb00w1_4","title":"Build a Streaming LLM API with FastAPI in Python (Real Time Responses)","lang":"en"},{"youtubeId":"uIuY1GCckXM","title":"What you NEED to know about LLM rate limits","lang":"en"},{"youtubeId":"4x4nM0uPmg0","title":"How I cut token costs by 90%: AI cost optimization guide","lang":"en"}]'::jsonb WHERE slug = 'prod-strategies' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"VdAPyfyR2Jw","title":"Prompt Injection Defense — A Four-Layer Security Strategy for LLMs","lang":"en"}]'::jsonb WHERE slug = 'prompt-injection' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"_0uiiJfsBPI","title":"How and When to Use Anthropic''s Prompt Caching (with code examples)","lang":"en"},{"youtubeId":"D8LqbR0mJ4M","title":"Use Claude Prompt Caching to reduce your AI cost up to 90%","lang":"en"}]'::jsonb WHERE slug = 'prompt-caching' AND module_id = 'm25-ia-appliquee';
+UPDATE skills SET videos = '[{"youtubeId":"_tBTfvQr38M","title":"Build a Real-Time Chatbot with Next.js 15, Vercel AI SDK, and Shadcn UI","lang":"en"},{"youtubeId":"RRK3JJrzi_w","title":"Build AI Chatbot in minutes: Vercel AI SDK + Next.js Tutorial","lang":"en"}]'::jsonb WHERE slug = 'vercel-ai-sdk' AND module_id = 'm25-ia-appliquee';
 
 COMMIT;
