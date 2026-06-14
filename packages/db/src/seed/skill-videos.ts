@@ -28,7 +28,6 @@ export const skillVideosByModule: Record<
 > = {
   "m00-algo-structures-donnees": {
     "big-o-intuition": [
-      { youtubeId: "P7gV2HuunVk", title: "Big O expliqué en 1 minute – Comprendre la complexité sans prise de tête", lang: "fr" },
       { youtubeId: "uqYY0nInx-8", title: "Complexité temporelle - Partie 1 : intuition (ALGO1)", lang: "fr" },
       { youtubeId: "gI4lX1EtGJw", title: "Notion de complexité temporelle pour un algorithme - Quelques exemples simples", lang: "fr" },
       { youtubeId: "XMUe3zFhM5c", title: "Learn Big O notation in 6 minutes", channel: "Bro Code", lang: "en" },
@@ -247,7 +246,6 @@ export const skillVideosByModule: Record<
       { youtubeId: "Zzqtj0sRB1k", title: "Easy SSH Key Setup for GitHub on Ubuntu", lang: "en" },
     ],
     cron: [
-      { youtubeId: "Yfcso39FUc8", title: "Tâches planifiées crontab sous Linux (en français)", lang: "fr" },
       { youtubeId: "jiB5jScG0uE", title: "L'essentiel des tâches cron sous Linux (1/2)", lang: "fr" },
       { youtubeId: "QZJ1drMQz1A", title: "Cron Jobs - Schedule tasks with crontab", channel: "Corey Schafer", lang: "en" },
     ],
@@ -404,7 +402,6 @@ export const skillVideosByModule: Record<
       { youtubeId: "0uQv6HpAcpk", title: "Comprendre les balises sémantiques | HTML", lang: "fr" },
     ],
     headings: [
-      { youtubeId: "nm9fYYHRTiQ", title: "Apprendre les balises h1, h2, h3… (en-têtes HTML)", lang: "fr" },
       { youtubeId: "a_M4FTazc2Q", title: "Balises H1, H2, H3… Comment structurer un texte ?", lang: "fr" },
     ],
     "block-inline": [
@@ -560,7 +557,6 @@ export const skillVideosByModule: Record<
       { youtubeId: "Fb-RNqiDoiw", title: "View Transition API Tutorial | New CSS Animation Power", lang: "en" },
     ],
     bem: [
-      { youtubeId: "6qlDR6yhm0I", title: "Notation BEM en CSS !", lang: "fr" },
       { youtubeId: "40FjRuIXlKg", title: "La methodologie BEM en CSS et SCSS", lang: "fr" },
       { youtubeId: "aKenj9ZQwJg", title: "CSS BEM - The What, How, and Why", lang: "en" },
     ],
@@ -617,7 +613,6 @@ export const skillVideosByModule: Record<
     ],
     coercion: [
       { youtubeId: "I5daUpU5_A4", title: "== vs === en JavaScript", lang: "fr" },
-      { youtubeId: "RXMYIog5xmU", title: "JavaScript == vs === Explained: Coercion Demystified", lang: "en" },
     ],
     operators: [
       { youtubeId: "SyXyWYucDkM", title: "Apprendre JavaScript - Les opérateurs (affectation, arithmétiques, comparaison, logiques)", channel: "Grafikart", lang: "fr" },
@@ -639,8 +634,8 @@ export const skillVideosByModule: Record<
       { youtubeId: "9OBKC5EQlZU", title: "Variables | Partie 4 - Les Types Primitifs et les Objets", channel: "Grafikart", lang: "fr" },
     ],
     strings: [
-      { youtubeId: "q287HJv10Rc", title: "JavaScript : 9 méthodes pour manipuler les chaînes de caractères (string)", lang: "fr" },
-      { youtubeId: "_nPykgMCIlQ", title: "Strings en JavaScript | Template literals - backticks", lang: "fr" },
+      { youtubeId: "7Bz75OoBJFw", title: "Les méthodes de l’objet String", channel: "Pierre Giraud", lang: "fr" },
+      { youtubeId: "x87WIDfPtG8", title: "JavaScript : les chaînes de caractères", channel: "EvoluNoob", lang: "fr" },
     ],
     numbers: [
       { youtubeId: "lIkXktOFJIM", title: "COURS COMPLET JAVASCRIPT [8/65] - Opérations entre variables", channel: "Pierre Giraud", lang: "fr" },
@@ -648,7 +643,6 @@ export const skillVideosByModule: Record<
     ],
     scope: [
       { youtubeId: "qYuvcK8QU4c", title: "Apprendre le JavaScript : La portée des variables", channel: "Grafikart", lang: "fr" },
-      { youtubeId: "Nt-qa_LlUH0", title: "Execution Contexts, Hoisting, Scopes", lang: "en" },
     ],
     "var-let-const": [
       { youtubeId: "A9sD9GOkMdQ", title: "Tutoriel JavaScript - var, let ou const ?", lang: "fr" },
@@ -657,7 +651,6 @@ export const skillVideosByModule: Record<
     ],
     hoisting: [
       { youtubeId: "LYvQWwsKiME", title: "Scope et closures en JS (et... hoisting ?)", lang: "fr" },
-      { youtubeId: "Nt-qa_LlUH0", title: "Execution Contexts, Hoisting, Scopes (TDZ)", lang: "en" },
     ],
     "truthy-falsy": [
       { youtubeId: "Xp60QbXRAPI", title: "One Of the Most IMPORTANT Parts of JavaScript - Truthy and Falsy EXPLAINED", lang: "en" },
@@ -740,7 +733,6 @@ export const skillVideosByModule: Record<
   "m10-javascript-moderne-es6": {
     "arrow-functions": [
       { youtubeId: "-WvmzxOVeL0", title: "Les fonctions fléchées (Arrow Functions) en JavaScript ES6", channel: "Grafikart", lang: "fr" },
-      { youtubeId: "TVpsLBPytI0", title: "JavaScript ES6 : Les fonctions fléchées", lang: "fr" },
       { youtubeId: "SVS1_sQua08", title: "JavaScript Arrow Functions & this Explained Simply", channel: "Web Dev Simplified", lang: "en" },
     ],
     "template-literals": [
@@ -758,7 +750,7 @@ export const skillVideosByModule: Record<
       { youtubeId: "eKDGKz1bvlw", title: "Astuce JavaScript : déstructuration d'objet avec valeurs par défaut et alias", lang: "fr" },
     ],
     "destructuring-arr": [
-      { youtubeId: "kACyI51stO0", title: "JavaScript : Maîtrisez la destructuration de tableaux et d'objets", lang: "fr" },
+      { youtubeId: "hOT9WvHu7lI", title: "Array destructuring en JavaScript", channel: "Thibaud Duthoit", lang: "fr" },
     ],
     "map-filter-reduce": [
       { youtubeId: "r0xv0uZM5V4", title: "Manipuler les tableaux avec map, reduce et filter", channel: "Grafikart", lang: "fr" },
@@ -873,12 +865,10 @@ export const skillVideosByModule: Record<
     "execution-context": [
       { youtubeId: "qYuvcK8QU4c", title: "Apprendre le JavaScript : La portée des variables", channel: "Grafikart", lang: "fr" },
       { youtubeId: "LYvQWwsKiME", title: "Scope et closures en JS (et... hoisting ?)", lang: "fr" },
-      { youtubeId: "Nt-qa_LlUH0", title: "Execution Contexts, Hoisting, Scopes, and Closures in JS", lang: "en" },
     ],
     "lexical-scope": [
       { youtubeId: "LYvQWwsKiME", title: "Scope et closures en JS (lexical scoping)", lang: "fr" },
       { youtubeId: "qYuvcK8QU4c", title: "Apprendre le JavaScript : La portée des variables", channel: "Grafikart", lang: "fr" },
-      { youtubeId: "Nt-qa_LlUH0", title: "Execution Contexts, Hoisting, Scopes, and Closures in JS", lang: "en" },
     ],
     hoisting: [
       { youtubeId: "LYvQWwsKiME", title: "Scope et closures en JS (et... hoisting ?)", lang: "fr" },
@@ -965,7 +955,6 @@ export const skillVideosByModule: Record<
     ],
     "interface-vs-type": [
       { youtubeId: "sFNQeh5Oc08", title: "Apprendre TypeScript : Type ou Interface ?", channel: "Grafikart", lang: "fr" },
-      { youtubeId: "crjIq7LEAJw", title: "Type vs Interface - Which Should You Use In TypeScript?", channel: "Web Dev Simplified", lang: "en" },
     ],
     "union-intersection": [
       { youtubeId: "dB_LbNMgVAA", title: "Apprendre TypeScript : Alias & Generics (unions & intersections)", channel: "Grafikart", lang: "fr" },
@@ -987,7 +976,6 @@ export const skillVideosByModule: Record<
     generics: [
       { youtubeId: "dB_LbNMgVAA", title: "Apprendre TypeScript : Alias & Generics", channel: "Grafikart", lang: "fr" },
       { youtubeId: "FIZilZ2KKbo", title: "TypeScript : Maîtriser la généricité en TypeScript", channel: "Web FR", lang: "fr" },
-      { youtubeId: "Zz_Uf7JEddk", title: "TypeScript Generics with Matt Pocock", channel: "Learn With Jason", lang: "en" },
     ],
     "utility-types": [
       { youtubeId: "Hg9rPl7Z4zA", title: "Apprendre TypeScript : Types utilitaires (Partial, Pick, Omit, Record...)", channel: "Grafikart", lang: "fr" },
@@ -1065,12 +1053,10 @@ export const skillVideosByModule: Record<
       { youtubeId: "fhbBI_8s58s", title: "Apprendre React : Mémoisation et useCallback", channel: "Grafikart", lang: "fr" },
     ],
     "conditional-render": [
-      { youtubeId: "H_dEaebG2u4", title: "Gérer l'affichage conditionnel en React", channel: "Dans Ton Code", lang: "fr" },
       { youtubeId: "7PcIYG7DXwM", title: "Le PIÈGE du rendu conditionnel en React", lang: "fr" },
     ],
     "lists-key": [
       { youtubeId: "0GzWbhPGdAs", title: "Pourquoi tu ne dois JAMAIS utiliser INDEX en tant que KEY dans React", lang: "fr" },
-      { youtubeId: "xe9bvyzHRao", title: "Why React Keys Matter (and why index is dangerous)", lang: "en" },
     ],
     forms: [
       { youtubeId: "rhPIw9a1CxQ", title: "Apprendre React : Les formulaires", channel: "Grafikart", lang: "fr" },
@@ -1078,7 +1064,6 @@ export const skillVideosByModule: Record<
     ],
     "react19-actions": [
       { youtubeId: "iNQbsdhOqGI", title: "React 19 Hooks - useTransition, useActionState, useFormStatus, useOptimistic in 20 mins", lang: "en" },
-      { youtubeId: "NafMDSppo1M", title: "React 19 Form Actions Explained | useActionState Hook", lang: "en" },
     ],
     rerender: [
       { youtubeId: "Aykxy0-kgtI", title: "QUAND React Re-Render ? Ce qu'il faut absolument savoir", channel: "Melvynx", lang: "fr" },
@@ -1126,7 +1111,6 @@ export const skillVideosByModule: Record<
     rhf: [
       { youtubeId: "nk_65cL9-kA", title: "Gestion Pro des formulaires - Tuto React Hook Form", channel: "React Academy", lang: "fr" },
       { youtubeId: "Ipgf8PLRmY8", title: "Tutoriel React : Présentation de React Hook Form", channel: "Grafikart", lang: "fr" },
-      { youtubeId: "4nXVitqJ8EM", title: "React Hook Form Tutorial - Advanced Validation", channel: "Web Dev Simplified", lang: "en" },
     ],
     "zod-forms": [
       { youtubeId: "haJq2YXLgmk", title: "Pourquoi il FAUT utiliser Zod dans ton application TypeScript", channel: "Melvynx", lang: "fr" },
@@ -1230,7 +1214,6 @@ export const skillVideosByModule: Record<
     ],
     "next-tick": [
       { youtubeId: "NhHXcsR2KN4", title: "setImmediate() vs setTimeout() vs process.nextTick()", lang: "en" },
-      { youtubeId: "5FoIxj7GHxU", title: "Understanding setImmediate vs. process.nextTick in Node.js", lang: "en" },
     ],
     "event-emitter": [
       { youtubeId: "pQZ6zeBcBcs", title: "Comment utiliser emit pour gérer des événements", lang: "fr" },
@@ -1274,7 +1257,6 @@ export const skillVideosByModule: Record<
       { youtubeId: "btGtOue1oDA", title: "Fastify Course - The Performant Node.js Web Framework (setup)", lang: "en" },
     ],
     routing: [
-      { youtubeId: "7p6J6sCKh3E", title: "Building a REST API in Fastify | Node.js Tutorial", lang: "en" },
       { youtubeId: "xdzqcG5dS7Q", title: "Fastify Complete Course - learn how to build REST APIs", lang: "en" },
     ],
     "schemas-zod": [
@@ -1395,7 +1377,6 @@ export const skillVideosByModule: Record<
     ],
     indexes: [
       { youtubeId: "r4pTomhzeok", title: "Optimisation base de données #02 : index B-Tree", lang: "fr" },
-      { youtubeId: "_HG2eB27j00", title: "PostgreSQL indexes — B-Tree, GIN, BRIN. What's the difference? Easy explanation", lang: "en" },
       { youtubeId: "3o1l9tGuIHQ", title: "How to create a GIN Index? — Deep Dive Into PostgreSQL Indexes", lang: "en" },
     ],
     explain: [
@@ -1443,7 +1424,6 @@ export const skillVideosByModule: Record<
     ],
     "schema-ts": [
       { youtubeId: "fDjZOZ1Hgf8", title: "Drizzle ORM #1 - Setup, Schema, Migrations", lang: "en" },
-      { youtubeId: "ZYe-5wbLP4s", title: "Drizzle ORM Course Part 2 - Schema And Push Command", lang: "en" },
       { youtubeId: "vLze97zZKsU", title: "Complex Schema Design with Drizzle ORM | Common Patterns", lang: "en" },
     ],
     "query-builder": [
@@ -1452,7 +1432,6 @@ export const skillVideosByModule: Record<
       { youtubeId: "vyU5mJGCJMw", title: "Drizzle ORM Tutorial - Full Course for Beginners", lang: "en" },
     ],
     "drizzle-joins": [
-      { youtubeId: "HR8v8Y1UOnQ", title: "Drizzle ORM Complex Queries (Joins)", lang: "en" },
       { youtubeId: "uUryANJtv5c", title: "How to join tables and build a complex query using Drizzle ORM", lang: "en" },
     ],
     relations: [
@@ -1461,7 +1440,6 @@ export const skillVideosByModule: Record<
       { youtubeId: "QdKdvb6iIXs", title: "Drizzle ORM #7 - Many-To-Many Relations", lang: "en" },
     ],
     "relational-queries": [
-      { youtubeId: "KqI1fkzIuQI", title: "Drizzle ORM Course Part 5 - Relational Queries", lang: "en" },
       { youtubeId: "szh7jdCwZW0", title: "Drizzle relations are amazing // Stop using manual joins", lang: "en" },
       { youtubeId: "N4-VDia4NcI", title: "Drizzle's new relational API is nuts!", lang: "en" },
     ],
@@ -1472,7 +1450,6 @@ export const skillVideosByModule: Record<
     "drizzle-kit": [
       { youtubeId: "dHTGEQnogPw", title: "How database migrations work when using Drizzle ORM", lang: "en" },
       { youtubeId: "lmTlR0R8MQU", title: "Drizzle ORM Tutorial #6 - Schema Migrations with Drizzle", lang: "en" },
-      { youtubeId: "wNygB8DhR3k", title: "Drizzle ORM Course Part 4 - SQL-like And Drizzle Studio", lang: "en" },
     ],
     "repo-pattern": [
       { youtubeId: "ff62ijMbSLI", title: "Build Scalable Node.js Apps: Mastering the Repository Pattern with TypeScript", lang: "en" },
@@ -1487,7 +1464,6 @@ export const skillVideosByModule: Record<
     ],
     "logger-sql": [
       { youtubeId: "mJrrJEIQxOQ", title: "The N+1 Query Problem with ORM, explained", lang: "en" },
-      { youtubeId: "wNygB8DhR3k", title: "Drizzle ORM Course Part 4 - SQL-like And Drizzle Studio", lang: "en" },
     ],
     "prisma-readonly": [
       { youtubeId: "0My0On3lvTc", title: "Tuto / Cours sur Prisma : L'ORM parfait pour tes applications", lang: "fr" },
@@ -1513,7 +1489,6 @@ export const skillVideosByModule: Record<
     "auth-vs-authz": [
       { youtubeId: "UmKZ2ajPhKI", title: "Cybersécurité : Authentification vs Autorisation", lang: "fr" },
       { youtubeId: "oUz60SCrk9k", title: "Les concepts avancés d'authentification et d'autorisation expliqués simplement (Julien Topçu)", lang: "fr" },
-      { youtubeId: "I48cIcCdII8", title: "Authentication vs Authorization explained", lang: "en" },
     ],
     "hash-passwords": [
       { youtubeId: "Kb4mAd9Kizc", title: "Comment les sites web sécurisent les mots de passe ? Hashage et salage expliqués", lang: "fr" },
@@ -1652,7 +1627,6 @@ export const skillVideosByModule: Record<
     ],
     msw: [
       { youtubeId: "HewTP74I-Nk", title: "Tester une application React avec Vitest, React Testing Library et MSW", lang: "fr" },
-      { youtubeId: "Vsk0nDJ12VE", title: "MSW Mock Service Worker Tutorial", lang: "en" },
     ],
     "fastify-inject": [
       { youtubeId: "ppc9xxkGDM0", title: "How to Test Fastify & Node.js Applications", lang: "en" },
@@ -1674,7 +1648,6 @@ export const skillVideosByModule: Record<
       { youtubeId: "tv59vLKLNws", title: "Tutoriel tests unitaires #17 - Introduction au code coverage (istanbul)", lang: "fr" },
     ],
     "anti-patterns": [
-      { youtubeId: "ByWnpZo4u1M", title: "Let's test: Unit testing antipatterns", lang: "en" },
       { youtubeId: "ykFcQf2EAzM", title: "Testing Anti-Patterns: Workshop", lang: "en" },
     ],
   },
@@ -1716,7 +1689,6 @@ export const skillVideosByModule: Record<
       { youtubeId: "Xwpi0ITkL3U", title: "Complete GitHub Actions Course - From BEGINNER to PRO", lang: "en" },
     ],
     "secrets-vars": [
-      { youtubeId: "Ug3Gzk5NIJc", title: "GitHub Actions - Variables & Secrets", lang: "en" },
       { youtubeId: "1mKJjQStGmg", title: "Secrets & Environment Variables in GitHub Actions | Secure DevOps Tutorial", lang: "en" },
     ],
     "ci-pipeline": [
@@ -1775,7 +1747,6 @@ export const skillVideosByModule: Record<
     "webgl-threejs": [
       { youtubeId: "4IvhajhllFo", title: "ThreeJS expliqué en 3 minutes (JavaScript 3D)", lang: "fr" },
       { youtubeId: "-C5Tjbxicz8", title: "WebGL tutoriel 01 - Introduction", lang: "fr" },
-      { youtubeId: "Y9Mn6FtZGpA", title: "Three.js in 100 Seconds", channel: "Fireship", lang: "en" },
     ],
     "pipeline-3d": [
       { youtubeId: "763XrkxwNuw", title: "Créer des scènes 3D dans un navigateur web avec Three.js", lang: "fr" },
@@ -1787,7 +1758,6 @@ export const skillVideosByModule: Record<
       { youtubeId: "x097KglSvWc", title: "Introduction to Three.js (Part 1) - scene, camera, renderer, animation loop", lang: "en" },
     ],
     geometries: [
-      { youtubeId: "oqGmiVX973Y", title: "MESH et GEOMETRY en THREE.JS", lang: "fr" },
       { youtubeId: "q5EctYACcI4", title: "Three.js Tutorial Part 3: Geometry (Beginner)", lang: "en" },
       { youtubeId: "B16IJLW_WoI", title: "Meshes - React Three Fiber Tutorial for Beginners", channel: "Wael Yasmina", lang: "en" },
     ],
@@ -1819,7 +1789,6 @@ export const skillVideosByModule: Record<
     ],
     particles: [
       { youtubeId: "Uh7yvnBnLj0", title: "Particules 3D connectées avec Three.js", channel: "Grafikart", lang: "fr" },
-      { youtubeId: "Zpo4xcDHAL4", title: "Tutoriel JavaScript : Particules 3D Three.js", channel: "Grafikart", lang: "fr" },
       { youtubeId: "gGVZt8rLZjY", title: "Three.js: Particles (BufferGeometry + ShaderMaterial + Points)", lang: "en" },
     ],
     glsl: [
@@ -1830,11 +1799,9 @@ export const skillVideosByModule: Record<
     "custom-shaders": [
       { youtubeId: "vowT_8oVFmM", title: "Customize ThreeJS Materials With Shaders (uniforms, injection)", lang: "en" },
       { youtubeId: "CepFdiDe3Lw", title: "Animated wave plane in React Three Fiber - Custom shader material", lang: "en" },
-      { youtubeId: "jK4uXGY07vA", title: "Create Realistic Water with Three.js - GLSL Shader Tutorial", lang: "en" },
       { youtubeId: "qZ2VpOOD9-0", title: "Three.js fully interactive shader tutorial - Perlin noise", lang: "en" },
     ],
     r3f: [
-      { youtubeId: "C1gp_WNCu3Y", title: "Des sites en 3D avec Three.js et React (VOD Coding Talk)", lang: "fr" },
       { youtubeId: "vTfMjI4rVSI", title: "React Three Fiber (R3F) - The Basics", lang: "en" },
       { youtubeId: "jKy2Rm7EVOk", title: "React Three Fiber Crash Course for Beginners", channel: "Wael Yasmina", lang: "en" },
       { youtubeId: "5wRiJU2DLxM", title: "React Three Fiber useFrame is the MOST IMPORTANT hook", lang: "en" },
