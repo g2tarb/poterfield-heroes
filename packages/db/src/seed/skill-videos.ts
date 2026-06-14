@@ -121,17 +121,18 @@ export const skillVideosByModule: Record<
   // -----------------------------------------------------------
   "m01-comment-fonctionne-le-web": {
     "internet-vs-web": [
-      { youtubeId: "vIZ6bY48kWk", title: "Internet vs Web : Comprendre la différence", lang: "fr" },
-      { youtubeId: "zN8YNNHcaZc", title: "How does the internet work? (Full Course)", channel: "freeCodeCamp / Ian Frost", lang: "en" },
+      { youtubeId: "RHljpE7pZh8", title: "Le Web expliqué avec des emojis", channel: "Cookie connecté", lang: "fr" },
+      { youtubeId: "1b06yz9ZAU0", title: "Internet vs Web : la base indispensable pour débuter en dév web", lang: "fr" },
+      { youtubeId: "uTnBcEcQNHs", title: "Quelle est la différence entre Internet et le Web ?", lang: "fr" },
     ],
     "client-server-model": [
-      { youtubeId: "toMtdE3Usyo", title: "Connaître la relation client/serveur", channel: "video2brain", lang: "fr" },
-      { youtubeId: "sz3gXm5v_G0", title: "Le protocole HTTP — Dialogue client / serveur web", lang: "fr" },
-      { youtubeId: "0w6GXuVHz1Y", title: "Client-Server Architecture Explained", lang: "en" },
+      { youtubeId: "ey8LtnsHjUg", title: "Architecture client-serveur et protocole HTTP", lang: "fr" },
+      { youtubeId: "bDA9lQB7cmA", title: "Comprendre l'architecture client-serveur", lang: "fr" },
+      { youtubeId: "sz3gXm5v_G0", title: "Le protocole HTTP — dialogue client/serveur web", lang: "fr" },
     ],
     "tcp-ip-layers": [
-      { youtubeId: "HuxCOWxQudU", title: "Les fondamentaux du réseau (Partie 1)", lang: "fr" },
-      { youtubeId: "26jazyc7VNk", title: "Comprendre les modèles OSI et TCP/IP", lang: "fr" },
+      { youtubeId: "HuxCOWxQudU", title: "Les fondamentaux du réseau (Partie 1)", channel: "Cookie connecté", lang: "fr" },
+      { youtubeId: "26jazyc7VNk", title: "Comprendre les modèles OSI et TCP/IP", channel: "Cookie connecté", lang: "fr" },
       { youtubeId: "P_hVprfTgls", title: "COMPRENDRE ENFIN le modèle OSI", lang: "fr" },
       { youtubeId: "L1pFhn1Uxx4", title: "Les modèles OSI & TCP/IP", lang: "fr" },
     ],
@@ -141,14 +142,13 @@ export const skillVideosByModule: Record<
       { youtubeId: "dh406O2v_1c", title: "What happens when you type google.com (Detailed)", channel: "Hussein Nasser", lang: "en" },
     ],
     "ip-mac-port": [
+      { youtubeId: "YSl6bordSh8", title: "Ports et protocoles : comprendre l'essentiel en 5 minutes", channel: "Cookie connecté", lang: "fr" },
       { youtubeId: "BzPgtMSvZFE", title: "Les adresses IP (Comprendre comment marche Internet, ép. 4)", lang: "fr" },
-      { youtubeId: "k0wLoHYC8IQ", title: "Les bases des réseaux IP expliquées", lang: "fr" },
       { youtubeId: "zN8YNNHcaZc", title: "How does the internet work?", channel: "freeCodeCamp", lang: "en" },
     ],
     "dns-resolution": [
-      { youtubeId: "qzWdzAvfBoo", title: "Comprendre le DNS en 5 minutes", lang: "fr" },
-      { youtubeId: "46m72I4s-zo", title: "Les noms de domaines / Les serveurs DNS (Comprendre Internet, ép. 16)", lang: "fr" },
-      { youtubeId: "BvrUi26ShzI", title: "Comprendre les serveurs DNS en 3 minutes", lang: "fr" },
+      { youtubeId: "qzWdzAvfBoo", title: "Comprendre le DNS en 5 minutes", channel: "Cookie connecté", lang: "fr" },
+      { youtubeId: "dcIrB8qRCbA", title: "Comment fonctionne le DNS ?", channel: "Afnic", lang: "fr" },
       { youtubeId: "tyDxzzdKnsU", title: "Le DNS pour les débutants", lang: "fr" },
     ],
     "http-versions": [
@@ -161,9 +161,9 @@ export const skillVideosByModule: Record<
       { youtubeId: "dh406O2v_1c", title: "Detailed Analysis: type google.com", channel: "Hussein Nasser", lang: "en" },
     ],
     "https-tls": [
-      { youtubeId: "k_ScPsb3WSk", title: "SSL/TLS pour les nuls", channel: "Julien Aubert", lang: "fr" },
       { youtubeId: "WIMKeyJ60Rw", title: "Comprendre HTTPS et le chiffrement SSL TLS en animation 3D", lang: "fr" },
       { youtubeId: "7W7WPMX7arI", title: "Comprendre le chiffrement SSL/TLS avec des emojis (et le HTTPS)", lang: "fr" },
+      { youtubeId: "k_ScPsb3WSk", title: "SSL/TLS pour les nuls", channel: "Julien Aubert", lang: "fr" },
       { youtubeId: "-dHbXLR-Mao", title: "Qu'est-ce qu'un certificat SSL/TLS ? (Cryptographie, PKI, OpenSSL)", lang: "fr" },
     ],
     "devtools-network": [
@@ -172,9 +172,9 @@ export const skillVideosByModule: Record<
       { youtubeId: "6QfJWYonU8I", title: "Afficher les requêtes HTTP sur Google Chrome", lang: "fr" },
     ],
     "network-hardware": [
+      { youtubeId: "Fopnr0IpwPM", title: "Comment fonctionne un routeur expliqué simplement", channel: "Formip", lang: "fr" },
       { youtubeId: "rHHVzhUmLqQ", title: "Comprends enfin la différence entre routeur et switch !", lang: "fr" },
       { youtubeId: "iQbS-eNQXzY", title: "Qu'est-ce qu'un routeur ?", lang: "fr" },
-      { youtubeId: "zN8YNNHcaZc", title: "How does the internet work?", channel: "freeCodeCamp", lang: "en" },
     ],
     "domain-vs-hosting": [
       { youtubeId: "j9IXwmA91iw", title: "Qu'est-ce qu'un nom de domaine, un hébergement et un hébergeur ?", lang: "fr" },
