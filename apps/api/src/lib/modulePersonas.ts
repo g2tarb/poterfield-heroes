@@ -401,23 +401,23 @@ export function buildSkillQuestionSystemPrompt(input: {
 - Phase : ${input.phase}/8
 - Domaine : ${persona.domain}
 
-# Style de questionnement
+# Style de questionnement (ton uniquement)
 ${persona.toneNote}
 
-# Pièges qui valent la peine de questionner
-${persona.commonPitfalls.map((p) => `- ${p}`).join("\n")}
-
-# Vocabulaire à manier dans tes questions
-${persona.vocabulary.join(", ")}
+# RÈGLE D'ANCRAGE (la plus importante)
+Le message utilisateur contient le CONTENU DE LA LEÇON, le label de la compétence et les objectifs du module. C'est ta SEULE source de vérité.
+- Ta question doit porter EXCLUSIVEMENT sur des notions effectivement présentes dans le contenu de la leçon fourni.
+- N'introduis JAMAIS un concept, un terme ou un piège qui n'apparaît pas dans ce contenu, même s'il appartient au domaine de la phase.
+- Ne monte jamais en difficulté au-delà de ce que la leçon enseigne. Si la leçon est introductive, la question reste introductive.
+- Si aucun contenu de leçon n'est fourni, base-toi sur le label de la compétence + les objectifs du module, et reste au niveau le plus simple cohérent avec ce module.
 
 # Mission
-Générer UNE question de validation pour une compétence précise. La question doit prouver que la compétence est *vraiment* acquise, pas juste comprise en surface.
+Générer UNE question de validation pour la compétence. Elle doit prouver que la compétence enseignée dans la leçon est acquise — ni plus, ni moins.
 
 # Critères de bonne question
 - Demande une explication conceptuelle OU un mini-snippet de code à écrire (max 5 lignes attendues).
-- Pointue mais pas piège. Ne porte pas sur un détail obscur.
-- Doit avoir UNE bonne réponse claire (pas vague).
-- Si tu peux questionner un piège classique listé ci-dessus, fais-le.
+- Claire, pas piège, pas sur un détail obscur ni hors-scope.
+- Doit avoir UNE bonne réponse claire, vérifiable dans le contenu de la leçon.
 
 # Format de retour (JSON strict)
 {
@@ -441,20 +441,19 @@ export function buildSkillValidationSystemPrompt(input: {
 - Phase : ${input.phase}/8
 - Domaine : ${persona.domain}
 
-# Style d'évaluation pour ce domaine
+# Style d'évaluation pour ce domaine (ton uniquement)
 ${persona.toneNote}
 
-# Exigences attendues
-${persona.expectations.map((e) => `- ${e}`).join("\n")}
-
-# Vocabulaire attendu dans la réponse
-${persona.vocabulary.join(", ")}
+# RÈGLE D'ANCRAGE (la plus importante)
+Le message utilisateur contient la question posée, la réponse attendue de référence et le CONTENU DE LA LEÇON. Juge la réponse d'Erwin par rapport à CE contenu et à cette question.
+- N'exige AUCUNE notion absente de la leçon. Si Erwin répond correctement au niveau enseigné, c'est "mastered" — même s'il ne maîtrise pas des subtilités hors-scope du domaine.
+- Ne pénalise pas l'absence de vocabulaire avancé qui n'a pas été enseigné dans la leçon.
 
 # Mission
-Juger si la réponse d'Erwin prouve la maîtrise de la compétence.
+Juger si la réponse d'Erwin prouve la maîtrise de la compétence telle qu'elle est enseignée.
 
 # Verdict
-- "mastered" : la réponse est juste, montre une vraie compréhension, vocabulaire utilisé correctement.
+- "mastered" : la réponse est juste et montre une vraie compréhension du contenu enseigné.
 - "practicing" : la réponse est partielle, début de compréhension mais fragile. Continuer à pratiquer.
 - "discovering" : la réponse est incorrecte ou hors sujet. Revenir aux fondamentaux.
 

@@ -43,6 +43,8 @@ const skillsRoutes: FastifyPluginAsync = async (app) => {
           id: skills.id,
           label: skills.label,
           moduleId: skills.moduleId,
+          description: skills.description,
+          contentMarkdown: skills.contentMarkdown,
         })
         .from(skills)
         .where(eq(skills.id, params.id))
@@ -54,6 +56,7 @@ const skillsRoutes: FastifyPluginAsync = async (app) => {
           title: modules.title,
           phase: modules.phase,
           moduleNumber: modules.moduleNumber,
+          objectives: modules.objectives,
         })
         .from(modules)
         .where(eq(modules.id, skill.moduleId))
@@ -66,6 +69,9 @@ const skillsRoutes: FastifyPluginAsync = async (app) => {
         moduleNumber: mod.moduleNumber,
         phase: mod.phase,
         skillId: skill.id,
+        skillDescription: skill.description,
+        lessonContent: skill.contentMarkdown,
+        objectives: mod.objectives,
       });
 
       return q;
@@ -92,6 +98,8 @@ const skillsRoutes: FastifyPluginAsync = async (app) => {
           id: skills.id,
           label: skills.label,
           moduleId: skills.moduleId,
+          description: skills.description,
+          contentMarkdown: skills.contentMarkdown,
         })
         .from(skills)
         .where(eq(skills.id, params.id))
@@ -99,7 +107,11 @@ const skillsRoutes: FastifyPluginAsync = async (app) => {
       if (!skill) throw new NotFoundError("Skill");
 
       const [mod] = await app.db
-        .select({ moduleNumber: modules.moduleNumber, phase: modules.phase })
+        .select({
+          moduleNumber: modules.moduleNumber,
+          phase: modules.phase,
+          objectives: modules.objectives,
+        })
         .from(modules)
         .where(eq(modules.id, skill.moduleId))
         .limit(1);
@@ -112,6 +124,9 @@ const skillsRoutes: FastifyPluginAsync = async (app) => {
         moduleNumber: mod?.moduleNumber ?? 1,
         phase: mod?.phase ?? 1,
         skillId: skill.id,
+        skillDescription: skill.description,
+        lessonContent: skill.contentMarkdown,
+        objectives: mod?.objectives ?? null,
       });
 
       const masteryPct =
