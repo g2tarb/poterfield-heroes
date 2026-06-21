@@ -1,96 +1,54 @@
 import type { NewMasteryAxis } from "../schema/content";
 
+// Radar de maîtrise — refonte parcours "5 modules systèmes / offensive-security".
+// 6 axes : Réseau, Shell & systèmes, C & bas niveau, Algorithmes, Python, Sécurité.
 export const masteryAxesSeed: NewMasteryAxis[] = [
   {
-    id: "fundamentals",
-    label: "Fondamentaux",
-    description: "Web, terminal, Git, environnement de dev.",
-    colorHex: "#A1A1A6",
+    id: "networking",
+    label: "Réseau & protocoles",
+    description:
+      "OSI/TCP-IP, IP/sous-réseaux, TCP/UDP, DNS, HTTP/1-2-3, TLS/PKI, NAT, capture (Wireshark/tcpdump), scan (nmap), netcat.",
+    colorHex: "#60A5FA",
     displayOrder: 1,
   },
   {
-    id: "git",
-    label: "Git & versionnage",
-    description: "Branches, merge, rebase, conflits, workflow pro.",
-    colorHex: "#F87171",
+    id: "shell_systems",
+    label: "Shell & systèmes Unix",
+    description:
+      "Bash avancé, scripting, processus, permissions, sed/awk/grep, SSH, cron, automatisation, recon & analyse de logs.",
+    colorHex: "#34D399",
     displayOrder: 2,
   },
   {
-    id: "html_css",
-    label: "HTML & CSS",
-    description: "Sémantique, accessibilité, layout, Tailwind, animations.",
-    colorHex: "#FB923C",
+    id: "c_lowlevel",
+    label: "C & bas niveau",
+    description:
+      "Pointeurs, modèle mémoire, pile/tas, allocation dynamique, compilation, gdb/valgrind/ASan, sockets BSD, corruption mémoire.",
+    colorHex: "#F59E0B",
     displayOrder: 3,
-  },
-  {
-    id: "javascript",
-    label: "JavaScript",
-    description: "ES2023+, async, closures, this, prototypes, patterns.",
-    colorHex: "#FACC15",
-    displayOrder: 4,
-  },
-  {
-    id: "typescript",
-    label: "TypeScript",
-    description: "Types stricts, generics, utility types, narrowing.",
-    colorHex: "#60A5FA",
-    displayOrder: 5,
-  },
-  {
-    id: "react",
-    label: "React",
-    description: "Composants, hooks, état, routing, queries, écosystème.",
-    colorHex: "#22D3EE",
-    displayOrder: 6,
-  },
-  {
-    id: "backend",
-    label: "Backend & Python",
-    description: "Node, Fastify, REST, WebSocket. Python pour scripting/IA.",
-    colorHex: "#34D399",
-    displayOrder: 7,
-  },
-  {
-    id: "database",
-    label: "Bases de données",
-    description: "SQL, Postgres, ORM Drizzle, transactions, indexes.",
-    colorHex: "#A78BFA",
-    displayOrder: 8,
-  },
-  {
-    id: "security",
-    label: "Sécurité",
-    description: "OWASP, auth, JWT, OAuth, CSP, rate limiting.",
-    colorHex: "#F472B6",
-    displayOrder: 9,
-  },
-  {
-    id: "testing",
-    label: "Tests",
-    description: "Vitest, Testing Library, Playwright, MSW.",
-    colorHex: "#E879F9",
-    displayOrder: 10,
-  },
-  {
-    id: "devops",
-    label: "DevOps",
-    description: "Docker, CI/CD, déploiement, monitoring, observabilité.",
-    colorHex: "#94A3B8",
-    displayOrder: 11,
-  },
-  {
-    id: "graphics_3d",
-    label: "Graphique & 3D",
-    description: "Three.js, R3F, shaders GLSL, performance 3D.",
-    colorHex: "#FDE68A",
-    displayOrder: 12,
   },
   {
     id: "algorithms",
     label: "Algorithmes & structures",
     description:
-      "Complexité Big-O, structures (array/list/stack/queue/hash/tree/graph), tris, recherche, recursion, DP, BFS/DFS, prep entretiens et 42.",
+      "Complexité Big-O, structures (array/list/stack/queue/hash/tree/graph), tris, recherche, récursion, DP, BFS/DFS, prep entretiens et 42.",
     colorHex: "#10B981",
-    displayOrder: 13,
+    displayOrder: 4,
+  },
+  {
+    id: "python",
+    label: "Python (outillage)",
+    description:
+      "Scripting, automatisation, parsing, requests/httpx, asyncio, scapy, outillage offensif/défensif, data wrangling.",
+    colorHex: "#FACC15",
+    displayOrder: 5,
+  },
+  {
+    id: "security",
+    label: "Sécurité offensive/défensive",
+    description:
+      "Reconnaissance, injections, exploitation mémoire, MITM, scanning, kill chains, hardening, détection — toujours en cadre légal.",
+    colorHex: "#F472B6",
+    displayOrder: 6,
   },
 ];

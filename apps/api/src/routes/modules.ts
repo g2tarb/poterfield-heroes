@@ -18,7 +18,7 @@ import { verifyAllResources } from "../services/resourceVerifier.js";
 const modulesRoutes: FastifyPluginAsync = async (app) => {
   const a = app.withTypeProvider<ZodTypeProvider>();
 
-  // GET /modules — liste des 25 modules avec statut de progression
+  // GET /modules — liste des 5 modules avec statut de progression
   a.get(
     "/modules",
     {

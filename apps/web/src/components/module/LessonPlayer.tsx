@@ -515,11 +515,13 @@ function StepSkill({
 }) {
   const [mobileTab, setMobileTab] = useState<"read" | "code">("read");
 
-  const codingPhases = moduleNumber >= 8; // M8+ = JS, donc sandbox utile
-  // M24-M25 Python natif. M26 (algo transversal) → JS par défaut + switch autorisé.
-  const allowSwitch = moduleNumber === 26;
+  // Sandbox navigateur seulement là où elle a du sens : Algo (n°0, JS/Python)
+  // et Python (n°4, Pyodide). Réseau/Shell/C se travaillent hors-éditeur
+  // (terminal, gcc, Wireshark) via les exercices "external".
+  const codingPhases = moduleNumber === 0 || moduleNumber === 4;
+  const allowSwitch = moduleNumber === 0; // algo : JS ↔ Python
   const language: "javascript" | "python" =
-    moduleNumber === 24 || moduleNumber === 25 ? "python" : "javascript";
+    moduleNumber === 4 ? "python" : "javascript";
 
   const seedCode =
     language === "python"
@@ -616,8 +618,8 @@ function StepSkill({
         Pas de sandbox sur ce module
       </p>
       <p className="mt-3 text-sm text-[var(--color-fg-secondary)]">
-        Ce concept se travaille hors-éditeur (terminal, schémas, lecture). La
-        sandbox revient sur les modules de code (à partir de M8 — JS fondamental).
+        Ce concept se travaille hors-éditeur (terminal, gcc, Wireshark, schémas).
+        La sandbox navigateur revient sur les modules Algo et Python.
       </p>
     </div>
   );

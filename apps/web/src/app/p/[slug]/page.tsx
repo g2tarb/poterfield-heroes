@@ -163,7 +163,7 @@ export default async function PublicProfilePage({
               )}
               <Stat
                 label="Modules"
-                value={`${profile.completedModules.length}/25`}
+                value={`${profile.completedModules.length}/5`}
               />
               <Stat label="Depuis" value={`${daysSinceStart}j`} />
             </div>

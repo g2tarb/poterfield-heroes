@@ -35,6 +35,7 @@ export const programmingLanguageEnum = pgEnum("programming_language", [
   "jsx",
   "tsx",
   "python",
+  "c",
   "sql",
   "bash",
   "glsl",

@@ -45,14 +45,14 @@ export const levels = pgTable("levels", {
 });
 
 // =============================================================
-// MODULES (les 25 modules de la roadmap)
+// MODULES (les 5 modules du parcours systèmes/sécu)
 // =============================================================
 export const modules = pgTable(
   "modules",
   {
     id: varchar("id", { length: 64 }).primaryKey(), // ex: "m01-comment-fonctionne-le-web"
-    moduleNumber: integer("module_number").notNull().unique(), // 1..25
-    phase: integer("phase").notNull(), // 1..8 (Phase 1 à Phase 8)
+    moduleNumber: integer("module_number").notNull().unique(), // numéros non contigus : algo=0, réseau=1, shell=2, C=3, python=4
+    phase: integer("phase").notNull(), // phases : 1 (réseau/shell), 2 (C), 3 (python), 9 (transversal algo)
     title: varchar("title", { length: 200 }).notNull(),
     subtitle: varchar("subtitle", { length: 300 }),
     pourquoi: text("pourquoi").notNull(),

@@ -4,10 +4,10 @@ export const M24_ID = "m24-python-scripting-data";
 
 export const m24Module: NewModule = {
   id: M24_ID,
-  moduleNumber: 24,
-  phase: 8,
+  moduleNumber: 4,
+  phase: 4,
   title: "Python (scripting, scraping, data)",
-  subtitle: "JS domine le web. Python domine scripting, data, IA. Pont vers M25.",
+  subtitle: "Le langage de l'outillage : scripting, parsing, scapy, automatisation offensive/défensive.",
   pourquoi:
     "JS/TS dominent le web. Python domine 3 territoires : (1) automatisation/scripting rapide (plus concis), (2) scraping + data wrangling (BeautifulSoup, pandas, polars), (3) IA appliquée (LangChain, LlamaIndex, SDK OpenAI/Anthropic 6-12 mois en avance sur TS). En 2026 : dev fullstack moderne maîtrise Python a minima. Pas pour backend (Fastify > FastAPI pour toi), mais pour automatiser, scraper, prototyper agents, manipuler CSV 1M lignes en 2s.",
   objectives: [
@@ -31,9 +31,9 @@ export const m24Module: NewModule = {
     "pytest (plus simple et puissant que unittest)",
     "Environnements virtuels (uv le fait par défaut)",
     "typer / click (CLI moderne)",
-    "Jupyter Notebooks (préparation M25)",
+    "Jupyter Notebooks (exploration data)",
   ],
-  prerequisites: "Modules 8-12 (JS solide, async familier)",
+  prerequisites: "Module C (m03) recommandé. À l'aise en terminal (m02) et en algo de base (m00).",
   estimatedHours: 40,
   estimatedWeeks: 3,
   stackAllowed: [
@@ -41,7 +41,7 @@ export const m24Module: NewModule = {
     "pytest + typer + httpx + BeautifulSoup",
     "pandas/polars + Jupyter + Pydantic",
   ],
-  prereqModuleId: "m23-threejs-r3f",
+  prereqModuleId: "m03-c-bas-niveau",
   unlockSrsMatureRatio: 80,
 };
 
@@ -64,10 +64,10 @@ export const m24Skills: NewSkill[] = [
   { moduleId: M24_ID, slug: "pytest", label: "pytest (tests Python)", displayOrder: 16, weight: 2 },
   { moduleId: M24_ID, slug: "venv", label: "Environnements virtuels (uv venv)", displayOrder: 17, weight: 2 },
   { moduleId: M24_ID, slug: "typer-cli", label: "typer (CLI moderne)", displayOrder: 18, weight: 1 },
-  { moduleId: M24_ID, slug: "jupyter", label: "Jupyter Notebooks (préparation M25)", displayOrder: 19, weight: 1 },
+  { moduleId: M24_ID, slug: "jupyter", label: "Jupyter Notebooks (exploration data)", displayOrder: 19, weight: 1 },
 ];
 
-export const m24SkillAxisRules = m24Skills.map((s) => ({ skillSlug: s.slug, axisId: "backend", contribution: 100 }));
+export const m24SkillAxisRules = m24Skills.map((s) => ({ skillSlug: s.slug, axisId: "python", contribution: 100 }));
 
 export const m24Videos: NewVideo[] = [
   {
@@ -186,7 +186,7 @@ export const m24Exercises: NewExercise[] = [
 - Rapport HTML auto-généré (Jinja2)
 - Comparer perf pandas vs polars sur 100k lignes
 
-**Tool 4 — async-api-client** (préparation M25)
+**Tool 4 — async-api-client**
 - async client pour orchestrer Claude + OpenAI + Mistral en parallèle
 - asyncio.gather + httpx
 - CLI : prompt → 3 LLMs → tableau comparatif (temps, coût)

@@ -10,7 +10,7 @@ export const M02_ID = "m02-terminal-shell";
 export const m02Module: NewModule = {
   id: M02_ID,
   moduleNumber: 2,
-  phase: 1,
+  phase: 2,
   title: "Terminal & Shell (Bash)",
   subtitle: "Le clavier du musicien du dev. Sans terminal, pas de prod.",
   pourquoi:
@@ -147,7 +147,7 @@ export const m02SkillAxisRules: Array<{
   contribution: number;
 }> = m02Skills.map((s) => ({
   skillSlug: s.slug,
-  axisId: "fundamentals",
+  axisId: "shell_systems",
   contribution: 100,
 }));
 

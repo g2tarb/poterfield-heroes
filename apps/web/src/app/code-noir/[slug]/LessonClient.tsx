@@ -7,6 +7,7 @@ import { Markdown } from "@/components/coach/Markdown";
 import { CodeNoirVideos } from "@/components/code-noir/CodeNoirVideos";
 import { VulgarizeButton } from "@/components/code-noir/VulgarizeButton";
 import { CodeNoirQuiz } from "@/components/code-noir/CodeNoirQuiz";
+import { CodeNoirLab, type LabStep } from "@/components/code-noir/CodeNoirLab";
 
 type Technique = {
   slug: string;
@@ -21,6 +22,7 @@ type Technique = {
   cve?: string;
   youtubeSearch?: string;
   youtubeIds?: string[];
+  steps?: LabStep[];
 };
 
 type TechniqueProgress = {
@@ -60,15 +62,18 @@ type TechniqueResponse = {
   progress: TechniqueProgress | null;
 };
 
-type Step = "intro" | "hack" | "defense" | "videos" | "quiz";
+type Step = "intro" | "hack" | "defense" | "lab" | "videos" | "quiz";
 
 const STEPS: Array<{ key: Step; label: string; index: number }> = [
   { key: "intro", label: "Intro", index: 1 },
   { key: "hack", label: "Hack", index: 2 },
   { key: "defense", label: "Défense", index: 3 },
-  { key: "videos", label: "Vidéos", index: 4 },
-  { key: "quiz", label: "Quiz", index: 5 },
+  { key: "lab", label: "🧪 Lab", index: 4 },
+  { key: "videos", label: "Vidéos", index: 5 },
+  { key: "quiz", label: "Quiz", index: 6 },
 ];
+
+const STEP_KEYS: Step[] = ["intro", "hack", "defense", "lab", "videos", "quiz"];
 
 function visitedKey(slug: string): string {
   return `ph:codenoir:visited:${slug}`;
@@ -81,7 +86,7 @@ function readVisited(slug: string): Set<Step> {
     if (!raw) return new Set();
     const arr = JSON.parse(raw) as string[];
     return new Set(arr.filter((s): s is Step =>
-      ["intro", "hack", "defense", "videos", "quiz"].includes(s),
+      (STEP_KEYS as string[]).includes(s),
     ));
   } catch {
     return new Set();

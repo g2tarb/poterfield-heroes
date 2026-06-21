@@ -15,7 +15,7 @@ type Props = {
 };
 
 /**
- * SVG radar chart for 12 mastery axes.
+ * SVG radar chart for the mastery axes (nombre dynamique).
  * Each vertex is colored after its axis, with a soft polygon fill.
  */
 export function RadarChart12({ axes, size = 320 }: Props) {
@@ -48,7 +48,7 @@ export function RadarChart12({ axes, size = 320 }: Props) {
         viewBox={`0 0 ${size} ${size}`}
         className="w-full overflow-visible"
         role="img"
-        aria-label="Radar des 12 axes de mastery"
+        aria-label="Radar des axes de maîtrise"
       >
         {/* Concentric grid rings */}
         {[0.25, 0.5, 0.75, 1].map((ratio) => (

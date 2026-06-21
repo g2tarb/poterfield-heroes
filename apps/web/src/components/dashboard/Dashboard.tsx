@@ -98,7 +98,7 @@ export function Dashboard() {
               progression={progression}
               srs={srs}
               modulesCompleted={modulesCompleted}
-              modulesTotal={modules.length || 25}
+              modulesTotal={modules.length || 5}
             />
           )}
         </div>

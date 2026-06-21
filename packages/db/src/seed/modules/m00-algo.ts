@@ -30,7 +30,7 @@ export const m00Module: NewModule = {
   title: "Algorithmie & Structures de Données",
   subtitle:
     "Module transversal — à travailler en parallèle des autres dès J1. Bases solides pour entretiens tech et prep 42.",
-  pourquoi: `Les 25 autres modules t'apprennent à **construire** des applications. Celui-ci t'apprend à **raisonner** sur ce que tu construis.
+  pourquoi: `Les 4 autres modules t'apprennent à **construire** des applications. Celui-ci t'apprend à **raisonner** sur ce que tu construis.
 
 Sans algo, tu codes au feeling, tes solutions marchent par chance, et tu te fais éclater en entretien dès qu'on te demande "et si on a 10 millions d'éléments au lieu de 100 ?". Sans algo, tu ne passes pas la piscine 42, tu ne franchis pas les filtres de Stripe / Datadog / Google. Sans algo, tu codes du O(n²) en pensant que c'est du O(n) et tes serveurs ramassent à 18h chaque jour sans que tu saches pourquoi.
 

@@ -13,7 +13,7 @@ type Step = {
 const STEPS: Step[] = [
   {
     title: "L'atelier",
-    body: "Tu vois 25 modules en escalier. Tu commences au premier non-verrouillé. Chaque module = vidéos + skills + exos + projet.",
+    body: "Tu vois 5 modules en escalier. Tu commences au premier non-verrouillé. Chaque module = vidéos + skills + exos + projet.",
     hint: "▼ Clique le module actif pour commencer",
   },
   {

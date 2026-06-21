@@ -28,119 +28,38 @@ import {
   m03SkillAxisRules,
   m03Videos,
   m03Exercises,
-} from "./modules/m03";
+} from "./modules/m03-c-bas-niveau";
 import {
-  M04_ID,
-  m04Module,
-  m04Skills,
-  m04SkillAxisRules,
-  m04Videos,
-  m04Exercises,
-} from "./modules/m04";
+  M24_ID,
+  m24Module,
+  m24Skills,
+  m24SkillAxisRules,
+  m24Videos,
+  m24Exercises,
+} from "./modules/m24";
 import {
-  M05_ID,
-  m05Module,
-  m05Skills,
-  m05SkillAxisRules,
-  m05Videos,
-  m05Exercises,
-} from "./modules/m05";
-import {
-  M06_ID,
-  m06Module,
-  m06Skills,
-  m06SkillAxisRules,
-  m06Videos,
-  m06Exercises,
-} from "./modules/m06";
-import {
-  M07_ID,
-  m07Module,
-  m07Skills,
-  m07SkillAxisRules,
-  m07Videos,
-  m07Exercises,
-} from "./modules/m07";
-import {
-  M08_ID,
-  m08Module,
-  m08Skills,
-  m08SkillAxisRules,
-  m08Videos,
-  m08Exercises,
-} from "./modules/m08";
-import {
-  M09_ID,
-  m09Module,
-  m09Skills,
-  m09SkillAxisRules,
-  m09Videos,
-  m09Exercises,
-} from "./modules/m09";
-import {
-  M10_ID,
-  m10Module,
-  m10Skills,
-  m10SkillAxisRules,
-  m10Videos,
-  m10Exercises,
-} from "./modules/m10";
-import {
-  M11_ID,
-  m11Module,
-  m11Skills,
-  m11SkillAxisRules,
-  m11Videos,
-  m11Exercises,
-} from "./modules/m11";
-import {
-  M12_ID,
-  m12Module,
-  m12Skills,
-  m12SkillAxisRules,
-  m12Videos,
-  m12Exercises,
-} from "./modules/m12";
-import {
-  M13_ID,
-  m13Module,
-  m13Skills,
-  m13SkillAxisRules,
-  m13Videos,
-  m13Exercises,
-} from "./modules/m13";
-import {
-  M14_ID,
-  m14Module,
-  m14Skills,
-  m14SkillAxisRules,
-  m14Videos,
-  m14Exercises,
-} from "./modules/m14";
-import {
-  M15_ID,
-  m15Module,
-  m15Skills,
-  m15SkillAxisRules,
-  m15Videos,
-  m15Exercises,
-} from "./modules/m15";
-import { M16_ID, m16Module, m16Skills, m16SkillAxisRules, m16Videos, m16Exercises } from "./modules/m16";
-import { M17_ID, m17Module, m17Skills, m17SkillAxisRules, m17Videos, m17Exercises } from "./modules/m17";
-import { M18_ID, m18Module, m18Skills, m18SkillAxisRules, m18Videos, m18Exercises } from "./modules/m18";
-import { M19_ID, m19Module, m19Skills, m19SkillAxisRules, m19Videos, m19Exercises } from "./modules/m19";
-import { M20_ID, m20Module, m20Skills, m20SkillAxisRules, m20Videos, m20Exercises } from "./modules/m20";
-import { M21_ID, m21Module, m21Skills, m21SkillAxisRules, m21Videos, m21Exercises } from "./modules/m21";
-import { M22_ID, m22Module, m22Skills, m22SkillAxisRules, m22Videos, m22Exercises } from "./modules/m22";
-import { M23_ID, m23Module, m23Skills, m23SkillAxisRules, m23Videos, m23Exercises } from "./modules/m23";
-import { M24_ID, m24Module, m24Skills, m24SkillAxisRules, m24Videos, m24Exercises } from "./modules/m24";
-import { M25_ID, m25Module, m25Skills, m25SkillAxisRules, m25Videos, m25Exercises } from "./modules/m25";
-import { M00_ID, m00Module, m00Skills, m00SkillAxisRules, m00Videos, m00Exercises } from "./modules/m00-algo";
+  M00_ID,
+  m00Module,
+  m00Skills,
+  m00SkillAxisRules,
+  m00Videos,
+  m00Exercises,
+} from "./modules/m00-algo";
 import {
   m00LessonContent,
   m00Resources,
   m00SkillResourceLinks,
 } from "./modules/m00-extras";
+import { m00LessonContentRest } from "./modules/m00-lessons-rest";
+import { m01LessonContent } from "./modules/m01-lessons";
+import { m02LessonContent } from "./modules/m02-lessons";
+import { m03LessonContent } from "./modules/m03-lessons";
+import { m24LessonContent } from "./modules/m24-lessons";
+import { m00ExtraExercises } from "./modules/m00-exercises-extra";
+import { m01ExtraExercises } from "./modules/m01-exercises-extra";
+import { m02ExtraExercises } from "./modules/m02-exercises-extra";
+import { m03ExtraExercises } from "./modules/m03-exercises-extra";
+import { m24ExtraExercises } from "./modules/m24-exercises-extra";
 
 const databaseUrl = process.env["DATABASE_URL"];
 if (!databaseUrl) {
@@ -295,6 +214,29 @@ async function seedM00Extras() {
   );
 }
 
+async function seedLessons(
+  moduleId: string,
+  lessons: Record<string, string>,
+) {
+  let applied = 0;
+  for (const [slug, markdown] of Object.entries(lessons)) {
+    const res = await db
+      .update(schema.skills)
+      .set({ contentMarkdown: markdown })
+      .where(
+        and(
+          eq(schema.skills.moduleId, moduleId),
+          eq(schema.skills.slug, slug),
+        ),
+      )
+      .returning({ id: schema.skills.id });
+    applied += res.length;
+  }
+  console.log(
+    `→ Lessons ${moduleId}: ${applied}/${Object.keys(lessons).length} appliquées`,
+  );
+}
+
 async function seedUserState() {
   console.log("→ Seeding user state (single row)…");
   await db
@@ -319,11 +261,11 @@ async function seedPublicProfile() {
     .values({
       id: 1,
       slug: "erwin",
-      tagline: "Dev fullstack en formation autodidacte.",
-      bio: "Je traverse 25 modules pour passer de dev JS confirmé à créateur de SaaS IA. Outil construit pour moi-même, transparent par choix.",
-      pitchMarkdown: `**Porterfield Heroes** est mon atelier privé d'apprentissage dev fullstack.
+      tagline: "Dev systèmes & sécurité offensive, en formation autodidacte.",
+      bio: "Je traverse 5 modules ultra-poussés — Réseau, Shell, C, Algorithmie, Python — pour passer de dev JS à profil systèmes / offensive-security. Outil construit pour moi-même, transparent par choix.",
+      pitchMarkdown: `**Porterfield Heroes** est mon atelier privé d'apprentissage bas niveau & sécurité.
 
-25 modules verrouillés, ~1500h, du fondamental web jusqu'à l'IA appliquée (RAG, agents, MCP). Un coach IA permanent qui me connaît. Une sandbox multi-langage. Un contrôle hebdomadaire qui m'empêche de tricher avec moi-même.
+5 modules ultra-poussés — Réseau & protocoles, Shell & systèmes Unix, C & bas niveau, Algorithmie & structures, Python (outillage) — avec la feature **Code Noir** : techniques offensives/défensives mappées à chaque module, toujours en cadre légal. Un coach IA permanent qui me connaît. Une sandbox multi-langage. Un contrôle hebdomadaire qui m'empêche de tricher avec moi-même.
 
 Ce que tu vois ici, c'est mon état d'avancement. Pas le contenu, juste les preuves de progression.`,
       isPublished: true,
@@ -339,6 +281,7 @@ async function main() {
   console.log("Seeding Porterfield Heroes database…\n");
   await seedMasteryAxes();
   await seedLevels();
+  // Chaîne principale : Réseau → Shell → C → Python.
   await seedModule(
     M01_ID,
     m01Module,
@@ -364,115 +307,43 @@ async function main() {
     m03Exercises,
   );
   await seedModule(
-    M04_ID,
-    m04Module,
-    m04Skills,
-    m04SkillAxisRules,
-    m04Videos,
-    m04Exercises,
+    M24_ID,
+    m24Module,
+    m24Skills,
+    m24SkillAxisRules,
+    m24Videos,
+    m24Exercises,
   );
+  // Module transversal M00 (algorithmie) — seedé en dernier mais affiché en TÊTE
+  // côté frontend (moduleNumber 0, phase 9, démarrable dès J1).
   await seedModule(
-    M05_ID,
-    m05Module,
-    m05Skills,
-    m05SkillAxisRules,
-    m05Videos,
-    m05Exercises,
+    M00_ID,
+    m00Module,
+    m00Skills,
+    m00SkillAxisRules,
+    m00Videos,
+    m00Exercises,
   );
-  await seedModule(
-    M06_ID,
-    m06Module,
-    m06Skills,
-    m06SkillAxisRules,
-    m06Videos,
-    m06Exercises,
-  );
-  await seedModule(
-    M07_ID,
-    m07Module,
-    m07Skills,
-    m07SkillAxisRules,
-    m07Videos,
-    m07Exercises,
-  );
-  await seedModule(
-    M08_ID,
-    m08Module,
-    m08Skills,
-    m08SkillAxisRules,
-    m08Videos,
-    m08Exercises,
-  );
-  await seedModule(
-    M09_ID,
-    m09Module,
-    m09Skills,
-    m09SkillAxisRules,
-    m09Videos,
-    m09Exercises,
-  );
-  await seedModule(
-    M10_ID,
-    m10Module,
-    m10Skills,
-    m10SkillAxisRules,
-    m10Videos,
-    m10Exercises,
-  );
-  await seedModule(
-    M11_ID,
-    m11Module,
-    m11Skills,
-    m11SkillAxisRules,
-    m11Videos,
-    m11Exercises,
-  );
-  await seedModule(
-    M12_ID,
-    m12Module,
-    m12Skills,
-    m12SkillAxisRules,
-    m12Videos,
-    m12Exercises,
-  );
-  await seedModule(
-    M13_ID,
-    m13Module,
-    m13Skills,
-    m13SkillAxisRules,
-    m13Videos,
-    m13Exercises,
-  );
-  await seedModule(
-    M14_ID,
-    m14Module,
-    m14Skills,
-    m14SkillAxisRules,
-    m14Videos,
-    m14Exercises,
-  );
-  await seedModule(
-    M15_ID,
-    m15Module,
-    m15Skills,
-    m15SkillAxisRules,
-    m15Videos,
-    m15Exercises,
-  );
-  await seedModule(M16_ID, m16Module, m16Skills, m16SkillAxisRules, m16Videos, m16Exercises);
-  await seedModule(M17_ID, m17Module, m17Skills, m17SkillAxisRules, m17Videos, m17Exercises);
-  await seedModule(M18_ID, m18Module, m18Skills, m18SkillAxisRules, m18Videos, m18Exercises);
-  await seedModule(M19_ID, m19Module, m19Skills, m19SkillAxisRules, m19Videos, m19Exercises);
-  await seedModule(M20_ID, m20Module, m20Skills, m20SkillAxisRules, m20Videos, m20Exercises);
-  await seedModule(M21_ID, m21Module, m21Skills, m21SkillAxisRules, m21Videos, m21Exercises);
-  await seedModule(M22_ID, m22Module, m22Skills, m22SkillAxisRules, m22Videos, m22Exercises);
-  await seedModule(M23_ID, m23Module, m23Skills, m23SkillAxisRules, m23Videos, m23Exercises);
-  await seedModule(M24_ID, m24Module, m24Skills, m24SkillAxisRules, m24Videos, m24Exercises);
-  await seedModule(M25_ID, m25Module, m25Skills, m25SkillAxisRules, m25Videos, m25Exercises);
-  // Module transversal M00 (algorithmie) — seedé en dernier pour pas casser
-  // l'ordre logique des dépendances, mais affiché en TÊTE côté frontend.
-  await seedModule(M00_ID, m00Module, m00Skills, m00SkillAxisRules, m00Videos, m00Exercises);
   await seedM00Extras();
+  // Leçons in-app pré-écrites (content_markdown par compétence)
+  await seedLessons(M01_ID, m01LessonContent);
+  await seedLessons(M02_ID, m02LessonContent);
+  await seedLessons(M03_ID, m03LessonContent);
+  await seedLessons(M24_ID, m24LessonContent);
+  await seedLessons(M00_ID, m00LessonContentRest);
+  // Exercices pratiques supplémentaires (quiz + code, par compétence)
+  const extraExercises = [
+    ...m01ExtraExercises,
+    ...m02ExtraExercises,
+    ...m03ExtraExercises,
+    ...m24ExtraExercises,
+    ...m00ExtraExercises,
+  ];
+  await db
+    .insert(schema.exercises)
+    .values(extraExercises)
+    .onConflictDoNothing();
+  console.log(`→ ${extraExercises.length} exercices pratiques supplémentaires`);
   await seedUserState();
   await seedPublicProfile();
   console.log("\nDone.");

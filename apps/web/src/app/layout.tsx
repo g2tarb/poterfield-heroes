@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: "%s · Porterfield Heroes",
   },
   description:
-    "Plateforme personnelle d'apprentissage dev fullstack. 25 modules, coach IA, sandbox multi-langage.",
+    "Plateforme personnelle d'apprentissage systèmes & sécurité. 5 modules (réseau, shell, C, algo, python), coach IA, sandbox multi-langage.",
   manifest: "/manifest.webmanifest",
   applicationName: "Porterfield Heroes",
   appleWebApp: {
