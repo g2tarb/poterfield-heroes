@@ -25,6 +25,7 @@ import settingsRoutes from "./routes/settings.js";
 import skillsRoutes from "./routes/skills.js";
 import srsRoutes from "./routes/srs.js";
 import videoRoutes from "./routes/video.js";
+import sandboxRoutes from "./routes/sandbox.js";
 import { env } from "./config/env.js";
 
 export async function buildApp(): Promise<FastifyInstance> {
@@ -91,6 +92,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(videoRoutes, { prefix: "/api" });
   await app.register(settingsRoutes, { prefix: "/api" });
   await app.register(skillsRoutes, { prefix: "/api" });
+  await app.register(sandboxRoutes);
 
   return app;
 }

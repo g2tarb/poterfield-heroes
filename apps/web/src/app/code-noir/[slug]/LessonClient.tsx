@@ -298,6 +298,7 @@ export function CodeNoirLessonClient({ slug }: { slug: string }) {
         {step === "intro" && <IntroStep technique={t} />}
         {step === "hack" && <HackStep technique={t} />}
         {step === "defense" && <DefenseStep technique={t} />}
+        {step === "lab" && <CodeNoirLab steps={t.steps} />}
         {step === "videos" && <VideosStep technique={t} />}
         {step === "quiz" && (
           <CodeNoirQuiz

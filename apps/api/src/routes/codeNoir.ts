@@ -16,6 +16,7 @@ import {
   getLockedTechniques,
   type CodeNoirTechnique,
 } from "../lib/codeNoirData.js";
+import { getStepsForTechnique } from "../lib/codeNoirSteps/index.js";
 import { buildCodeNoirSystemPrompt } from "../lib/codeNoirPersona.js";
 import {
   ACHIEVEMENTS,
@@ -285,7 +286,10 @@ const codeNoirRoutes: FastifyPluginAsync = async (app) => {
         .limit(1);
 
       return {
-        technique,
+        technique: {
+          ...technique,
+          steps: getStepsForTechnique(technique.moduleNumber, params.slug),
+        },
         currentModule,
         progress: progressRow
           ? {

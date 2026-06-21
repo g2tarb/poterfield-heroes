@@ -15,25 +15,19 @@ type Module = {
 };
 
 const PHASE_LABELS: Record<number, string> = {
-  1: "Fondamentaux",
-  2: "Frontend statique",
-  3: "JavaScript",
-  4: "Frontend dynamique",
-  5: "Backend",
-  6: "Bases de données",
-  7: "Outillage pro",
-  8: "Bonus 3D / IA",
+  1: "Réseau & protocoles",
+  2: "Shell & systèmes",
+  3: "C & bas niveau",
+  4: "Python offensif",
+  9: "Algorithmie",
 };
 
 const PHASE_ICONS: Record<number, string> = {
-  1: "⚙",
-  2: "▤",
-  3: "⌘",
-  4: "◐",
-  5: "⌬",
-  6: "▦",
-  7: "✦",
-  8: "★",
+  1: "◉",
+  2: "⬡",
+  3: "▸",
+  4: "⌬",
+  9: "∑",
 };
 
 // Pattern zigzag basé sur cosinus : positions [0..4] sur 5 lanes,
