@@ -9,8 +9,8 @@ const stepsByModule: Record<number, CodeNoirStepsByTechnique> = {
   0: stepsM00,
   1: stepsM01,
   2: stepsM02,
-  3: stepsM03,
-  4: stepsM04,
+  5: stepsM03,
+  6: stepsM04,
 };
 
 export function getStepsForTechnique(

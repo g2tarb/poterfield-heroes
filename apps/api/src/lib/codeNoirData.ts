@@ -212,7 +212,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   // ==================== M03 — C & bas niveau ====================
   {
     slug: "buffer-overflow-stack",
-    moduleNumber: 3,
+    moduleNumber: 5,
     kind: "duo",
     language: "concept",
     title: "Stack Buffer Overflow",
@@ -225,7 +225,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "use-after-free",
-    moduleNumber: 3,
+    moduleNumber: 5,
     kind: "duo",
     language: "concept",
     title: "Use-After-Free (UAF)",
@@ -238,7 +238,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "format-string",
-    moduleNumber: 3,
+    moduleNumber: 5,
     kind: "duo",
     language: "concept",
     title: "Format String (printf user-controlled)",
@@ -251,7 +251,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "integer-overflow-c",
-    moduleNumber: 3,
+    moduleNumber: 5,
     kind: "duo",
     language: "concept",
     title: "Integer Overflow / Underflow en C",
@@ -264,7 +264,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "heap-exploitation",
-    moduleNumber: 3,
+    moduleNumber: 5,
     kind: "offensive",
     language: "concept",
     title: "Heap Exploitation — bases (métadonnées, double-free, tcache)",
@@ -277,7 +277,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "rop-intro",
-    moduleNumber: 3,
+    moduleNumber: 5,
     kind: "offensive",
     language: "concept",
     title: "Return-Oriented Programming (intro)",
@@ -293,7 +293,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   {
     slug: "python-unsafe-deserialization",
     youtubeSearch: "python pickle yaml.load eval RCE deserialization",
-    moduleNumber: 4,
+    moduleNumber: 6,
     kind: "duo",
     language: "python",
     title: "Python — désérialisation non sûre (pickle / yaml.load / eval-exec)",
@@ -309,7 +309,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "supply-chain-pip",
-    moduleNumber: 4,
+    moduleNumber: 6,
     kind: "duo",
     language: "concept",
     title: "Supply Chain — pip / PyPI",
@@ -322,7 +322,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "redos",
-    moduleNumber: 4,
+    moduleNumber: 6,
     kind: "duo",
     language: "both",
     title: "ReDoS (Regular Expression DoS)",
@@ -336,7 +336,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "ssti-jinja2",
-    moduleNumber: 4,
+    moduleNumber: 6,
     kind: "duo",
     language: "python",
     title: "SSTI — Server-Side Template Injection (Jinja2 / Flask)",
@@ -349,7 +349,7 @@ export const CODE_NOIR_TECHNIQUES: CodeNoirTechnique[] = [
   },
   {
     slug: "dependency-confusion",
-    moduleNumber: 4,
+    moduleNumber: 6,
     kind: "duo",
     language: "concept",
     title: "Dependency Confusion",

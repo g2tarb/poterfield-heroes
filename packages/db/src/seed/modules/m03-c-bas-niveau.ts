@@ -31,8 +31,8 @@ export const M03_ID = "m03-c-bas-niveau";
 
 export const m03Module: NewModule = {
   id: M03_ID,
-  moduleNumber: 3,
-  phase: 3,
+  moduleNumber: 5,
+  phase: 5,
   title: "C & bas niveau (mémoire, pointeurs, systèmes)",
   subtitle:
     "Le langage où tu vois la mémoire à nu. Pointeurs, heap/stack, compilation, debugging — et la base de toute la sécu offensive.",
@@ -79,7 +79,7 @@ La quasi-totalité des classes de vulnérabilités historiques (buffer overflow,
     "Compiler Explorer / godbolt.org (inspection assembleur)",
     "VM ou conteneur jetable pour les labs sécu",
   ],
-  prereqModuleId: "m02-terminal-shell",
+  prereqModuleId: "m06-env-dev",
   unlockSrsMatureRatio: 80,
 };
 

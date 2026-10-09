@@ -17,16 +17,20 @@ type Module = {
 const PHASE_LABELS: Record<number, string> = {
   1: "Réseau & protocoles",
   2: "Shell & systèmes",
-  3: "C & bas niveau",
-  4: "Python offensif",
+  3: "Git & GitHub",
+  4: "Env. développeur",
+  5: "C & bas niveau",
+  6: "Python offensif",
   9: "Algorithmie",
 };
 
 const PHASE_ICONS: Record<number, string> = {
   1: "◉",
   2: "⬡",
-  3: "▸",
-  4: "⌬",
+  3: "⑂",
+  4: "⚒",
+  5: "▸",
+  6: "⌬",
   9: "∑",
 };
 

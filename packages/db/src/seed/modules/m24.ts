@@ -4,8 +4,8 @@ export const M24_ID = "m24-python-scripting-data";
 
 export const m24Module: NewModule = {
   id: M24_ID,
-  moduleNumber: 4,
-  phase: 4,
+  moduleNumber: 6,
+  phase: 6,
   title: "Python (scripting, scraping, data)",
   subtitle: "Le langage de l'outillage : scripting, parsing, scapy, automatisation offensive/défensive.",
   pourquoi:

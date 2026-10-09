@@ -46,6 +46,22 @@ import {
   m00Exercises,
 } from "./modules/m00-algo";
 import {
+  M05_ID,
+  m05Module,
+  m05Skills,
+  m05SkillAxisRules,
+  m05Videos,
+  m05Exercises,
+} from "./modules/m05-git-github";
+import {
+  M06_ID,
+  m06Module,
+  m06Skills,
+  m06SkillAxisRules,
+  m06Videos,
+  m06Exercises,
+} from "./modules/m06-env-dev";
+import {
   m00LessonContent,
   m00Resources,
   m00SkillResourceLinks,
@@ -281,7 +297,7 @@ async function main() {
   console.log("Seeding Porterfield Heroes database…\n");
   await seedMasteryAxes();
   await seedLevels();
-  // Chaîne principale : Réseau → Shell → C → Python.
+  // Chaîne : Réseau → Shell → Git → Env dev → C → Python.
   await seedModule(
     M01_ID,
     m01Module,
@@ -297,6 +313,22 @@ async function main() {
     m02SkillAxisRules,
     m02Videos,
     m02Exercises,
+  );
+  await seedModule(
+    M05_ID,
+    m05Module,
+    m05Skills,
+    m05SkillAxisRules,
+    m05Videos,
+    m05Exercises,
+  );
+  await seedModule(
+    M06_ID,
+    m06Module,
+    m06Skills,
+    m06SkillAxisRules,
+    m06Videos,
+    m06Exercises,
   );
   await seedModule(
     M03_ID,
